@@ -21,28 +21,25 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uhn-PE-gc6">
-                                <rect key="frame" x="20" y="567" width="80" height="80"/>
+                                <rect key="frame" x="20" y="567" width="100" height="80"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="0cZ-ZG-IV9"/>
+                                    <constraint firstAttribute="width" constant="100" id="0cZ-ZG-IV9"/>
                                     <constraint firstAttribute="height" constant="80" id="mii-ga-p03"/>
                                 </constraints>
-                                <state key="normal" title="Add"/>
+                                <state key="normal" title="Clipboard"/>
                                 <connections>
-                                    <action selector="add:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NCq-zw-93V"/>
+                                    <action selector="addFromClip:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xPD-8j-nfl"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YjF-k6-aPB">
-                                <rect key="frame" x="275" y="567" width="80" height="80"/>
+                                <rect key="frame" x="255" y="567" width="100" height="80"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="mhk-YT-q5P"/>
+                                    <constraint firstAttribute="width" constant="100" id="mhk-YT-q5P"/>
                                     <constraint firstAttribute="height" constant="80" id="qe6-8y-zkj"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="reset_org:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3p9-J3-mwx"/>
-                                </connections>
+                                <state key="normal" title="Gallery"/>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
