@@ -8,7 +8,7 @@
 
 import UIKit
 import ARKit
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate  {
     
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
@@ -20,6 +20,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewDidLoad()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         self.sceneView.session.run(configuration)
+        self.userInputBox.delegate = self
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -89,8 +90,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         renderNode(node: node)
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
         updateText(self)
+        textField.resignFirstResponder()
         return true
     }
     
