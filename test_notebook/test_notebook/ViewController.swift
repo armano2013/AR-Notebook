@@ -20,6 +20,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewDidLoad()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         self.sceneView.session.run(configuration)
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -27,28 +28,33 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    @IBAction func addFromClip(_ sender: Any) {
-        let ourText = SCNText(string: getClipboard(), extrusionDepth: 1.0)
+    func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
         
         material.diffuse.contents = UIColor.red
         
-        ourText.materials = [material]
+        text.materials = [material]
         let node = SCNNode();
-        node.geometry = ourText;
+        node.geometry = text;
         node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
         node.position = SCNVector3(0.01, 0.01, -0.01)
         
+        return node;
+    }
+    func renderNode(node: SCNNode) {
         sceneView.scene.rootNode.addChildNode(node)
-
+    }
+    
+    @IBAction func addFromClip(_ sender: Any) {
+        let ourText = SCNText(string: getClipboard(), extrusionDepth: 1.0)
+        renderNode(node: createTextNode(text: ourText))
     }
     func getClipboard() -> String{
         let pasteboard: String? = UIPasteboard.general.string
         if let string = pasteboard {
-            return "hi the string is: \(string)"
+            return string
         }
-        return "else"
+        return "No String Found on Clipboard"
     }
     
     //gallery
@@ -75,21 +81,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         dismiss(animated: true, completion: nil)
     }
+    //keyboard
     
     @IBAction func updateText(_ sender: Any) {
-        let ourText = SCNText(string: userInputBox.text, extrusionDepth: 1.0)
-        let material = SCNMaterial()
-        
-        material.diffuse.contents = UIColor.red
-        
-        ourText.materials = [material]
-        let node = SCNNode();
-        node.geometry = ourText;
-        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
-        node.position = SCNVector3(0.01, 0.01, -0.01)
-        
-        sceneView.scene.rootNode.addChildNode(node)
-
+        let keyText = SCNText(string: userInputBox.text, extrusionDepth: 1.0)
+        let node = createTextNode(text: keyText)
+        renderNode(node: node)
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        updateText(self)
+        return true
     }
     
 }
