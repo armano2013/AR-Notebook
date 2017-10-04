@@ -13,6 +13,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     let imagePicker = UIImagePickerController()
+    
+    @IBOutlet weak var userInputBox: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -71,6 +74,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             //
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func updateText(_ sender: Any) {
+        let ourText = SCNText(string: userInputBox.text, extrusionDepth: 1.0)
+        let material = SCNMaterial()
+        
+        material.diffuse.contents = UIColor.red
+        
+        ourText.materials = [material]
+        let node = SCNNode();
+        node.geometry = ourText;
+        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
+        node.position = SCNVector3(0.01, 0.01, -0.01)
+        
+        sceneView.scene.rootNode.addChildNode(node)
+
     }
     
 }
