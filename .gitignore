@@ -10,4 +10,8 @@ Pods/
 
 # Xcode - User files
 xcuserdata/
-.xcworkspace
+
+
+# add sql ignore
+SQLite.xcodeproj
+
