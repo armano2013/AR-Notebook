@@ -8,7 +8,7 @@
 
 import UIKit
 import ARKit
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate  {
+class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate  {
     
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
@@ -19,10 +19,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UITextF
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        self.configuration.planeDetection = .horizontal
         self.sceneView.session.run(configuration)
-        self.userInputBox.delegate = self
-        
-        // Do any additional setup after loading the view, typically from a nib.
+        self.sceneView.delegate = self
     }
     
     override func didReceiveMemoryWarning() {
@@ -94,6 +93,46 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UITextF
         textField.resignFirstResponder()
         return true
     }
+    func createPage(planeAnchor: ARPlaneAnchor)->SCNNode{
+        //.extent means the width and height of horizontal surface detected
+        let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(planeAnchor.extent.x), height:CGFloat(planeAnchor.extent.z)))
+        pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+//since the page is being pasted on horizontal we need to make sure it is double sided so the top and bottom of the plane both have the content
+        pageNode.geometry?.firstMaterial?.isDoubleSided = true
+        pageNode.position = SCNVector3(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
+        pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
+        return pageNode
+    }
     
+    //arscnview deleagete for when a new horz surface is detected
+    //didadd can tell you the plane size -- but probably not needed for our project since books will be predefined
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        //if a surface is detected will return plane anchor
+        guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
+        let pageNode = createPage(planeAnchor: planeAnchor);
+        node.addChildNode(pageNode)
+    }
+    //add more page nodes on detecting of planes... Not useful for our application added as example.
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
+        node.enumerateChildNodes{(childNode, _) in
+            childNode.removeFromParentNode()
+        }
+        let pageNode = createPage(planeAnchor: planeAnchor)
+        node.addChildNode(pageNode)
+    }
+    
+    //didRemove runs when a feature point is removed - in this case check to see if the feature point removed was a plane note
+    func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
+        guard let _ = anchor as? ARPlaneAnchor else {return}
+        node.enumerateChildNodes{(childNode, _) in
+            childNode.removeFromParentNode()
+        }
+    }
 }
 
+//converts degrees to radians, since objects are oriented according to radians
+//credit to udemy video
+extension Int {
+    var degreesToRadians: Double {return Double(self) * .pi/180}
+}
