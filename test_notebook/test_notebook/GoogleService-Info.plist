@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>519014042909-275j1k6bm1lklfn0jf4bqmf4lmar0i5k.apps.googleusercontent.com</string>
+	<string>830967420645-a2eb1jbiuuo2fk6ir42p6ckrid5ges4b.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.519014042909-275j1k6bm1lklfn0jf4bqmf4lmar0i5k</string>
+	<string>com.googleusercontent.apps.830967420645-a2eb1jbiuuo2fk6ir42p6ckrid5ges4b</string>
 	<key>API_KEY</key>
-	<string>AIzaSyC76YAbz8Qk85UTR4OwZp3Zw3LcoUX0hnE</string>
+	<string>AIzaSyA_qHwTK4afdNH4UDxQlEjVVyVdPbB2rco</string>
 	<key>GCM_SENDER_ID</key>
-	<string>519014042909</string>
+	<string>830967420645</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>none.test-notebook</string>
 	<key>PROJECT_ID</key>
-	<string>test-notebook-db3d6</string>
+	<string>capmeg-b86b3</string>
 	<key>STORAGE_BUCKET</key>
-	<string>test-notebook-db3d6.appspot.com</string>
+	<string>capmeg-b86b3.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:519014042909:ios:f9f8234ffdbfd167</string>
+	<string>1:830967420645:ios:f9f8234ffdbfd167</string>
 	<key>DATABASE_URL</key>
-	<string>https://test-notebook-db3d6.firebaseio.com</string>
+	<string>https://capmeg-b86b3.firebaseio.com</string>
 </dict>
 </plist>

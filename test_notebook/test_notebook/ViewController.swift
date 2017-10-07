@@ -8,6 +8,8 @@
 
 import UIKit
 import ARKit
+import Firebase
+
 class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var sceneView: ARSCNView!
@@ -36,6 +38,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         renderNode(node: node)
         
     }
+    
+    //default did load
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -48,6 +52,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
         
@@ -74,6 +80,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let pasteboard: String? = UIPasteboard.general.string
         if let string = pasteboard {
             return string
+            //update database here
         }
         return "No String Found on Clipboard"
     }
@@ -91,6 +98,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            //send picked image to the database
             let node = SCNNode()
             node.geometry = SCNBox(width: 0.1, height: 0.1, length: 0.001, chamferRadius: 0)
             node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
