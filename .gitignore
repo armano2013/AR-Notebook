@@ -3,14 +3,15 @@
 # Apple sample code gitignore configuration.
 
 # Finder
-.DS_Store
+*.DS_Store
 
 #Pods
 Pods/
 
 # Xcode - User files
 xcuserdata/
-*.xcworkspace
+
 
 # add sql ignore
 SQLite.xcodeproj
+
