@@ -8,14 +8,34 @@
 
 import UIKit
 import ARKit
-class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate  {
+class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     let imagePicker = UIImagePickerController()
-    
+    var someNodes = [SCNNode]()
     @IBOutlet weak var userInputBox: UITextField!
-    
+    //Swipe detectors
+    @IBAction func leftSwipe(_ sender: UISwipeGestureRecognizer) {
+        let text = SCNText(string: "left swipe", extrusionDepth: 1.0);
+        let node = createTextNode(text: text)
+        node.name = "left"
+        if let testNode = self.sceneView.scene.rootNode.childNode(withName: "right", recursively: true) {
+            self.sceneView.scene.rootNode.replaceChildNode(testNode, with:node)
+        }
+        renderNode(node: node)
+        
+    }
+    @IBAction func rightSwipe(_ sender: UISwipeGestureRecognizer) {
+        let text = SCNText(string: "right swipe", extrusionDepth: 1.0);
+        let node = createTextNode(text: text)
+        node.name = "right"
+        if let testNode = self.sceneView.scene.rootNode.childNode(withName: "left", recursively: true) {
+         self.sceneView.scene.rootNode.replaceChildNode(testNode, with:node)
+        }
+        renderNode(node: node)
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -42,6 +62,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         return node;
     }
     func renderNode(node: SCNNode) {
+        someNodes.append(node)
         sceneView.scene.rootNode.addChildNode(node)
     }
     
@@ -129,6 +150,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             childNode.removeFromParentNode()
         }
     }
+    
 }
 
 //converts degrees to radians, since objects are oriented according to radians

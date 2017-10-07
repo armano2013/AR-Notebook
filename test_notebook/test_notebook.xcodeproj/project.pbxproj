@@ -15,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F0D0DF01F8948B1008F8193 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1FD7A3611F7B460900EA5418 /* test_notebook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_notebook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD7A3641F7B460900EA5418 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1FD7A3661F7B460900EA5418 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,6 +61,7 @@
 				1FD7A36B1F7B460900EA5418 /* Assets.xcassets */,
 				1FD7A36D1F7B460900EA5418 /* LaunchScreen.storyboard */,
 				1FD7A3701F7B460900EA5418 /* Info.plist */,
+				1F0D0DF01F8948B1008F8193 /* GoogleService-Info.plist */,
 			);
 			path = test_notebook;
 			sourceTree = "<group>";
