@@ -26,8 +26,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             self.sceneView.scene.rootNode.replaceChildNode(testNode, with:node)
         }
         renderNode(node: node)
-        
     }
+    
     @IBAction func rightSwipe(_ sender: UISwipeGestureRecognizer) {
         let text = SCNText(string: "right swipe", extrusionDepth: 1.0);
         let node = createTextNode(text: text)
