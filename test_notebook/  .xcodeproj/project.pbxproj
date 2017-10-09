@@ -25,8 +25,6 @@
 		1FD7A36B1F7B460900EA5418 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1FD7A36E1F7B460900EA5418 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1FD7A3701F7B460900EA5418 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		27AE8E9A51A3CA67AE8DC1BD /* Pods-test_notebook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-test_notebook.release.xcconfig"; path = "Pods/Target Support Files/Pods-test_notebook/Pods-test_notebook.release.xcconfig"; sourceTree = "<group>"; };
-		543A143667562AFA13765EBB /* Pods-test_notebook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-test_notebook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-test_notebook/Pods-test_notebook.debug.xcconfig"; sourceTree = "<group>"; };
 		6C8A0F6B450095BD21B9A6CA /* Pods_test_notebook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_test_notebook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -47,7 +45,6 @@
 			children = (
 				1FD7A3631F7B460900EA5418 /* test_notebook */,
 				1FD7A3621F7B460900EA5418 /* Products */,
-				7599228E0DD2FAAFC75DED39 /* Pods */,
 				62DD98C0FE55E3A54BF8C449 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -80,15 +77,6 @@
 				6C8A0F6B450095BD21B9A6CA /* Pods_test_notebook.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		7599228E0DD2FAAFC75DED39 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				543A143667562AFA13765EBB /* Pods-test_notebook.debug.xcconfig */,
-				27AE8E9A51A3CA67AE8DC1BD /* Pods-test_notebook.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -361,7 +349,6 @@
 		};
 		1FD7A3741F7B460900EA5418 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 543A143667562AFA13765EBB /* Pods-test_notebook.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -377,7 +364,6 @@
 		};
 		1FD7A3751F7B460900EA5418 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 27AE8E9A51A3CA67AE8DC1BD /* Pods-test_notebook.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
