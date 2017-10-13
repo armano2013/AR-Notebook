@@ -19,6 +19,11 @@
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PuH-x2-Eux">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="ykQ-vn-8Bc" appends="YES" id="xnw-aa-BZE"/>
+                                    <outletCollection property="gestureRecognizers" destination="kPL-dH-BVb" appends="YES" id="SYd-eH-hsd"/>
+                                </connections>
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uhn-PE-gc6">
                                 <rect key="frame" x="20" y="567" width="100" height="80"/>
@@ -80,6 +85,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="left" id="ykQ-vn-8Bc">
+                    <connections>
+                        <action selector="leftSwipe:" destination="BYZ-38-t0r" id="UiS-rx-p84"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="right" id="kPL-dH-BVb">
+                    <connections>
+                        <action selector="rightSwipe:" destination="BYZ-38-t0r" id="rxB-Qf-0HO"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="117.59999999999999" y="117.39130434782609"/>
         </scene>
