@@ -8,15 +8,27 @@
 
 import UIKit
 import ARKit
-import Firebase
 
-class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate {
+    
     
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     let imagePicker = UIImagePickerController()
     var someNodes = [SCNNode]()
     @IBOutlet weak var userInputBox: UITextField!
+    
+    // limiting character length: just change the return value to desired character length
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let startingLength = userInputBox.text?.characters.count ?? 0
+        let lengthToAdd = string.characters.count
+        let lengthToReplace = range.length
+        
+        let newLength = startingLength + lengthToAdd - lengthToReplace
+        
+        return newLength <= 140
+    }
+
     //Swipe detectors
     @IBAction func leftSwipe(_ sender: UISwipeGestureRecognizer) {
         let text = SCNText(string: "left swipe", extrusionDepth: 1.0);
@@ -41,6 +53,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     //default did load
     override func viewDidLoad() {
+        userInputBox.delegate = self
         super.viewDidLoad()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         self.configuration.planeDetection = .horizontal
@@ -113,6 +126,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     //keyboard
     
     @IBAction func updateText(_ sender: Any) {
+        
+
+        
         let keyText = SCNText(string: userInputBox.text, extrusionDepth: 1.0)
         let node = createTextNode(text: keyText)
         renderNode(node: node)
