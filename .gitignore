@@ -8,6 +8,7 @@
 # Xcode - User files
 xcuserdata/
 
+prototype1/ARNotebook/Pods/
 
 # add sql ignore
 SQLite.xcodeproj
