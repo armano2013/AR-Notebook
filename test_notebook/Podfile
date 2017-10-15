@@ -8,6 +8,7 @@ target 'test_notebook' do
   # Pods for test_notebook
 	pod 'Firebase/Core'
 	pod 'Firebase/Database’
+	pod 'Firebase/Auth'
 
 
 end
