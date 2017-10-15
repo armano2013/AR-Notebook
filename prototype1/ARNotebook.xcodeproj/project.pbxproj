@@ -14,7 +14,6 @@
 		E4CDB5161F93BE1900BBFE12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */; };
 		E4CDB5191F93BE1900BBFE12 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */; };
 		E4CDB5211F93C12000BBFE12 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4CDB5201F93C11D00BBFE12 /* FBSDKCoreKit.framework */; };
-		E4CDB5221F93C12400BBFE12 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB51A1F93BE1900BBFE12 /* Info.plist */; };
 		E4CDB5251F93C25B00BBFE12 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */; };
 		E4CDB5271F93C77500BBFE12 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5261F93C76800BBFE12 /* GoogleService-Info.plist */; };
 		E4CDB5291F93D44D00BBFE12 /* shareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5281F93D44D00BBFE12 /* shareViewController.swift */; };
@@ -175,7 +174,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4CDB5221F93C12400BBFE12 /* Info.plist in Resources */,
 				E4CDB5191F93BE1900BBFE12 /* LaunchScreen.storyboard in Resources */,
 				E4CDB5271F93C77500BBFE12 /* GoogleService-Info.plist in Resources */,
 				E4CDB5161F93BE1900BBFE12 /* Assets.xcassets in Resources */,
