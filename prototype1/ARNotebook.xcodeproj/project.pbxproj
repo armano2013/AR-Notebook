@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		6DBF880E1F953ECB005C1456 /* designableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBF880D1F953ECB005C1456 /* designableView.swift */; };
 		89DA3783F4A25CD8BFA95048 /* Pods_ARNotebook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */; };
+		C267263C1F9551E400E6EEA1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = C267263B1F9551E300E6EEA1 /* art.scnassets */; };
+		C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C267263D1F9552A100E6EEA1 /* arScene.swift */; };
 		E4CDB50F1F93BE1900BBFE12 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */; };
 		E4CDB5111F93BE1900BBFE12 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5101F93BE1900BBFE12 /* ViewController.swift */; };
 		E4CDB5141F93BE1900BBFE12 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5121F93BE1900BBFE12 /* Main.storyboard */; };
@@ -27,6 +29,8 @@
 		6DBF880D1F953ECB005C1456 /* designableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = designableView.swift; sourceTree = "<group>"; };
 		7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARNotebook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82A9E091CB039DA3E9D0DA91 /* Pods-ARNotebook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARNotebook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook.debug.xcconfig"; sourceTree = "<group>"; };
+		C267263B1F9551E300E6EEA1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
+		C267263D1F9552A100E6EEA1 /* arScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = arScene.swift; sourceTree = "<group>"; };
 		D13320603C063F665068EF3B /* Pods-ARNotebook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARNotebook.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook.release.xcconfig"; sourceTree = "<group>"; };
 		E4CDB50B1F93BE1900BBFE12 /* ARNotebook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARNotebook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -99,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */,
+				C267263B1F9551E300E6EEA1 /* art.scnassets */,
 				E4CDB5101F93BE1900BBFE12 /* ViewController.swift */,
 				E4CDB5121F93BE1900BBFE12 /* Main.storyboard */,
 				6DBF880D1F953ECB005C1456 /* designableView.swift */,
@@ -107,6 +112,7 @@
 				E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */,
 				E4CDB5281F93D44D00BBFE12 /* shareViewController.swift */,
 				E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */,
+				C267263D1F9552A100E6EEA1 /* arScene.swift */,
 				E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */,
 				E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */,
 				E4CDB51A1F93BE1900BBFE12 /* Info.plist */,
@@ -179,6 +185,7 @@
 			files = (
 				E4CDB5191F93BE1900BBFE12 /* LaunchScreen.storyboard in Resources */,
 				E4CDB5271F93C77500BBFE12 /* GoogleService-Info.plist in Resources */,
+				C267263C1F9551E400E6EEA1 /* art.scnassets in Resources */,
 				E4CDB5161F93BE1900BBFE12 /* Assets.xcassets in Resources */,
 				E4CDB5141F93BE1900BBFE12 /* Main.storyboard in Resources */,
 			);
@@ -272,6 +279,7 @@
 				E4CDB52B1F93D4C500BBFE12 /* addViewController.swift in Sources */,
 				E4CDB50F1F93BE1900BBFE12 /* AppDelegate.swift in Sources */,
 				E4CDB52F1F93D64F00BBFE12 /* insertViewController.swift in Sources */,
+				C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */,
 				E4CDB52D1F93D53700BBFE12 /* newViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
