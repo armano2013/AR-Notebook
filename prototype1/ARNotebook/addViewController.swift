@@ -7,9 +7,14 @@
 //
 
 import UIKit
+import ARKit
 
-class addViewController: UIViewController {
+class addViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate {
 
+    @IBOutlet weak var new: UIButton!
+    @IBOutlet weak var recent: UIButton!
+    @IBOutlet weak var insert: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -19,6 +24,10 @@ class addViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func insert(_ sender: Any) {
+        performSegue(withIdentifier: "insertOne", sender: self)
     }
     
 

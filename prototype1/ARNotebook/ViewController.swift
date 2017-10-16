@@ -18,6 +18,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     let configuration = ARWorldTrackingConfiguration()
     let imagePicker = UIImagePickerController()
     var someNodes = [SCNNode]()
+    
     @IBOutlet weak var menu: UIButton!
     
     
@@ -32,9 +33,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         // Dispose of any resources that can be recreated.
     }
    
-    @IBAction func menu(_ sender: Any) {
-        performSegue(withIdentifier: "menuOne", sender: self)
-    }
     
 }
 
