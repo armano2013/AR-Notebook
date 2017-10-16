@@ -167,10 +167,11 @@
                                             <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                         </state>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ecF-8M-y9Q">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ecF-8M-y9Q">
                                         <rect key="frame" x="38" y="111" width="46" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Insert"/>
+                                        <state key="normal" title="Insert">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
                                         <connections>
                                             <action selector="insert:" destination="db3-xQ-AWA" eventType="touchUpInside" id="72D-om-FPy"/>
                                             <segue destination="ylS-d8-bpH" kind="presentation" identifier="insertOne" modalPresentationStyle="overCurrentContext" id="RYC-Tu-xPi"/>
@@ -179,10 +180,13 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="ecF-8M-y9Q" secondAttribute="trailing" constant="36" id="1eP-0i-EGd"/>
                                     <constraint firstItem="2Oi-Y1-gRQ" firstAttribute="top" secondItem="jJZ-mS-djh" secondAttribute="top" constant="8" id="8Vm-qT-UtS"/>
+                                    <constraint firstAttribute="bottom" secondItem="ecF-8M-y9Q" secondAttribute="bottom" constant="34" id="Jmp-X2-gwM"/>
                                     <constraint firstItem="2Oi-Y1-gRQ" firstAttribute="leading" secondItem="jJZ-mS-djh" secondAttribute="leading" constant="45" id="bfj-K5-Fh5"/>
                                     <constraint firstAttribute="trailing" secondItem="2Oi-Y1-gRQ" secondAttribute="trailing" constant="44" id="fPG-RR-suu"/>
                                     <constraint firstAttribute="bottom" secondItem="2Oi-Y1-gRQ" secondAttribute="bottom" constant="137" id="n1l-7b-KpE"/>
+                                    <constraint firstItem="ecF-8M-y9Q" firstAttribute="leading" secondItem="jJZ-mS-djh" secondAttribute="leading" constant="38" id="wc8-hN-uMr"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -287,6 +291,7 @@
                                         </state>
                                         <connections>
                                             <action selector="Text:" destination="ylS-d8-bpH" eventType="touchUpInside" id="Ubt-9o-ljm"/>
+                                            <segue destination="Ew9-Ja-XIM" kind="presentation" modalPresentationStyle="overCurrentContext" id="Shl-fy-Y8r"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JHe-Nn-Rda">
@@ -320,6 +325,37 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mJ6-ff-Ffs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1768.8" y="906.29685157421295"/>
+        </scene>
+        <!--Text View Controller-->
+        <scene sceneID="B09-Uv-cAC">
+            <objects>
+                <viewController id="Ew9-Ja-XIM" customClass="textViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YAO-N8-aPV">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QeC-6v-JKx">
+                                <rect key="frame" x="139" y="335" width="97" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="textField:" destination="Ew9-Ja-XIM" eventType="editingDidEnd" id="il5-N6-LTe"/>
+                                </connections>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="LQp-Hk-H8Z"/>
+                    </view>
+                    <connections>
+                        <outlet property="text" destination="QeC-6v-JKx" id="VQ3-Hu-EQa"/>
+                        <outlet property="userTextInput" destination="QeC-6v-JKx" id="PJh-yG-gTP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QoV-xL-1LC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2752.8000000000002" y="905.3973013493254"/>
         </scene>
         <!--Share View Controller-->
         <scene sceneID="EOi-lH-jh1">
