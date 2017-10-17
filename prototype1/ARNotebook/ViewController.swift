@@ -18,23 +18,31 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     let configuration = ARWorldTrackingConfiguration()
     var someNodes = [SCNNode]() //using this to store text nodes, remove later.
     var bookNode: SCNNode?
+    var currentPageNode : SCNNode?
     @IBOutlet weak var menu: UIButton!
-    var pages = [SCNNode]()
-    
+    var pages = [SCNNode]() //stores page nodes, can get page num from here
     
     
     //mock add pages //
     @IBAction func addPage(_ sender: Any) {
         if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
             //gemoetry to figure out the size of the book placed //
-            let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(bookNode.boundingBox.max.x - bookNode.boundingBox.min.x), height: 1.8))
+            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.1, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
-            pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+            
+            if(pages.count % 2 == 0){
+                 pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+            }
+            else{
+                 pageNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+            }
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //issues with y position here, the page isnt placed right ontop of the book.
-            pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y + 1, bookNode.position.z - 1)
+            let offset = Float(pages.count) * Float(0.1);
+            pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y - offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
             pages.append(pageNode)
+            currentPageNode = pageNode
             pageNode.name = String(pages.count)
             bookNode.addChildNode(pageNode)
         }
@@ -42,8 +50,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         self.registerGestureRecognizers()
-
+        self.registerGestureRecognizers()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         self.configuration.planeDetection = .horizontal
         self.sceneView.session.run(configuration)
@@ -54,16 +61,47 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         someNodes.append(node)
         self.sceneView.scene.rootNode.addChildNode(node)
     }
-    
-   
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    //page turns
+    @IBAction func rightSwipe(_ sender: Any) {
+        //if there is more than one page and the current page node is the last one in the array turn the page backward?
+        if (pages.count > 1 && Int((currentPageNode?.name)!)! >= 0) {
+            print("right swipe loop")
+            let previous = Int((currentPageNode?.name)!)! - 2
+            let turnPage = pages[previous]
+            turnPage.position = SCNVector3(0.01, 0.01, -0.01)
+            currentPageNode = turnPage
+            if let pageExists = self.sceneView.scene.rootNode.childNode(withName: "previousPage", recursively: false) {
+                self.sceneView.scene.rootNode.replaceChildNode(pageExists, with:turnPage)
+            }
+            else{
+                //if node with name previous page exists, replace it with the new one
+                self.sceneView.scene.rootNode.addChildNode(turnPage)
+            }
+         
+        }
+    }
+    
+    @IBAction func leftSwipe(_ sender: Any) {
+           //if there is more than one page and the current page node is the last one in the array turn the page forward
+        if (pages.count > 1 && (Int((currentPageNode?.name)!)! <= Int(pages.count))) {
+            print("left swipe loop")
+            let previous = Int((currentPageNode?.name)!)! - 1
+            let turnPage = pages[previous]
+            turnPage.position = SCNVector3(0.01, 0.01, -0.01)
+            currentPageNode = turnPage
+            self.sceneView.scene.rootNode.addChildNode(turnPage)
+        }
+    }
+    
+    
     func registerGestureRecognizers() {
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
+         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
          self.sceneView.addGestureRecognizer(tapGestureRecognizer)
     }
    
