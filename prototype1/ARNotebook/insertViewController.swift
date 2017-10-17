@@ -39,7 +39,8 @@ class insertViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBAction func clipboard(_ sender: Any) {
         let ourText = SCNText(string: getClipboard(), extrusionDepth: 1.0)
         let node = createTextNode(text: ourText)
-        VC1.bookNode?.addChildNode(node)
+
+        self.presentingViewController?.dismiss(animated: true, completion: {self.VC1.renderNode(node: node)})
     }
     
     func createTextNode(text: SCNText) -> SCNNode {

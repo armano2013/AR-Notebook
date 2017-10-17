@@ -18,9 +18,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     let configuration = ARWorldTrackingConfiguration()
     var someNodes = [SCNNode]() //using this to store text nodes, remove later.
     var bookNode: SCNNode?
-    
     @IBOutlet weak var menu: UIButton!
+    var pages = [SCNNode]()
     
+    
+    
+    //mock add pages //
+    @IBAction func addPage(_ sender: Any) {
+        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+            let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(bookNode.boundingBox.max.x), height: CGFloat(bookNode.boundingBox.max.y)))
+            pageNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+            pageNode.geometry?.firstMaterial?.isDoubleSided = true
+            pageNode.position = SCNVector3(bookNode.position.x+0.5, bookNode.position.y + 0.5, bookNode.position.z + 0.5)
+            pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
+            pages.append(pageNode)
+            pageNode.name = String(pages.count)
+            bookNode.addChildNode(pageNode)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,11 +69,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let tapLocation = sender.location(in: sceneView)
         let hitTest = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
         if !hitTest.isEmpty {
-            self.addItem(hitTestResult: hitTest.first!)
+            self.addBook(hitTestResult: hitTest.first!)
         }
     }
     
-    func addItem(hitTestResult: ARHitTestResult) {
+    func addBook(hitTestResult: ARHitTestResult) {
         let scene = SCNScene(named: "art.scnassets/Book.dae")
         let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
         node.name = "Book"
@@ -68,9 +83,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let thirdColumn = transform.columns.3
         node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
         node.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        
+        someNodes.append(node);
         //check if another book object exists
-        if let existingBookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+        if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
             //this means theres already a book placed in the scene.. what do we want to do here??
             //user should only have one book open at a time.
         }
