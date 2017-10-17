@@ -10,12 +10,16 @@ import UIKit
 import FacebookLogin
 import FirebaseAuth
 import FacebookCore
+import FirebaseDatabase
 
 class AuthenticationViewController: UIViewController, LoginButtonDelegate {
+    
+    
     func loginButtonDidLogOut(_ loginButton: LoginButton) {
         
     }
     
+    var ref: DatabaseReference!
     
     override func viewDidLoad() {
         
@@ -26,6 +30,7 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
         FBLogin.center = view.center
         view.addSubview(FBLogin)
         FBLogin.delegate = self as LoginButtonDelegate
+        ref = Database.database().reference()
     }
     
     override func didReceiveMemoryWarning() {
@@ -46,11 +51,15 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
                     return
                 }
             })
+
             performSegue(withIdentifier: "loginSegue", sender: self)
         default:
             break
         }
     }
+    
+
+    
     
     /*
      // MARK: - Navigation
