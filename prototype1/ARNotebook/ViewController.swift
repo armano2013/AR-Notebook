@@ -26,10 +26,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     //mock add pages //
     @IBAction func addPage(_ sender: Any) {
         if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
-            let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(bookNode.boundingBox.max.x), height: CGFloat(bookNode.boundingBox.max.y)))
-            pageNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+            //gemoetry to figure out the size of the book placed //
+            let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(bookNode.boundingBox.max.x - bookNode.boundingBox.min.x), height: 1.8))
+            //@FIXME have fixed hieght for now bounding box isnt working
+            pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
-            pageNode.position = SCNVector3(bookNode.position.x+0.5, bookNode.position.y + 0.5, bookNode.position.z + 0.5)
+            //issues with y position here, the page isnt placed right ontop of the book.
+            pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y + 1, bookNode.position.z - 1)
             pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count)
