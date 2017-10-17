@@ -27,7 +27,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBAction func addPage(_ sender: Any) {
         if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
             //gemoetry to figure out the size of the book placed //
-            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.1, chamferRadius: 0.0))
+            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.01, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
             
             if(pages.count % 2 == 0){
@@ -70,32 +70,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     //page turns
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
-        if (pages.count > 1 && Int((currentPageNode?.name)!)! >= 0) {
+        if (pages.count > 1 && Int((currentPageNode?.name)!)! > 1) {
             print("right swipe loop")
-            let previous = Int((currentPageNode?.name)!)! - 2
+            let previous = Int((currentPageNode?.name)!)! - 1
             let turnPage = pages[previous]
             turnPage.position = SCNVector3(0.01, 0.01, -0.01)
+            bookNode?.replaceChildNode(currentPageNode!, with:turnPage)
             currentPageNode = turnPage
-            if let pageExists = self.sceneView.scene.rootNode.childNode(withName: "previousPage", recursively: false) {
-                self.sceneView.scene.rootNode.replaceChildNode(pageExists, with:turnPage)
-            }
-            else{
-                //if node with name previous page exists, replace it with the new one
-                self.sceneView.scene.rootNode.addChildNode(turnPage)
-            }
-         
         }
     }
     
     @IBAction func leftSwipe(_ sender: Any) {
            //if there is more than one page and the current page node is the last one in the array turn the page forward
-        if (pages.count > 1 && (Int((currentPageNode?.name)!)! <= Int(pages.count))) {
+        if (pages.count > 1 && (Int((currentPageNode?.name)!) - 1! < Int(pages.count))) {
             print("left swipe loop")
-            let previous = Int((currentPageNode?.name)!)! - 1
+            let previous = Int((currentPageNode?.name)!)! + 1
             let turnPage = pages[previous]
             turnPage.position = SCNVector3(0.01, 0.01, -0.01)
+            bookNode?.replaceChildNode(currentPageNode!, with:turnPage)
             currentPageNode = turnPage
-            self.sceneView.scene.rootNode.addChildNode(turnPage)
         }
     }
     
