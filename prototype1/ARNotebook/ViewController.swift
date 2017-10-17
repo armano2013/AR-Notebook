@@ -16,9 +16,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
-    let imagePicker = UIImagePickerController()
-    var someNodes = [SCNNode]()
-    
+    var someNodes = [SCNNode]() //using this to store text nodes, remove later.
     var bookNode: SCNNode?
     
     @IBOutlet weak var menu: UIButton!
@@ -27,41 +25,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     override func viewDidLoad() {
         super.viewDidLoad()
          self.registerGestureRecognizers()
-        // Do any additional setup after loading the view, typically from a nib.
+
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         self.configuration.planeDetection = .horizontal
         self.sceneView.session.run(configuration)
         self.sceneView.delegate = self
-
-        sceneView.showsStatistics = true
-     
     }
-    func createTextNode(text: SCNText) -> SCNNode {
-        let material = SCNMaterial()
-        
-        material.diffuse.contents = UIColor.red
-        
-        text.materials = [material]
-        let node = SCNNode();
-        node.geometry = text;
-        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
-        node.position = SCNVector3(0.01, 0.01, -0.01)
-        
-        return node;
-    }
+   
     func renderNode(node: SCNNode) {
         someNodes.append(node)
-        sceneView.scene.rootNode.addChildNode(node)
+        self.sceneView.scene.rootNode.addChildNode(node)
     }
     
-    func getClipboard() -> String{
-        let pasteboard: String? = UIPasteboard.general.string
-        if let string = pasteboard {
-            return string
-            //update database here
-        }
-        return "No String Found on Clipboard"
-    }
+   
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -104,7 +80,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
     }
     
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -114,29 +89,38 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     
       /*
-     /////////////////
+
+     This section will show the 'focus square' when AR Kit detects a flat surface.
+     This will help users know when the can click to set a notebook object
      
-     leaving this here because we probably need later
-     
-     /////////////////////////
-     Ended up needing hit test for plane detection of initial book model , probably need this later for adding pages */
-    /*func createPage(planeAnchor: ARPlaneAnchor)->SCNNode{
+     */
+    func createPlaneFocusSquare(planeAnchor: ARPlaneAnchor)->SCNNode{
         //.extent means the width and height of horizontal surface detected
-        let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(planeAnchor.extent.x), height:CGFloat(planeAnchor.extent.z)))
-        pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+        let planeNode = SCNNode(geometry: SCNPlane(width: CGFloat(planeAnchor.extent.x), height:CGFloat(planeAnchor.extent.z)))
+        planeNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "focus")
         //since the page is being pasted on horizontal we need to make sure it is double sided so the top and bottom of the plane both have the content
-        pageNode.geometry?.firstMaterial?.isDoubleSided = true
-        pageNode.position = SCNVector3(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
-        pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
-        return pageNode
+        planeNode.geometry?.firstMaterial?.isDoubleSided = true
+        planeNode.position = SCNVector3(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
+        planeNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
+        return planeNode
+    }
+    //add more page nodes on detecting of planes... Not useful for our application added as example.
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
+        node.enumerateChildNodes{(childNode, _) in
+            childNode.removeFromParentNode()
+        }
+        let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
+        node.addChildNode(planeNode)
     }
     
-    //arscnview deleagete for when a new horz surface is detected
-    //didadd can tell you the plane size -- but probably not needed for our project since books will be predefined
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-      
-        
-    }*/
+    //didRemove runs when a feature point is removed - in this case check to see if the feature point removed was a plane note
+    func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
+        guard let _ = anchor as? ARPlaneAnchor else {return}
+        node.enumerateChildNodes{(childNode, _) in
+            childNode.removeFromParentNode()
+        }
+    }
     
 }
 

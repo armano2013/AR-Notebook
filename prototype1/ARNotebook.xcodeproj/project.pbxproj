@@ -117,8 +117,8 @@
 				E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */,
 				C267263D1F9552A100E6EEA1 /* arScene.swift */,
 				E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */,
-				E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */,
 				E4CDB51A1F93BE1900BBFE12 /* Info.plist */,
+				E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */,
 				E4CDB5261F93C76800BBFE12 /* GoogleService-Info.plist */,
 			);
 			path = ARNotebook;

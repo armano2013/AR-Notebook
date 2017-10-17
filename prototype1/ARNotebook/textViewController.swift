@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class textViewController: UIViewController,UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate {
 
     
@@ -32,7 +33,6 @@ class textViewController: UIViewController,UITextFieldDelegate, UINavigationCont
         userTextInput.resignFirstResponder()
         return true
     }
-    
     /*
     // MARK: - Navigation
 
