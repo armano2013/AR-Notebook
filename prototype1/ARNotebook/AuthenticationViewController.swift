@@ -23,11 +23,8 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
         
         // Do any additional setup after loading the view.
         let FBLogin = LoginButton(readPermissions: [.publicProfile])
-        print("test1")
         FBLogin.center = view.center
-        print("test2")
         view.addSubview(FBLogin)
-        print("test3")
         FBLogin.delegate = self as LoginButtonDelegate
     }
     

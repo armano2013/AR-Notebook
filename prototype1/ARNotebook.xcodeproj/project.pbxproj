@@ -12,6 +12,7 @@
 		89DA3783F4A25CD8BFA95048 /* Pods_ARNotebook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */; };
 		C267263C1F9551E400E6EEA1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = C267263B1F9551E300E6EEA1 /* art.scnassets */; };
 		C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C267263D1F9552A100E6EEA1 /* arScene.swift */; };
+		E43212891F968B7E00BC8F24 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E43212881F968B6C00BC8F24 /* GoogleService-Info.plist */; };
 		E4CDB50F1F93BE1900BBFE12 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */; };
 		E4CDB5111F93BE1900BBFE12 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5101F93BE1900BBFE12 /* ViewController.swift */; };
 		E4CDB5141F93BE1900BBFE12 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5121F93BE1900BBFE12 /* Main.storyboard */; };
@@ -19,7 +20,6 @@
 		E4CDB5191F93BE1900BBFE12 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */; };
 		E4CDB5211F93C12000BBFE12 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4CDB5201F93C11D00BBFE12 /* FBSDKCoreKit.framework */; };
 		E4CDB5251F93C25B00BBFE12 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */; };
-		E4CDB5271F93C77500BBFE12 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5261F93C76800BBFE12 /* GoogleService-Info.plist */; };
 		E4CDB5291F93D44D00BBFE12 /* shareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5281F93D44D00BBFE12 /* shareViewController.swift */; };
 		E4CDB52B1F93D4C500BBFE12 /* addViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */; };
 		E4CDB52D1F93D53700BBFE12 /* newViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB52C1F93D53700BBFE12 /* newViewController.swift */; };
@@ -34,6 +34,7 @@
 		C267263B1F9551E300E6EEA1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		C267263D1F9552A100E6EEA1 /* arScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = arScene.swift; sourceTree = "<group>"; };
 		D13320603C063F665068EF3B /* Pods-ARNotebook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARNotebook.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook.release.xcconfig"; sourceTree = "<group>"; };
+		E43212881F968B6C00BC8F24 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E4CDB50B1F93BE1900BBFE12 /* ARNotebook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARNotebook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4CDB5101F93BE1900BBFE12 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -44,7 +45,6 @@
 		E4CDB5201F93C11D00BBFE12 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		E4CDB5231F93C12D00BBFE12 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
-		E4CDB5261F93C76800BBFE12 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E4CDB5281F93D44D00BBFE12 /* shareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = shareViewController.swift; path = Assets.xcassets/shareViewController.swift; sourceTree = "<group>"; };
 		E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addViewController.swift; sourceTree = "<group>"; };
 		E4CDB52C1F93D53700BBFE12 /* newViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newViewController.swift; sourceTree = "<group>"; };
@@ -117,7 +117,7 @@
 				C267263D1F9552A100E6EEA1 /* arScene.swift */,
 				E4CDB51A1F93BE1900BBFE12 /* Info.plist */,
 				E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */,
-				E4CDB5261F93C76800BBFE12 /* GoogleService-Info.plist */,
+				E43212881F968B6C00BC8F24 /* GoogleService-Info.plist */,
 				E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */,
 				C267263B1F9551E300E6EEA1 /* art.scnassets */,
 			);
@@ -187,8 +187,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4CDB5191F93BE1900BBFE12 /* LaunchScreen.storyboard in Resources */,
-				E4CDB5271F93C77500BBFE12 /* GoogleService-Info.plist in Resources */,
 				C267263C1F9551E400E6EEA1 /* art.scnassets in Resources */,
+				E43212891F968B7E00BC8F24 /* GoogleService-Info.plist in Resources */,
 				E4CDB5161F93BE1900BBFE12 /* Assets.xcassets in Resources */,
 				E4CDB5141F93BE1900BBFE12 /* Main.storyboard in Resources */,
 			);
