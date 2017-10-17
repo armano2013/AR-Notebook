@@ -36,22 +36,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         sceneView.showsStatistics = true
      
     }
-/*
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first
-            else {return}
-        
-        let results = sceneView.hitTest(touch.location(in: sceneView),
-                                        types: [ARHitTestResult.ResultType.featurePoint])
-        
-        guard let hitFeature = results.last else {return}
-        
-        let hitTransform = SCNMatrix4(hitFeature.worldTransform)
-        let hitPosition = SCNVector3Make(hitTransform.m41, hitTransform.m42, hitTransform.m43)
-        let bookClone = bookNode!.clone()
-        sceneView.scene.rootNode.addChildNode(bookClone)
-    }
-    */
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
         
@@ -99,13 +83,43 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     
     func addItem(hitTestResult: ARHitTestResult) {
-            let scene = SCNScene(named: "art.scnassets/Book.dae")
-            let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
-            let transform = hitTestResult.worldTransform
-            let thirdColumn = transform.columns.3
-            node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
+        let scene = SCNScene(named: "art.scnassets/Book.dae")
+        let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
+        node.name = "Book"
+        
+        //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
+        let transform = hitTestResult.worldTransform
+        let thirdColumn = transform.columns.3
+        node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
+        node.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        
+        //check if another book object exists
+        if let existingBookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+            //this means theres already a book placed in the scene.. what do we want to do here??
+            //user should only have one book open at a time.
+        }
+        else{
             self.sceneView.scene.rootNode.addChildNode(node)
+            
+        }
     }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Pause the view's session
+        sceneView.session.pause()
+    }
+    
+    
+      /*
+     /////////////////
+     
+     leaving this here because we probably need later
+     
+     /////////////////////////
+     Ended up needing hit test for plane detection of initial book model , probably need this later for adding pages */
     /*func createPage(planeAnchor: ARPlaneAnchor)->SCNNode{
         //.extent means the width and height of horizontal surface detected
         let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(planeAnchor.extent.x), height:CGFloat(planeAnchor.extent.z)))
@@ -115,48 +129,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         pageNode.position = SCNVector3(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
         pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
         return pageNode
-    }*/
+    }
     
     //arscnview deleagete for when a new horz surface is detected
     //didadd can tell you the plane size -- but probably not needed for our project since books will be predefined
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        //if a surface is detected will return plane anchor
-        guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
-        print("plane")
-        /*
-        let bookScene = SCNScene(named: "art.scnassets/Book.dae")!
-        let bookNode = bookScene.rootNode.childNode(withName: "Book_", recursively: false)!
-        bookNode.position = SCNVector3(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
-        bookNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
-        bookNode.geometry?.firstMaterial?.isDoubleSided = true
-        self.sceneView.scene.rootNode.addChildNode(bookNode)*/
+      
         
-    }
-    
-    /*add more page nodes on detecting of planes... Not useful for our application added as example.
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
-        node.enumerateChildNodes{(childNode, _) in
-            childNode.removeFromParentNode()
-        }
-        let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(planeAnchor.extent.x), height:CGFloat(planeAnchor.extent.z)))
-        node.addChildNode(pageNode)
     }*/
-    
-    //didRemove runs when a feature point is removed - in this case check to see if the feature point removed was a plane note
-    func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
-        guard let _ = anchor as? ARPlaneAnchor else {return}
-        node.enumerateChildNodes{(childNode, _) in
-            childNode.removeFromParentNode()
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        // Pause the view's session
-        sceneView.session.pause()
-    }
     
 }
 
