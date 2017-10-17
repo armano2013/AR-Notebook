@@ -26,6 +26,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
+         self.registerGestureRecognizers()
         // Do any additional setup after loading the view, typically from a nib.
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         self.configuration.planeDetection = .horizontal
@@ -33,18 +34,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         self.sceneView.delegate = self
 
         sceneView.showsStatistics = true
-        
-        // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/Book.dae")!
-        let bookNode = scene.rootNode.childNode(withName: "Book_", recursively: true)
-        bookNode?.position = SCNVector3Make(4, -1, 0)
-        // Set the scene to the view
-        self.bookNode = bookNode
-        
-        sceneView.scene = scene
-    
+     
     }
-
+/*
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first
             else {return}
@@ -59,7 +51,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let bookClone = bookNode!.clone()
         sceneView.scene.rootNode.addChildNode(bookClone)
     }
-    
+    */
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
         
@@ -78,8 +70,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         sceneView.scene.rootNode.addChildNode(node)
     }
     
-    
-    
     func getClipboard() -> String{
         let pasteboard: String? = UIPasteboard.general.string
         if let string = pasteboard {
@@ -89,14 +79,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         return "No String Found on Clipboard"
     }
     
-    
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    func registerGestureRecognizers() {
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
+         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
+    }
    
-    func createPage(planeAnchor: ARPlaneAnchor)->SCNNode{
+    @objc func tapped(sender: UITapGestureRecognizer) {
+        let sceneView = sender.view as! ARSCNView
+        let tapLocation = sender.location(in: sceneView)
+        let hitTest = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
+        if !hitTest.isEmpty {
+            self.addItem(hitTestResult: hitTest.first!)
+        }
+    }
+    
+    func addItem(hitTestResult: ARHitTestResult) {
+            let scene = SCNScene(named: "art.scnassets/Book.dae")
+            let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
+            let transform = hitTestResult.worldTransform
+            let thirdColumn = transform.columns.3
+            node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
+            self.sceneView.scene.rootNode.addChildNode(node)
+    }
+    /*func createPage(planeAnchor: ARPlaneAnchor)->SCNNode{
         //.extent means the width and height of horizontal surface detected
         let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(planeAnchor.extent.x), height:CGFloat(planeAnchor.extent.z)))
         pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
@@ -105,25 +115,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         pageNode.position = SCNVector3(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
         pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
         return pageNode
-    }
+    }*/
     
     //arscnview deleagete for when a new horz surface is detected
     //didadd can tell you the plane size -- but probably not needed for our project since books will be predefined
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         //if a surface is detected will return plane anchor
         guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
-        let pageNode = createPage(planeAnchor: planeAnchor);
-        node.addChildNode(pageNode)
+        print("plane")
+        /*
+        let bookScene = SCNScene(named: "art.scnassets/Book.dae")!
+        let bookNode = bookScene.rootNode.childNode(withName: "Book_", recursively: false)!
+        bookNode.position = SCNVector3(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
+        bookNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
+        bookNode.geometry?.firstMaterial?.isDoubleSided = true
+        self.sceneView.scene.rootNode.addChildNode(bookNode)*/
+        
     }
-    //add more page nodes on detecting of planes... Not useful for our application added as example.
+    
+    /*add more page nodes on detecting of planes... Not useful for our application added as example.
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
         node.enumerateChildNodes{(childNode, _) in
             childNode.removeFromParentNode()
         }
-        let pageNode = createPage(planeAnchor: planeAnchor)
+        let pageNode = SCNNode(geometry: SCNPlane(width: CGFloat(planeAnchor.extent.x), height:CGFloat(planeAnchor.extent.z)))
         node.addChildNode(pageNode)
-    }
+    }*/
     
     //didRemove runs when a feature point is removed - in this case check to see if the feature point removed was a plane note
     func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
@@ -133,41 +151,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
-        
-        // Run the view's session
-        sceneView.session.run(configuration)
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // Pause the view's session
         sceneView.session.pause()
     }
-    
-    
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
-    }
-    
-    
     
 }
 
