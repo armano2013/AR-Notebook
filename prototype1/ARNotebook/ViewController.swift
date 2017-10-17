@@ -87,6 +87,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
         node.name = "Book"
         
+        let coverMaterial = SCNMaterial()
+        coverMaterial.diffuse.contents = UIImage(named: "BookCover(Ancient)_COLOR")
+        coverMaterial.locksAmbientWithDiffuse = true
+        node.geometry?.firstMaterial = coverMaterial
         //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
         let transform = hitTestResult.worldTransform
         let thirdColumn = transform.columns.3
