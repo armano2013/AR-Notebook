@@ -105,7 +105,6 @@
 			isa = PBXGroup;
 			children = (
 				E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */,
-				C267263B1F9551E300E6EEA1 /* art.scnassets */,
 				E4CDB5101F93BE1900BBFE12 /* ViewController.swift */,
 				E4CDB5121F93BE1900BBFE12 /* Main.storyboard */,
 				6DBF880F1F955BC1005C1456 /* textViewController.swift */,
@@ -116,10 +115,11 @@
 				E4CDB5281F93D44D00BBFE12 /* shareViewController.swift */,
 				E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */,
 				C267263D1F9552A100E6EEA1 /* arScene.swift */,
-				E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */,
-				E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */,
 				E4CDB51A1F93BE1900BBFE12 /* Info.plist */,
+				E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */,
 				E4CDB5261F93C76800BBFE12 /* GoogleService-Info.plist */,
+				E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */,
+				C267263B1F9551E300E6EEA1 /* art.scnassets */,
 			);
 			path = ARNotebook;
 			sourceTree = "<group>";

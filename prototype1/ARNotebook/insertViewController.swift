@@ -10,27 +10,20 @@ import UIKit
 import ARKit
 import SceneKit
 
-class insertViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate  {
+class insertViewController: UIViewController, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate  {
     
-    let VC1 = ViewController()
     
     @IBOutlet weak var image: UIButton!
     @IBOutlet weak var text: UIButton!
     @IBOutlet weak var clipboard: UIButton!
     
-    let imagePicker = UIImagePickerController()
-    var someNodes = [SCNNode]()
+    var VC1 = ViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-        // Do any additional setup after loading the view.
     }
+    let imagePicker = UIImagePickerController()
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     @IBAction func image(_ sender: Any) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -44,16 +37,41 @@ class insertViewController: UIViewController, ARSCNViewDelegate, UIImagePickerCo
         //
     }
     @IBAction func clipboard(_ sender: Any) {
+        let ourText = SCNText(string: getClipboard(), extrusionDepth: 1.0)
+        let node = createTextNode(text: ourText)
+
+        self.presentingViewController?.dismiss(animated: true, completion: {self.VC1.renderNode(node: node)})
     }
     
+    func createTextNode(text: SCNText) -> SCNNode {
+        let material = SCNMaterial()
+        
+        material.diffuse.contents = UIColor.red
+        
+        text.materials = [material]
+        let node = SCNNode();
+        node.geometry = text;
+        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
+        node.position = SCNVector3(0.01, 0.01, -0.01)
+        
+        return node;
+    }
+    func getClipboard() -> String{
+        let pasteboard: String? = UIPasteboard.general.string
+        if let string = pasteboard {
+            return string
+            //update database here
+        }
+        return "No String Found on Clipboard"
+    }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             //send picked image to the database
             let node = SCNNode()
             node.geometry = SCNBox(width: 0.1, height: 0.1, length: 0.001, chamferRadius: 0)
             node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
-            node.position = SCNVector3(0.1,0.1,0.1)
-            VC1.sceneView.scene.rootNode.addChildNode(node)
+            VC1.renderNode(node: node)
+            
         }
         else{
             //
