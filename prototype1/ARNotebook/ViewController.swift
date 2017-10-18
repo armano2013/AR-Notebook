@@ -40,10 +40,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let page = currentPageNode
         let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
         
-       // text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 100, height: 10))
-        //text.isWrapped = true
+      //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
+        text.isWrapped = true
         let material = SCNMaterial()
-        material.diffuse.contents = UIColor.red
+        if(pages.count % 2 == 0){
+            material.diffuse.contents = UIColor.black
+        }
+        else {
+            material.diffuse.contents = UIColor.blue
+        }
         text.materials = [material]
         let node = SCNNode()
         node.geometry = text
@@ -57,7 +62,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let dz = min.z + 0.5 * (max.z - min.z)
         node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
         */
-        node.position = SCNVector3(-0.7, 0.0, 0.01)
+        node.position = SCNVector3(-0.7, 0.0, 0.05)
+        //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
         page?.addChildNode(node)
     }
     func getClipboard() -> String{
@@ -84,7 +90,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             }
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //issues with y position here, the page isnt placed right ontop of the book.
-            let offset = Float(pages.count) * Float(0.1);
+            let offset = Float(pages.count) * Float(0.01);
+            //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
             pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y - offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
             pages.append(pageNode)
@@ -119,7 +126,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         if (pages.count > 1 && Int((currentPageNode?.name)!)! > 0) {
                 let i = Int((currentPageNode?.name)!)
                 let previous = i! - 1;
-                print(previous)
                 let turnPage = pages[previous]
                 currentPageNode?.isHidden = true;
                 currentPageNode = turnPage
