@@ -30,7 +30,7 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
         view.addSubview(FBLogin)
         FBLogin.delegate = self as LoginButtonDelegate
         
-        ref = Database.database().reference()
+        ref = Database.database().reference().child("users")
         
     }
     
@@ -51,11 +51,9 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
                     print("error: \(describing: error?.localizedDescription)")
                     return
                 }
-
-                GraphRequest.init(graphPath: "me", accessToken: accessToken)
-                // profile = UserProfile.init(userId: user, fullName: Any)
-                //UserProfile
-                //self.ref.child("users").setValue(profile)
+                let profileName = user?.displayName
+                let name = [profileName]
+                self.ref.setValue(name)
             })
             
             performSegue(withIdentifier: "loginSegue", sender: self)
