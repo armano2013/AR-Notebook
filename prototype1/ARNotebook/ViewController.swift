@@ -22,6 +22,52 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var menu: UIButton!
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     
+    ///mock text functions
+    func createTextNode(text: SCNText) -> SCNNode {
+        let material = SCNMaterial()
+        
+        material.diffuse.contents = UIColor.red
+        
+        text.materials = [material]
+        let node = SCNNode();
+        node.geometry = text
+        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
+        node.position = SCNVector3(0.01, 0.01, -0.01)
+        
+        return node;
+    }
+    @IBAction func addText(_ sender: Any) {
+        let page = currentPageNode
+        let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+        
+       // text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 100, height: 10))
+        //text.isWrapped = true
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.red
+        text.materials = [material]
+        let node = SCNNode()
+        node.geometry = text
+        node.scale = SCNVector3Make(0.01, 0.01, 0.01)
+        
+        /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
+         let (min, max) = node.boundingBox
+        
+        let dx = min.x + 0.5 * (max.x - min.x)
+        let dy = min.y + 0.5 * (max.y - min.y)
+        let dz = min.z + 0.5 * (max.z - min.z)
+        node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+        */
+        node.position = SCNVector3(-0.7, 0.0, 0.01)
+        page?.addChildNode(node)
+    }
+    func getClipboard() -> String{
+        let pasteboard: String? = UIPasteboard.general.string
+        if let string = pasteboard {
+            return string
+            //update database here
+        }
+        return "No String Found on Clipboard"
+    }
     
     //mock add pages //
     @IBAction func addPage(_ sender: Any) {
