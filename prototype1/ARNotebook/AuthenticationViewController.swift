@@ -59,6 +59,7 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
                     }
                     print("successfull")
                 })
+                
             })
             
             performSegue(withIdentifier: "loginSegue", sender: self)
