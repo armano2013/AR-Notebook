@@ -27,7 +27,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBAction func addPage(_ sender: Any) {
         if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
             //gemoetry to figure out the size of the book placed //
-            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.01, chamferRadius: 0.0))
+            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
             
             if(pages.count % 2 == 0){
@@ -42,8 +42,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y - offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
             pages.append(pageNode)
+            pageNode.name = String(pages.count - 1) //minus one so 0 index array
             currentPageNode = pageNode
-            pageNode.name = String(pages.count)
             bookNode.addChildNode(pageNode)
         }
     }
@@ -70,24 +70,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     //page turns
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
-        if (pages.count > 1 && Int((currentPageNode?.name)!)! > 1) {
-            print("right swipe loop")
-            let previous = Int((currentPageNode?.name)!)! - 1
-            let turnPage = pages[previous]
-            turnPage.position = SCNVector3(0.01, 0.01, -0.01)
-            bookNode?.replaceChildNode(currentPageNode!, with:turnPage)
-            currentPageNode = turnPage
+        if (pages.count > 1 && Int((currentPageNode?.name)!)! > 0) {
+                let i = Int((currentPageNode?.name)!)
+                let previous = i! - 1;
+                print(previous)
+                let turnPage = pages[previous]
+                currentPageNode?.isHidden = true;
+                currentPageNode = turnPage
         }
     }
     
     @IBAction func leftSwipe(_ sender: Any) {
            //if there is more than one page and the current page node is the last one in the array turn the page forward
-        if (pages.count > 1 && (Int((currentPageNode?.name)!) - 1! < Int(pages.count))) {
-            print("left swipe loop")
-            let previous = Int((currentPageNode?.name)!)! + 1
+        if (pages.count > 1 && ((Int((currentPageNode?.name)!)!) < Int(pages.count - 1))) {
+            let i = Int((currentPageNode?.name)!)
+            let previous = i! + 1;
             let turnPage = pages[previous]
-            turnPage.position = SCNVector3(0.01, 0.01, -0.01)
-            bookNode?.replaceChildNode(currentPageNode!, with:turnPage)
+            turnPage.isHidden = false
             currentPageNode = turnPage
         }
     }
