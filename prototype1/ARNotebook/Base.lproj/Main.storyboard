@@ -37,6 +37,11 @@
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7rB-xZ-A2i">
                                 <rect key="frame" x="0.0" y="0.0" width="386" height="714"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="YTD-NP-XBO" appends="YES" id="tyP-f4-XPl"/>
+                                    <outletCollection property="gestureRecognizers" destination="501-9a-cgW" appends="YES" id="cNr-nF-ZuY"/>
+                                </connections>
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bbd-ET-Ljj">
                                 <rect key="frame" x="285" y="577" width="50" height="50"/>
@@ -54,7 +59,7 @@
                                 <state key="normal" image="delete"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Dg-KQ-Jh2">
-                                <rect key="frame" x="162" y="577" width="50" height="50"/>
+                                <rect key="frame" x="162.5" y="577" width="50" height="50"/>
                                 <state key="normal" image="add"/>
                                 <connections>
                                     <segue destination="db3-xQ-AWA" kind="presentation" modalPresentationStyle="overCurrentContext" id="97G-j6-BVz"/>
@@ -92,6 +97,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="right" id="YTD-NP-XBO">
+                    <connections>
+                        <action selector="rightSwipe:" destination="BYZ-38-t0r" id="DVd-4v-oGh"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="left" id="501-9a-cgW">
+                    <connections>
+                        <action selector="leftSwipe:" destination="BYZ-38-t0r" id="k4b-wu-EVO"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="669.60000000000002" y="31.934032983508249"/>
         </scene>
@@ -229,16 +244,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qvv-Ec-SaT" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qvv-Ec-SaT" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
                                 <rect key="frame" x="127" y="442" width="120" height="175"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dcQ-P3-4lC">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dcQ-P3-4lC">
                                         <rect key="frame" x="32" y="105" width="57" height="30"/>
                                         <state key="normal" title="Temp 2">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iRo-OW-wZM">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iRo-OW-wZM">
                                         <rect key="frame" x="32" y="45" width="57" height="30"/>
                                         <state key="normal" title="Temp 1">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -262,6 +277,12 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Qvv-Ec-SaT" firstAttribute="centerX" secondItem="Jq5-7B-0mx" secondAttribute="centerX" id="2n8-pS-0sY"/>
+                            <constraint firstItem="Qvv-Ec-SaT" firstAttribute="leading" secondItem="YUf-o7-iG8" secondAttribute="leading" constant="127" id="79G-K1-3EM"/>
+                            <constraint firstItem="YUf-o7-iG8" firstAttribute="bottom" secondItem="Qvv-Ec-SaT" secondAttribute="bottom" constant="50" id="cVr-Ys-AN4"/>
+                            <constraint firstItem="Qvv-Ec-SaT" firstAttribute="top" secondItem="YUf-o7-iG8" secondAttribute="top" constant="422" id="hfq-Sy-qtQ"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="YUf-o7-iG8"/>
                     </view>
                 </viewController>
@@ -373,14 +394,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bOf-Fm-yfC" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bOf-Fm-yfC" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
                                 <rect key="frame" x="127" y="456" width="120" height="175"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vak-jp-NxG">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vak-jp-NxG">
                                         <rect key="frame" x="37" y="8" width="46" height="30"/>
                                         <state key="normal" title="Button"/>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9eO-VH-VDV">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9eO-VH-VDV">
                                         <rect key="frame" x="37" y="72" width="46" height="30"/>
                                         <state key="normal" title="Button"/>
                                     </button>
@@ -408,6 +429,7 @@
                         <constraints>
                             <constraint firstItem="bOf-Fm-yfC" firstAttribute="leading" secondItem="AOe-x4-4Fj" secondAttribute="leading" constant="127" id="5mO-Z5-ZQB"/>
                             <constraint firstItem="AOe-x4-4Fj" firstAttribute="trailing" secondItem="bOf-Fm-yfC" secondAttribute="trailing" constant="128" id="KVk-2f-vPL"/>
+                            <constraint firstItem="bOf-Fm-yfC" firstAttribute="top" secondItem="AOe-x4-4Fj" secondAttribute="top" constant="436" id="mop-nS-9vI"/>
                             <constraint firstItem="AOe-x4-4Fj" firstAttribute="bottom" secondItem="bOf-Fm-yfC" secondAttribute="bottom" constant="36" id="o15-Qh-AOp"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="AOe-x4-4Fj"/>
