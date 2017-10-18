@@ -14,9 +14,7 @@ import FirebaseDatabase
 
 class AuthenticationViewController: UIViewController, LoginButtonDelegate {
     
-    
     func loginButtonDidLogOut(_ loginButton: LoginButton) {
-        
     }
     
     var ref: DatabaseReference!
@@ -26,11 +24,14 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        
         let FBLogin = LoginButton(readPermissions: [.publicProfile])
         FBLogin.center = view.center
         view.addSubview(FBLogin)
         FBLogin.delegate = self as LoginButtonDelegate
+        
         ref = Database.database().reference()
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -50,8 +51,13 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
                     print("error: \(describing: error?.localizedDescription)")
                     return
                 }
-            })
 
+                GraphRequest.init(graphPath: "me", accessToken: accessToken)
+                // profile = UserProfile.init(userId: user, fullName: Any)
+                //UserProfile
+                //self.ref.child("users").setValue(profile)
+            })
+            
             performSegue(withIdentifier: "loginSegue", sender: self)
         default:
             break
