@@ -22,6 +22,58 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var menu: UIButton!
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     
+    ///mock text functions
+    func createTextNode(text: SCNText) -> SCNNode {
+        let material = SCNMaterial()
+        
+        material.diffuse.contents = UIColor.red
+        
+        text.materials = [material]
+        let node = SCNNode();
+        node.geometry = text
+        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
+        node.position = SCNVector3(0.01, 0.01, -0.01)
+        
+        return node;
+    }
+    @IBAction func addText(_ sender: Any) {
+        let page = currentPageNode
+        let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+        
+      //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
+        text.isWrapped = true
+        let material = SCNMaterial()
+        if(pages.count % 2 == 0){
+            material.diffuse.contents = UIColor.black
+        }
+        else {
+            material.diffuse.contents = UIColor.blue
+        }
+        text.materials = [material]
+        let node = SCNNode()
+        node.geometry = text
+        node.scale = SCNVector3Make(0.01, 0.01, 0.01)
+        
+        /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
+         let (min, max) = node.boundingBox
+        
+        let dx = min.x + 0.5 * (max.x - min.x)
+        let dy = min.y + 0.5 * (max.y - min.y)
+        let dz = min.z + 0.5 * (max.z - min.z)
+        node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+        */
+        node.position = SCNVector3(-0.7, 0.0, 0.05)
+        //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
+        page?.addChildNode(node)
+    }
+    func getClipboard() -> String{
+        let pasteboard: String? = UIPasteboard.general.string
+        if let string = pasteboard {
+            return string
+            //update database here
+        }
+        return "No String Found on Clipboard"
+    }
     
     //mock add pages //
     @IBAction func addPage(_ sender: Any) {
@@ -38,7 +90,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             }
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //issues with y position here, the page isnt placed right ontop of the book.
-            let offset = Float(pages.count) * Float(0.1);
+            let offset = Float(pages.count) * Float(0.01);
+            //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
             pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y - offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
             pages.append(pageNode)
@@ -73,7 +126,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         if (pages.count > 1 && Int((currentPageNode?.name)!)! > 0) {
                 let i = Int((currentPageNode?.name)!)
                 let previous = i! - 1;
-                print(previous)
                 let turnPage = pages[previous]
                 currentPageNode?.isHidden = true;
                 currentPageNode = turnPage

@@ -73,6 +73,14 @@
                                     <action selector="addPage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qqg-9b-4RJ"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gib-DC-2KC">
+                                <rect key="frame" x="63" y="387" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Text"/>
+                                <connections>
+                                    <action selector="addText:" destination="BYZ-38-t0r" eventType="touchUpInside" id="clf-TU-FQu"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
