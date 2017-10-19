@@ -25,7 +25,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eK5-iH-ANM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-711" y="32"/>
+            <point key="canvasLocation" x="-711.20000000000005" y="31.934032983508249"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -100,7 +100,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="menu" destination="6Dg-KQ-Jh2" id="g42-1f-2Ou"/>
+                        <outlet property="menu" destination="6Dg-KQ-Jh2" id="L2O-ag-3bm"/>
                         <outlet property="sceneView" destination="7rB-xZ-A2i" id="KUY-j7-7m4"/>
                     </connections>
                 </viewController>
@@ -260,12 +260,18 @@
                                         <state key="normal" title="Temp 2">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
+                                        <connections>
+                                            <segue destination="qXQ-Gx-K79" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="GEQ-B4-CRX"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iRo-OW-wZM">
                                         <rect key="frame" x="32" y="45" width="57" height="30"/>
                                         <state key="normal" title="Temp 1">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
+                                        <connections>
+                                            <segue destination="qXQ-Gx-K79" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="yQw-S4-cAL"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -295,6 +301,7 @@
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z6h-qX-1nf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="qXQ-Gx-K79" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-644" y="1764.4677661169417"/>
         </scene>
@@ -328,7 +335,6 @@
                                         </state>
                                         <connections>
                                             <action selector="Text:" destination="ylS-d8-bpH" eventType="touchUpInside" id="Ubt-9o-ljm"/>
-                                            <segue destination="Ew9-Ja-XIM" kind="presentation" modalPresentationStyle="overCurrentContext" id="Shl-fy-Y8r"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JHe-Nn-Rda">
@@ -357,9 +363,11 @@
                         <outlet property="clipboard" destination="JHe-Nn-Rda" id="dTo-Ca-ddJ"/>
                         <outlet property="image" destination="iFk-Ws-onZ" id="Fyl-BD-9fh"/>
                         <outlet property="text" destination="37A-Lv-PuS" id="8Z0-9k-sxf"/>
+                        <segue destination="fsJ-kF-Ing" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="7Ak-qc-lx4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mJ6-ff-Ffs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="fsJ-kF-Ing" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1768.8" y="906.29685157421295"/>
         </scene>
@@ -379,6 +387,7 @@
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <action selector="textField:" destination="Ew9-Ja-XIM" eventType="editingDidEnd" id="il5-N6-LTe"/>
+                                    <segue destination="ZiT-vW-dz5" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="17v-hG-IAy"/>
                                 </connections>
                             </textField>
                         </subviews>
@@ -388,9 +397,11 @@
                     <connections>
                         <outlet property="text" destination="QeC-6v-JKx" id="VQ3-Hu-EQa"/>
                         <outlet property="userTextInput" destination="QeC-6v-JKx" id="PJh-yG-gTP"/>
+                        <segue destination="ZiT-vW-dz5" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="dhh-KY-46k"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QoV-xL-1LC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="ZiT-vW-dz5" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2752.8000000000002" y="905.3973013493254"/>
         </scene>
@@ -446,20 +457,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6uu-HO-oJY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1765.5999999999999" y="31.934032983508249"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="pwN-YV-lt6">
-            <objects>
-                <viewController id="bAe-CG-Hgd" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="TNW-Eu-fCa">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="zWi-KQ-pns"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="987-ye-KSq" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
         </scene>
     </scenes>
     <resources>

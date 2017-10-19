@@ -1,21 +1,25 @@
 //
-//  textViewController.swift
-//  ARNotebook
+//  Final.swift
+//  passBackText
 //
-//  Created by Denise Green on 10/16/17.
-//  Copyright © 2017 Artur Bushi. All rights reserved.
+//  Created by Denise Green on 10/18/17.
+//  Copyright © 2017 Darion Thompson. All rights reserved.
 //
 
 import UIKit
 
+protocol finalDelegate {
+    func finishPassing (string :String )
+}
 
-class textViewController: UIViewController,UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate {
-
+class Final: UIViewController {
     
-    @IBOutlet weak var userTextInput: UITextField!
+    @IBOutlet weak var passData: UIButton!
+    
+    var delegate : finalDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
-         userTextInput.delegate = self as? UITextFieldDelegate
+
         // Do any additional setup after loading the view.
     }
 
@@ -23,16 +27,11 @@ class textViewController: UIViewController,UITextFieldDelegate, UINavigationCont
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // this ends the key boards
-        self.view.endEditing(true)
+    
+    @IBAction func dataPassed(_ sender: Any) {
+        delegate?.finishPassing(string: "string recieved")
     }
     
-    
-    func textFieldShouldReturn(_ text: UITextField) -> Bool{
-        userTextInput.resignFirstResponder()
-        return true
-    }
     /*
     // MARK: - Navigation
 

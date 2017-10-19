@@ -69,7 +69,7 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
     }
     
 
-    
+
     
     /*
      // MARK: - Navigation
