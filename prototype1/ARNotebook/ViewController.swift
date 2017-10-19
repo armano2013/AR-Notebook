@@ -10,10 +10,9 @@ import UIKit
 import ARKit
 import FirebaseAuth
 
-class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate {
-
+class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate, imageDelegate, textDelegate {
     
-    
+   
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     var someNodes = [SCNNode]() //using this to store text nodes, remove later.
@@ -22,6 +21,61 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var menu: UIButton!
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     
+<<<<<<< Updated upstream
+=======
+    ///mock text functions
+    func createTextNode(text: SCNText) -> SCNNode {
+        let material = SCNMaterial()
+
+        material.diffuse.contents = UIColor.red
+
+        text.materials = [material]
+        let node = SCNNode();
+        node.geometry = text
+        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
+        node.position = SCNVector3(0.01, 0.01, -0.01)
+
+        return node;
+    }
+//    @IBAction func addText(_ sender: Any) {
+//        let page = currentPageNode
+//        let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+//        
+//      //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
+//        text.isWrapped = true
+//        let material = SCNMaterial()
+//        if(pages.count % 2 == 0){
+//            material.diffuse.contents = UIColor.black
+//        }
+//        else {
+//            material.diffuse.contents = UIColor.blue
+//        }
+//        text.materials = [material]
+//        let node = SCNNode()
+//        node.geometry = text
+//        node.scale = SCNVector3Make(0.01, 0.01, 0.01)
+//        
+//        /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
+//         let (min, max) = node.boundingBox
+//        
+//        let dx = min.x + 0.5 * (max.x - min.x)
+//        let dy = min.y + 0.5 * (max.y - min.y)
+//        let dz = min.z + 0.5 * (max.z - min.z)
+//        node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+//        */
+//        node.position = SCNVector3(-0.7, 0.0, 0.05)
+//        //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
+//        page?.addChildNode(node)
+//    }
+//    func getClipboard() -> String{
+//        let pasteboard: String? = UIPasteboard.general.string
+//        if let string = pasteboard {
+//            return string
+//            //update database here
+//        }
+//        return "No String Found on Clipboard"
+//    }
+>>>>>>> Stashed changes
     
     //mock add pages //
     @IBAction func addPage(_ sender: Any) {
@@ -173,6 +227,53 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             childNode.removeFromParentNode()
         }
     }
+    @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
+        //
+    }
+    func passImage(image: UIImage) {
+        //let page = currentPageNode
+         print("xcode sucks")
+        let newImage = image
+        let node = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [newImage], duration: 0)
+        node.position = SCNVector3(-0.7, 0.0, 0.05)
+        self.sceneView.scene.rootNode.addChildNode(node)
+        print("data passed")
+        
+    }
+    
+    func passingClip(string: String) {
+        let page = currentPageNode
+        let text = SCNText(string: string, extrusionDepth: 0.1)
+        
+        //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
+        text.isWrapped = true
+        let material = SCNMaterial()
+        if(pages.count % 2 == 0){
+            material.diffuse.contents = UIColor.black
+        }
+        else {
+            material.diffuse.contents = UIColor.blue
+        }
+        text.materials = [material]
+        let node = SCNNode()
+        node.geometry = text
+        node.scale = SCNVector3Make(0.01, 0.01, 0.01)
+        
+        /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
+         let (min, max) = node.boundingBox
+         
+         let dx = min.x + 0.5 * (max.x - min.x)
+         let dy = min.y + 0.5 * (max.y - min.y)
+         let dz = min.z + 0.5 * (max.z - min.z)
+         node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+         */
+        node.position = SCNVector3(-0.7, 0.0, 0.05)
+        //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
+        page?.addChildNode(node)
+        print("clipboard string recieved")
+    }
+    
     
 }
 
@@ -181,3 +282,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
 extension Int {
     var degreesToRadians: Double {return Double(self) * .pi/180}
 }
+
+
+
