@@ -10,15 +10,24 @@ import UIKit
 import ARKit
 import FirebaseAuth
 
-class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate, imageDelegate, textDelegate {
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
+
     
-   
+    @IBAction func updateText(_ sender: Any) {
+        
+    }
+    
+    @IBAction func undo(_ sender: Any) {
+    
+    }
+    
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     var someNodes = [SCNNode]() //using this to store text nodes, remove later.
     var bookNode: SCNNode?
+    let imagePicker = UIImagePickerController()
     var currentPageNode : SCNNode?
-    @IBOutlet weak var menu: UIButton!
+//    @IBOutlet weak var menu: UIButton!
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
@@ -99,6 +108,53 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
         page?.addChildNode(node)
     }
+//    @IBAction func addImage(_ sender: Any) {
+//        let imagePicker = UIImagePickerController()
+//        imagePicker.delegate = self
+//
+//        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+//        imagePicker.allowsEditing = false
+//        self.present(imagePicker, animated: true)
+//
+//    }
+//
+//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+//        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+//            //send picked image to the database
+//            let node = SCNNode()
+//            node.geometry = SCNBox(width: 0.1, height: 0.1, length: 0.001, chamferRadius: 0)
+//            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
+//            node.position = SCNVector3(0.1,0.1,0.1)
+//            sceneView.scene.rootNode.addChildNode(node)
+//        }
+//        else{
+//            //
+//        }
+//        dismiss(animated: true, completion: nil)
+//    }
+    @IBAction func chooseIMG(_ sender: Any) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        
+        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        imagePicker.allowsEditing = false
+        self.present(imagePicker, animated: true)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        let page = currentPageNode
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            //send picked image to the database
+            let node = SCNNode()
+            node.geometry = SCNBox(width: 1.4, height: 1.8, length: 0.001, chamferRadius: 0)
+            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
+            node.position = SCNVector3(-0.7,0.0, 0.05)
+            page?.addChildNode(node)
+        }
+        else{
+            //
+        }
+        dismiss(animated: true, completion: nil)
+    }
     func getClipboard() -> String{
         let pasteboard: String? = UIPasteboard.general.string
         if let string = pasteboard {
@@ -136,18 +192,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.registerGestureRecognizers()
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-        self.configuration.planeDetection = .horizontal
-        self.sceneView.session.run(configuration)
-        self.sceneView.delegate = self
+//        self.registerGestureRecognizers()
+//        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+//        self.configuration.planeDetection = .horizontal
+//        sceneView.session.run(configuration)
+//        self.sceneView.delegate = self
+//        sceneView.showsStatistics = true
+
     }
    
-    func renderNode(node: SCNNode) {
-        someNodes.append(node)
-        self.sceneView.scene.rootNode.addChildNode(node)
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -224,8 +277,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         sceneView.session.pause()
     }
     
-    
-      /*
+    /*
 
      This section will show the 'focus square' when AR Kit detects a flat surface.
      This will help users know when the can click to set a notebook object
@@ -258,18 +310,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             childNode.removeFromParentNode()
         }
     }
-    @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
-        //
-    }
+
     func passImage(image: UIImage) {
         //let page = currentPageNode
-         print("xcode sucks")
-        let newImage = image
         let node = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
-        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [newImage], duration: 0)
+        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
         node.position = SCNVector3(-0.7, 0.0, 0.05)
         self.sceneView.scene.rootNode.addChildNode(node)
-        print("data passed")
         
     }
     
@@ -304,7 +351,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         page?.addChildNode(node)
         print("clipboard string recieved")
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        /* Create a session configuration
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = .horizontal
+        
+        // Run the view's session
+        sceneView.session.run(configuration)
+    */
+                self.registerGestureRecognizers()
+                self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+                self.configuration.planeDetection = .horizontal
+                sceneView.session.run(configuration)
+                self.sceneView.delegate = self
+                sceneView.showsStatistics = true
+
+    }
     
+
     
 }
 
