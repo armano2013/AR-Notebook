@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		6DBF880E1F953ECB005C1456 /* designableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBF880D1F953ECB005C1456 /* designableView.swift */; };
-		6DF83E0F1F97EC1D004E992D /* textViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF83E0E1F97EC1D004E992D /* textViewController.swift */; };
 		89DA3783F4A25CD8BFA95048 /* Pods_ARNotebook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */; };
 		C267263C1F9551E400E6EEA1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = C267263B1F9551E300E6EEA1 /* art.scnassets */; };
 		C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C267263D1F9552A100E6EEA1 /* arScene.swift */; };
@@ -29,7 +28,6 @@
 
 /* Begin PBXFileReference section */
 		6DBF880D1F953ECB005C1456 /* designableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = designableView.swift; sourceTree = "<group>"; };
-		6DF83E0E1F97EC1D004E992D /* textViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = textViewController.swift; path = ../../../../../.Trash/textViewController.swift; sourceTree = "<group>"; };
 		7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARNotebook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82A9E091CB039DA3E9D0DA91 /* Pods-ARNotebook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARNotebook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook.debug.xcconfig"; sourceTree = "<group>"; };
 		C267263B1F9551E300E6EEA1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -111,7 +109,6 @@
 				E4CDB5121F93BE1900BBFE12 /* Main.storyboard */,
 				6DBF880D1F953ECB005C1456 /* designableView.swift */,
 				E4CDB52E1F93D64F00BBFE12 /* insertViewController.swift */,
-				6DF83E0E1F97EC1D004E992D /* textViewController.swift */,
 				E4CDB52C1F93D53700BBFE12 /* newViewController.swift */,
 				E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */,
 				E4CDB5281F93D44D00BBFE12 /* shareViewController.swift */,
@@ -284,7 +281,6 @@
 				E4CDB52B1F93D4C500BBFE12 /* addViewController.swift in Sources */,
 				E4CDB50F1F93BE1900BBFE12 /* AppDelegate.swift in Sources */,
 				E4CDB52F1F93D64F00BBFE12 /* insertViewController.swift in Sources */,
-				6DF83E0F1F97EC1D004E992D /* textViewController.swift in Sources */,
 				C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */,
 				E4CDB52D1F93D53700BBFE12 /* newViewController.swift in Sources */,
 			);
