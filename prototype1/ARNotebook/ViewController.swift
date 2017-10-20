@@ -237,7 +237,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let transform = hitTestResult.worldTransform
         let thirdColumn = transform.columns.3
         node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
-        node.geometry?.firstMaterial?.diffuse.contents = UIColor.red
         bookNode = node //assign the book node to the global variable for book node
         //check if another book object exists
         if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
