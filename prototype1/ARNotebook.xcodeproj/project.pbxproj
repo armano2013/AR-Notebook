@@ -119,9 +119,9 @@
 				E4CDB51A1F93BE1900BBFE12 /* Info.plist */,
 				E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */,
 				E40171141F972716003CEB85 /* GoogleService-Info.plist */,
+				1F5A442C1F9AA917005EAB55 /* references.swift */,
 				E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */,
 				C267263B1F9551E300E6EEA1 /* art.scnassets */,
-				1F5A442C1F9AA917005EAB55 /* references.swift */,
 			);
 			path = ARNotebook;
 			sourceTree = "<group>";

@@ -19,10 +19,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
-    var someNodes = [SCNNode]() //using this to store text nodes, remove later.
     var bookNode: SCNNode?
     let imagePicker = UIImagePickerController()
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
+    var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     
     /*
      -----
@@ -70,7 +70,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     @IBAction func undo(_ sender: Any) {
-    
+        if let last = (lastNode.last){
+            last.removeFromParentNode()
+            lastNode.removeLast()
+        }
+        else {
+            print("no last")
+        }
     }
     
     var pages = [SCNNode]() //stores page nodes, can get page num from here
@@ -89,8 +95,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func addText(_ sender: Any) {
         let page = currentPageNode
         let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
-        
-
         text.isWrapped = true
         let material = SCNMaterial()
         if(pages.count % 2 == 0){
@@ -104,7 +108,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.geometry = text
         node.scale = SCNVector3Make(0.01, 0.01, 0.01)
         node.position = SCNVector3(-0.7, 0.0, 0.05)
-        page?.addChildNode(node)
+        page?.addChildNode(node) // add to screen
+        
+        lastNode.append(node) //add for undo
         
         /*
          
@@ -231,8 +237,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let transform = hitTestResult.worldTransform
         let thirdColumn = transform.columns.3
         node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
-        node.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        someNodes.append(node);
+        bookNode = node //assign the book node to the global variable for book node
         //check if another book object exists
         if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
             //this means theres already a book placed in the scene.. what do we want to do here??
@@ -244,7 +249,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-   
     /*
 
      This section will show the 'focus square' when AR Kit detects a flat surface.
@@ -286,38 +290,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.position = SCNVector3(-0.7, 0.0, 0.05)
         self.sceneView.scene.rootNode.addChildNode(node)
         
-    }
-    
-    func passingClip(string: String) {
-        let page = currentPageNode
-        let text = SCNText(string: string, extrusionDepth: 0.1)
-        
-        //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
-        text.isWrapped = true
-        let material = SCNMaterial()
-        if(pages.count % 2 == 0){
-            material.diffuse.contents = UIColor.black
-        }
-        else {
-            material.diffuse.contents = UIColor.blue
-        }
-        text.materials = [material]
-        let node = SCNNode()
-        node.geometry = text
-        node.scale = SCNVector3Make(0.01, 0.01, 0.01)
-        
-        /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
-         let (min, max) = node.boundingBox
-         
-         let dx = min.x + 0.5 * (max.x - min.x)
-         let dy = min.y + 0.5 * (max.y - min.y)
-         let dz = min.z + 0.5 * (max.z - min.z)
-         node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
-         */
-        node.position = SCNVector3(-0.7, 0.0, 0.05)
-        //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
-        page?.addChildNode(node)
-        print("clipboard string recieved")
     }
 }
 
