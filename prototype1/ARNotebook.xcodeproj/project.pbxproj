@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F5A442D1F9AA917005EAB55 /* references.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A442C1F9AA917005EAB55 /* references.swift */; };
 		6DBF880E1F953ECB005C1456 /* designableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBF880D1F953ECB005C1456 /* designableView.swift */; };
 		89DA3783F4A25CD8BFA95048 /* Pods_ARNotebook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */; };
 		C267263C1F9551E400E6EEA1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = C267263B1F9551E300E6EEA1 /* art.scnassets */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F5A442C1F9AA917005EAB55 /* references.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = references.swift; sourceTree = "<group>"; };
 		6DBF880D1F953ECB005C1456 /* designableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = designableView.swift; sourceTree = "<group>"; };
 		7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARNotebook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82A9E091CB039DA3E9D0DA91 /* Pods-ARNotebook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARNotebook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook.debug.xcconfig"; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				E40171141F972716003CEB85 /* GoogleService-Info.plist */,
 				E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */,
 				C267263B1F9551E300E6EEA1 /* art.scnassets */,
+				1F5A442C1F9AA917005EAB55 /* references.swift */,
 			);
 			path = ARNotebook;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 				6DBF880E1F953ECB005C1456 /* designableView.swift in Sources */,
 				E4CDB5111F93BE1900BBFE12 /* ViewController.swift in Sources */,
 				E4CDB5251F93C25B00BBFE12 /* AuthenticationViewController.swift in Sources */,
+				1F5A442D1F9AA917005EAB55 /* references.swift in Sources */,
 				E4CDB5291F93D44D00BBFE12 /* shareViewController.swift in Sources */,
 				E4CDB52B1F93D4C500BBFE12 /* addViewController.swift in Sources */,
 				E4CDB50F1F93BE1900BBFE12 /* AppDelegate.swift in Sources */,

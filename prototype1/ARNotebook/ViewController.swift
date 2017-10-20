@@ -11,7 +11,59 @@ import ARKit
 import FirebaseAuth
 
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
-
+    
+    /*
+     -----
+     Global Variables
+     -----
+     */
+    @IBOutlet weak var sceneView: ARSCNView!
+    let configuration = ARWorldTrackingConfiguration()
+    var someNodes = [SCNNode]() //using this to store text nodes, remove later.
+    var bookNode: SCNNode?
+    let imagePicker = UIImagePickerController()
+    var currentPageNode : SCNNode? //points to the current page, assigned in page turns
+    
+    /*
+     -----
+     Generic Session Setup
+     -----
+     */
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Pause the view's session
+        sceneView.session.pause()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        /// Create a session configuration
+         self.registerGestureRecognizers()
+         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+         // Run the view's session
+        self.configuration.planeDetection = .horizontal
+        sceneView.session.run(configuration)
+        self.sceneView.delegate = self
+    }
+    func registerGestureRecognizers() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        self.sceneView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    /*
+     -----
+     Main Story - View Controller Buttons
+     -----
+     */
     
     @IBAction func updateText(_ sender: Any) {
         
@@ -21,13 +73,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     }
     
-    @IBOutlet weak var sceneView: ARSCNView!
-    let configuration = ARWorldTrackingConfiguration()
-    var someNodes = [SCNNode]() //using this to store text nodes, remove later.
-    var bookNode: SCNNode?
-    let imagePicker = UIImagePickerController()
-    var currentPageNode : SCNNode?
-//    @IBOutlet weak var menu: UIButton!
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
@@ -40,49 +85,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.position = SCNVector3(0.01, 0.01, -0.01)
         return node;
     }
-//    @IBAction func addText(_ sender: Any) {
-//        let page = currentPageNode
-//        let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
-//        
-//      //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
-//        text.isWrapped = true
-//        let material = SCNMaterial()
-//        if(pages.count % 2 == 0){
-//            material.diffuse.contents = UIColor.black
-//        }
-//        else {
-//            material.diffuse.contents = UIColor.blue
-//        }
-//        text.materials = [material]
-//        let node = SCNNode()
-//        node.geometry = text
-//        node.scale = SCNVector3Make(0.01, 0.01, 0.01)
-//        
-//        /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
-//         let (min, max) = node.boundingBox
-//        
-//        let dx = min.x + 0.5 * (max.x - min.x)
-//        let dy = min.y + 0.5 * (max.y - min.y)
-//        let dz = min.z + 0.5 * (max.z - min.z)
-//        node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
-//        */
-//        node.position = SCNVector3(-0.7, 0.0, 0.05)
-//        //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
-//        page?.addChildNode(node)
-//    }
-//    func getClipboard() -> String{
-//        let pasteboard: String? = UIPasteboard.general.string
-//        if let string = pasteboard {
-//            return string
-//            //update database here
-//        }
-//        return "No String Found on Clipboard"
-//    }
+
     @IBAction func addText(_ sender: Any) {
         let page = currentPageNode
         let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
         
-      //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
+
         text.isWrapped = true
         let material = SCNMaterial()
         if(pages.count % 2 == 0){
@@ -95,43 +103,26 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let node = SCNNode()
         node.geometry = text
         node.scale = SCNVector3Make(0.01, 0.01, 0.01)
+        node.position = SCNVector3(-0.7, 0.0, 0.05)
+        page?.addChildNode(node)
         
-        /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
+        /*
+         
+         Trying to contain the text to the page
+         ------
+         
+         credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
          let (min, max) = node.boundingBox
-        
+              //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
         let dx = min.x + 0.5 * (max.x - min.x)
         let dy = min.y + 0.5 * (max.y - min.y)
         let dz = min.z + 0.5 * (max.z - min.z)
         node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
         */
-        node.position = SCNVector3(-0.7, 0.0, 0.05)
+        
         //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
-        page?.addChildNode(node)
     }
-//    @IBAction func addImage(_ sender: Any) {
-//        let imagePicker = UIImagePickerController()
-//        imagePicker.delegate = self
-//
-//        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
-//        imagePicker.allowsEditing = false
-//        self.present(imagePicker, animated: true)
-//
-//    }
-//
-//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-//        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-//            //send picked image to the database
-//            let node = SCNNode()
-//            node.geometry = SCNBox(width: 0.1, height: 0.1, length: 0.001, chamferRadius: 0)
-//            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
-//            node.position = SCNVector3(0.1,0.1,0.1)
-//            sceneView.scene.rootNode.addChildNode(node)
-//        }
-//        else{
-//            //
-//        }
-//        dismiss(animated: true, completion: nil)
-//    }
+
     @IBAction func chooseIMG(_ sender: Any) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -163,8 +154,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
         return "No String Found on Clipboard"
     }
-
-    //mock add pages //
+    /*
+     -----
+     Add Pages
+     -----
+     */
     @IBAction func addPage(_ sender: Any) {
         if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
             //gemoetry to figure out the size of the book placed //
@@ -189,23 +183,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             bookNode.addChildNode(pageNode)
         }
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-//        self.registerGestureRecognizers()
-//        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-//        self.configuration.planeDetection = .horizontal
-//        sceneView.session.run(configuration)
-//        self.sceneView.delegate = self
-//        sceneView.showsStatistics = true
-
-    }
-   
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+  
     //page turns
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
@@ -230,11 +208,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     
-    func registerGestureRecognizers() {
-         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
-         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
-    }
-   
+
     @objc func tapped(sender: UITapGestureRecognizer) {
         let sceneView = sender.view as! ARSCNView
         let tapLocation = sender.location(in: sceneView)
@@ -270,13 +244,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        // Pause the view's session
-        sceneView.session.pause()
-    }
-    
+   
     /*
 
      This section will show the 'focus square' when AR Kit detects a flat surface.
@@ -351,27 +319,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         page?.addChildNode(node)
         print("clipboard string recieved")
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        /* Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = .horizontal
-        
-        // Run the view's session
-        sceneView.session.run(configuration)
-    */
-                self.registerGestureRecognizers()
-                self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-                self.configuration.planeDetection = .horizontal
-                sceneView.session.run(configuration)
-                self.sceneView.delegate = self
-                sceneView.showsStatistics = true
-
-    }
-    
-
-    
 }
 
 //converts degrees to radians, since objects are oriented according to radians
