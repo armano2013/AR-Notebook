@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -50,8 +50,8 @@
                                     <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dGQ-F1-UVK"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gib-DC-2KC">
-                                <rect key="frame" x="289" y="691" width="67" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gib-DC-2KC">
+                                <rect key="frame" x="328" y="691" width="67" height="30"/>
                                 <state key="normal" title="Clipboard"/>
                                 <connections>
                                     <action selector="addText:" destination="BYZ-38-t0r" eventType="touchUpInside" id="clf-TU-FQu"/>
@@ -64,24 +64,24 @@
                                     <action selector="chooseIMG:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qNN-Ej-uC9"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BAC-4y-d12">
-                                <rect key="frame" x="163" y="691" width="51" height="30"/>
-                                <state key="normal" title="Update"/>
-                                <connections>
-                                    <action selector="updateText:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lj5-Ib-squ"/>
-                                </connections>
-                            </button>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DyU-jB-arc">
                                 <rect key="frame" x="95" y="652" width="224" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXA-sQ-EEB">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXA-sQ-EEB">
                                 <rect key="frame" x="20" y="691" width="69" height="30"/>
                                 <state key="normal" title="New Page"/>
                                 <connections>
                                     <action selector="addPage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qqg-9b-4RJ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BAC-4y-d12">
+                                <rect key="frame" x="174" y="401" width="51" height="30"/>
+                                <state key="normal" title="Update"/>
+                                <connections>
+                                    <action selector="updateText:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lj5-Ib-squ"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -92,11 +92,9 @@
                             <constraint firstItem="eXA-sQ-EEB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="6Ed-Yp-OaR"/>
                             <constraint firstItem="BAC-4y-d12" firstAttribute="top" secondItem="DyU-jB-arc" secondAttribute="bottom" constant="9" id="AYQ-Cp-OLJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eXA-sQ-EEB" secondAttribute="bottom" constant="15" id="Gpf-rW-KTd"/>
-                            <constraint firstItem="BAC-4y-d12" firstAttribute="leading" secondItem="eXA-sQ-EEB" secondAttribute="trailing" constant="80" id="Hha-cT-562"/>
                             <constraint firstAttribute="trailing" secondItem="7rB-xZ-A2i" secondAttribute="trailing" id="IzJ-hZ-F29"/>
                             <constraint firstItem="DyU-jB-arc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="95" id="MK0-Dn-OSa"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="BAC-4y-d12" secondAttribute="bottom" constant="15" id="MMa-O7-XdO"/>
-                            <constraint firstItem="BAC-4y-d12" firstAttribute="top" secondItem="DyU-jB-arc" secondAttribute="bottom" constant="9" id="NTl-z2-8rJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="gib-DC-2KC" secondAttribute="bottom" constant="15" id="NsI-l2-KKP"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="gib-DC-2KC" secondAttribute="bottom" constant="15" id="QnD-65-Nui"/>
                             <constraint firstItem="gib-DC-2KC" firstAttribute="top" secondItem="M7K-pd-cUn" secondAttribute="bottom" constant="10" id="T23-XR-5p9"/>
@@ -106,23 +104,21 @@
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="f19-dl-EFu"/>
                             <constraint firstAttribute="bottom" secondItem="7rB-xZ-A2i" secondAttribute="bottom" id="fXS-g4-fbN"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tYF-ND-GVF" secondAttribute="trailing" constant="40" id="fsT-1d-TYR"/>
-                            <constraint firstItem="BAC-4y-d12" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gfi-5p-JYt"/>
                             <constraint firstItem="M7K-pd-cUn" firstAttribute="leading" secondItem="DyU-jB-arc" secondAttribute="trailing" constant="22" id="ifb-sm-Omt"/>
                             <constraint firstItem="eXA-sQ-EEB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="jHf-mC-xZP"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="M7K-pd-cUn" secondAttribute="trailing" constant="19" id="mD2-nr-qDn"/>
-                            <constraint firstItem="BAC-4y-d12" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="o7u-aZ-huj"/>
                             <constraint firstItem="M7K-pd-cUn" firstAttribute="leading" secondItem="DyU-jB-arc" secondAttribute="trailing" constant="22" id="peD-K3-Ega"/>
                             <constraint firstItem="DyU-jB-arc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="95" id="pqe-mp-k7b"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="qbf-F0-zVh"/>
                             <constraint firstItem="DyU-jB-arc" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="u5y-C7-5l1"/>
                             <constraint firstItem="tYF-ND-GVF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="vZp-IR-hua"/>
-                            <constraint firstItem="BAC-4y-d12" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="y42-eE-VK8"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="yPj-lQ-BXe"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="gib-DC-2KC" secondAttribute="trailing" constant="19" id="yiU-nc-zrQ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="UserInputText" destination="DyU-jB-arc" id="TEG-u4-9Db"/>
                         <outlet property="sceneView" destination="7rB-xZ-A2i" id="KUY-j7-7m4"/>
                     </connections>
                 </viewController>
@@ -138,7 +134,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="669.60000000000002" y="31.934032983508249"/>
+            <point key="canvasLocation" x="643" y="-420"/>
         </scene>
         <!--New View Controller-->
         <scene sceneID="6eN-b8-ap8">

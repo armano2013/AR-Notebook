@@ -17,6 +17,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Global Variables
      -----
      */
+    
+    @IBOutlet weak var UserInputText: UITextField!
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     var someNodes = [SCNNode]() //using this to store text nodes, remove later.
@@ -45,7 +47,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        UserInputText.delegate = self as? UITextFieldDelegate
         /// Create a session configuration
          self.registerGestureRecognizers()
          self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -66,14 +68,38 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func updateText(_ sender: Any) {
-        
+        let keyText = SCNText(string: UserInputText.text, extrusionDepth: 1.0)
+        let node = createTextNode(text: keyText)
+        renderNode(node: node)
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        updateText(self)
+        textField.resignFirstResponder()
+        return true
+    }
+    //this function will shutdown the keyboard when touch else where
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // this ends the key boards
+        self.view.endEditing(true)
     }
     
     @IBAction func undo(_ sender: Any) {
     
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let startingLength = UserInputText.text?.characters.count ?? 0
+        let lengthToAdd = string.characters.count
+        let lengthToReplace = range.length
+        
+        let newLength = startingLength + lengthToAdd - lengthToReplace
+        
+        return newLength <= 140
+    }
+    
+    
     var pages = [SCNNode]() //stores page nodes, can get page num from here
+    
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
         
@@ -84,6 +110,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
         node.position = SCNVector3(0.01, 0.01, -0.01)
         return node;
+    }
+    func renderNode(node: SCNNode) {
+        someNodes.append(node)
+        sceneView.scene.rootNode.addChildNode(node)
     }
 
     @IBAction func addText(_ sender: Any) {
