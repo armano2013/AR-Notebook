@@ -9,6 +9,7 @@
 import UIKit
 import ARKit
 import FirebaseAuth
+import FirebaseDatabase
 
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
     
@@ -27,13 +28,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     
+    var ref: DatabaseReference!
+    
     /*
      -----
      Generic Session Setup
      -----
      */
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
     }
     
     override func didReceiveMemoryWarning() {
@@ -71,6 +76,25 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func updateText(_ sender: Any) {
         let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
         let node = createTextNode(text: keyText)
+        let dbString = UserInputText.text
+        
+        let userID = Auth.auth().currentUser?.uid
+        ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            let textString = ["name":dbString]
+            let childUpdates = ["users/\(userID)/notebook": textString]
+            
+            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                if  err != nil{
+                    print(err as Any)
+                    return
+                }
+                print("text update successful")
+            })
+            
+        }) { (error) in
+            print(error.localizedDescription)
+        }
         renderNode(node: node)
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
