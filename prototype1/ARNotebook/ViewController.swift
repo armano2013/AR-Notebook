@@ -8,6 +8,7 @@
 
 import UIKit
 import ARKit
+import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
@@ -28,7 +29,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     
     var ref: DatabaseReference!
-    
+    var myStorage: Storage!
+
+    var storageRef: StorageReference!
     /*
      -----
      Generic Session Setup
@@ -38,6 +41,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     override func viewDidLoad() {
         super.viewDidLoad()
         ref = Database.database().reference()
+        myStorage = Storage.storage()
+        storageRef = myStorage?.reference()
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -206,8 +212,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
 
     @IBAction func chooseIMG(_ sender: Any) {
-        //make sure there is a book open
-        if bookNode != nil {
+       if bookNode != nil {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             
@@ -223,17 +228,50 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let page = currentPageNode { // make sure there is a page on the notebook
-            if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-                //send picked image to the database here
-                let node = SCNNode()
-                node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
-                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
-                node.position = SCNVector3(0,0, 0.01)
-                page.addChildNode(node)
-                dismiss(animated: true, completion: nil)
-            }
-        }
+        let page = currentPageNode
+        if let page = currentPageNode {
+          if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+              //send picked image to the database
+              let userID = String(describing: Auth.auth().currentUser?.uid)
+              let imageRef = storageRef?.child("images")
+              let fileRef = imageRef?.child((userID))
+
+              var data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
+              //normally would have your error handling; in this case we just do a return
+              let dataInfo = fileRef?.putData(data as Data, metadata: nil){
+                  (metadata, error) in guard metadata != nil else {
+
+                      print("There was an error")
+                      return}
+                  //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
+                  // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
+                  print(metadata?.downloadURLs as Any)
+                  guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
+
+                  self.ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+
+                      let urlString = ["image url":imageURL]
+                      let childUpdates = ["users/\(userID)/notebook/page": urlString]
+
+                      self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                          if  err != nil{
+                              print(err as Any)
+                              return
+                          }
+                          print("image url successful")
+                      })
+
+                  }) { (error) in
+                      print(error.localizedDescription)
+                  }
+
+              }
+             let node = SCNNode()
+            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
+            node.position = SCNVector3(0,0, 0.01)
+            page?.addChildNode(node)
+          }
         else{ //error for if there is no page
             dismiss(animated: true, completion: nil)
             let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
