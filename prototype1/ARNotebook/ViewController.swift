@@ -242,17 +242,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                   (metadata, error) in guard metadata != nil else {
 
                       print("There was an error")
-                      return}
+                      return
+                    }
+                    
+                }
                   //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
                   // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
                   print(metadata?.downloadURLs as Any)
                   guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
 
                   self.ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
-
                       let urlString = ["image url":imageURL]
                       let childUpdates = ["users/\(userID)/notebook/page": urlString]
-
                       self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                           if  err != nil{
                               print(err as Any)
@@ -261,7 +262,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                           print("image url successful")
                       })
 
-                  }) { (error) in
+                  }){ (error) in
                       print(error.localizedDescription)
                   }
 
@@ -284,6 +285,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
     }
+        
     func getClipboard() -> String{
         let pasteboard: String? = UIPasteboard.general.string
         if let string = pasteboard {
@@ -299,7 +301,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
             return ""
         }
-        //return
     }
     /*
      -----
@@ -354,9 +355,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPageNode = turnPage
         }
     }
-    
-    
-
     @objc func tapped(sender: UITapGestureRecognizer) {
         let sceneView = sender.view as! ARSCNView
         let tapLocation = sender.location(in: sceneView)
@@ -414,7 +412,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.sceneView.scene.rootNode.addChildNode(node)
 
         }
-}
+    }
     
     /*
 
@@ -459,12 +457,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         
     }
 }
-
 //converts degrees to radians, since objects are oriented according to radians
 //credit to udemy video
 extension Int {
     var degreesToRadians: Double {return Double(self) * .pi/180}
 }
-
-
-
