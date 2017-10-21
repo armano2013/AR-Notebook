@@ -17,12 +17,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Global Variables
      -----
      */
+    
+    @IBOutlet weak var UserInputText: UITextField!
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     var bookNode: SCNNode?
     let imagePicker = UIImagePickerController()
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
+    var pages = [SCNNode]() //stores page nodes, can get page num from here
     
     /*
      -----
@@ -45,7 +48,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        UserInputText.delegate = self as? UITextFieldDelegate
         /// Create a session configuration
          self.registerGestureRecognizers()
          self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -66,8 +69,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func updateText(_ sender: Any) {
-        
+        let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
+        let node = createTextNode(text: keyText)
+        renderNode(node: node)
     }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        updateText(self)
+        textField.resignFirstResponder()
+        return true
+    }
+    //this function will shutdown the keyboard when touch else where
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        // this ends the key boards
+//        self.view.endEditing(true)
+//    }
     
     @IBAction func undo(_ sender: Any) {
         if let last = (lastNode.last){
@@ -79,7 +94,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    var pages = [SCNNode]() //stores page nodes, can get page num from here
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let startingLength = UserInputText.text?.characters.count ?? 0
+        let lengthToAdd = string.characters.count
+        let lengthToReplace = range.length
+        
+        let newLength = startingLength + lengthToAdd - lengthToReplace
+        
+        return newLength <= 140
+    }
+    
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
         
@@ -88,8 +112,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let node = SCNNode();
         node.geometry = text
         node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
-        node.position = SCNVector3(0.01, 0.01, -0.01)
+        node.position = SCNVector3(-0.7, 0.0, 0.5)
         return node;
+    }
+    func renderNode(node: SCNNode) {
+        let page = currentPageNode
+        lastNode.append(node)
+        page?.addChildNode(node)
     }
 
     @IBAction func addText(_ sender: Any) {
@@ -142,9 +171,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             //send picked image to the database
             let node = SCNNode()
-            node.geometry = SCNBox(width: 1.4, height: 1.8, length: 0.001, chamferRadius: 0)
+            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
             node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
-            node.position = SCNVector3(-0.7,0.0, 0.05)
+            node.position = SCNVector3(0,0, 0.01)
             page?.addChildNode(node)
         }
         else{
@@ -179,9 +208,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //issues with y position here, the page isnt placed right ontop of the book.
-            let offset = Float(pages.count) * Float(0.01);
+           // let offset = Float(pages.count) * Float(0.01);
             //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
-            pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y - offset, bookNode.position.z)
+            pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count - 1) //minus one so 0 index array
@@ -223,12 +252,37 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.addBook(hitTestResult: hitTest.first!)
         }
     }
-    
+    //updated cover for only 2D
+//    func addBook(hitTestResult: ARHitTestResult) {
+//        let scene = SCNScene()
+//        let node = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+//        node.name = "Book"
+//
+//        let coverMaterial = SCNMaterial()
+//        coverMaterial.diffuse.contents = UIImage(named: "BookCover(Ancient)_COLOR")
+//        coverMaterial.locksAmbientWithDiffuse = true
+//        node.geometry?.firstMaterial = coverMaterial
+//        //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
+//        let transform = hitTestResult.worldTransform
+//        let thirdColumn = transform.columns.3
+//        node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
+//        bookNode = node //assign the book node to the global variable for book node
+//        //check if another book object exists
+//        if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
+//            //this means theres already a book placed in the scene.. what do we want to do here??
+//            //user should only have one book open at a time.
+//        }
+//        else{
+//            self.sceneView.scene.rootNode.addChildNode(node)
+//
+//        }
+    //}
+    // original 3d model
     func addBook(hitTestResult: ARHitTestResult) {
         let scene = SCNScene(named: "art.scnassets/Book.dae")
         let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
         node.name = "Book"
-        
+
         let coverMaterial = SCNMaterial()
         coverMaterial.diffuse.contents = UIImage(named: "BookCover(Ancient)_COLOR")
         coverMaterial.locksAmbientWithDiffuse = true
@@ -245,9 +299,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
         else{
             self.sceneView.scene.rootNode.addChildNode(node)
-            
+
         }
-    }
+}
     
     /*
 
@@ -282,7 +336,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             childNode.removeFromParentNode()
         }
     }
-
+// functions to pass the image through to the VIEW CONTROLLER
     func passImage(image: UIImage) {
         //let page = currentPageNode
         let node = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
