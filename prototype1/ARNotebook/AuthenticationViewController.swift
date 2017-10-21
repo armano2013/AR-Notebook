@@ -60,6 +60,8 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
                     print("successfull")
                 })
                 
+                userName  = user?.displayName
+                
             })
             
             performSegue(withIdentifier: "loginSegue", sender: self)
@@ -83,4 +85,5 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
     
 }
 
-
+//FB Name Global
+var userName : String?

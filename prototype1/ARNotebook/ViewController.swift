@@ -9,9 +9,9 @@
 import UIKit
 import ARKit
 import FirebaseAuth
+import FirebaseDatabase
 
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
-    
     /*
      -----
      Global Variables
@@ -27,13 +27,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     
+    var ref: DatabaseReference!
+    
     /*
      -----
      Generic Session Setup
      -----
      */
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
     }
     
     override func didReceiveMemoryWarning() {
@@ -69,9 +73,36 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func updateText(_ sender: Any) {
-        let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
-        let node = createTextNode(text: keyText)
-        renderNode(node: node)
+        if !UserInputText.text?.isEmpty {
+            let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
+            let node = createTextNode(text: keyText)
+            renderNode(node: node)
+                  // Uploading text to database
+            let dbString = UserInputText.text
+            let userID = Auth.auth().currentUser?.uid
+            ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in 
+            let textString = ["Update Text":dbString]
+            let childUpdates = ["users/\(userID)/notebook/page": textString]
+            
+            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                if  err != nil{
+                    print(err as Any)
+                    return
+                }
+                print("text update successful")
+            })
+            
+        }){ (error) in
+            print(error.localizedDescription)
+          }
+        }
+        else {
+            let alertController = UIAlertController(title: "Error", message: "You did not enter any text.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         updateText(self)
@@ -79,10 +110,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         return true
     }
     //this function will shutdown the keyboard when touch else where
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        // this ends the key boards
-//        self.view.endEditing(true)
-//    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // this ends the key boards
+        self.view.endEditing(true)
+    }
     
     @IBAction func undo(_ sender: Any) {
         if let last = (lastNode.last){
@@ -94,6 +125,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
+    // limit the text characters to be less than 140
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let startingLength = UserInputText.text?.characters.count ?? 0
         let lengthToAdd = string.characters.count
@@ -124,14 +156,29 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func addText(_ sender: Any) {
         let page = currentPageNode
         let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+        
+        //adding clipboard to database
+        let dbClipboard = getClipboard()
+        let userID = String(describing: Auth.auth().currentUser?.uid)
+        ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            let clipboardString = ["Update Clipboard":dbClipboard]
+            let childUpdates = ["users/\(userID)/notebook/page": clipboardString]
+            
+            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                if  err != nil{
+                    print(err as Any)
+                    return
+                }
+                print("clipboard successful")
+            })
+            
+        }) { (error) in
+            print(error.localizedDescription)
+        }
         text.isWrapped = true
         let material = SCNMaterial()
-        if(pages.count % 2 == 0){
-            material.diffuse.contents = UIColor.black
-        }
-        else {
-            material.diffuse.contents = UIColor.blue
-        }
+        material.diffuse.contents = UIColor.black
         text.materials = [material]
         let node = SCNNode()
         node.geometry = text
@@ -159,27 +206,45 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
 
     @IBAction func chooseIMG(_ sender: Any) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        
-        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
-        imagePicker.allowsEditing = false
-        self.present(imagePicker, animated: true)
+        //make sure there is a book open
+        if bookNode != nil {
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            
+            imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+            imagePicker.allowsEditing = false
+            self.present(imagePicker, animated: true)
+        }
+        else{ //error for if there is no book
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook before choosing an image", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let page = currentPageNode
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            //send picked image to the database
-            let node = SCNNode()
-            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
-            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
-            node.position = SCNVector3(0,0, 0.001)
-            page?.addChildNode(node)
+        if let page = currentPageNode { // make sure there is a page on the notebook
+            if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+                //send picked image to the database here
+                let node = SCNNode()
+                node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
+                node.position = SCNVector3(0,0, 0.01)
+                page.addChildNode(node)
+                dismiss(animated: true, completion: nil)
+            }
         }
-        else{
-            //
+        else{ //error for if there is no page
+            dismiss(animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                self.addPage(self)
+            }
+            alertController.addAction(cancelAction)
+            alertController.addAction(addPageAction)
+            self.present(alertController, animated: true, completion: nil)
         }
-        dismiss(animated: true, completion: nil)
     }
     func getClipboard() -> String{
         let pasteboard: String? = UIPasteboard.general.string
@@ -187,7 +252,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             return string
             //update database here
         }
-        return "No String Found on Clipboard"
+        else{ //error for if there is nothing on the clipboard
+            dismiss(animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Error", message: "Your Clipboard is empty", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
+            }
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+            return ""
+        }
+        //return
     }
     /*
      -----
@@ -207,7 +281,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                  pageNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
             }
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
-            //issues with y position here, the page isnt placed right ontop of the book.
+            //issues with y position here, the page isnt placed right ontop of the book
+          
            let offset = Float(pages.count) * Float(0.01);
             //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
             pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)

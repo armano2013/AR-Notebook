@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -51,7 +51,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gib-DC-2KC">
-                                <rect key="frame" x="328" y="691" width="67" height="30"/>
+                                <rect key="frame" x="327" y="691" width="68" height="30"/>
                                 <state key="normal" title="Clipboard"/>
                                 <connections>
                                     <action selector="addText:" destination="BYZ-38-t0r" eventType="touchUpInside" id="clf-TU-FQu"/>
@@ -77,9 +77,9 @@
                                     <action selector="addPage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qqg-9b-4RJ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BAC-4y-d12">
-                                <rect key="frame" x="174" y="401" width="51" height="30"/>
-                                <state key="normal" title="Update"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BAC-4y-d12">
+                                <rect key="frame" x="165" y="691" width="84" height="30"/>
+                                <state key="normal" title="Update Text"/>
                                 <connections>
                                     <action selector="updateText:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lj5-Ib-squ"/>
                                 </connections>
@@ -92,7 +92,9 @@
                             <constraint firstItem="eXA-sQ-EEB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="6Ed-Yp-OaR"/>
                             <constraint firstItem="BAC-4y-d12" firstAttribute="top" secondItem="DyU-jB-arc" secondAttribute="bottom" constant="9" id="AYQ-Cp-OLJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eXA-sQ-EEB" secondAttribute="bottom" constant="15" id="Gpf-rW-KTd"/>
+                            <constraint firstItem="BAC-4y-d12" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Hbj-Ig-OdJ"/>
                             <constraint firstAttribute="trailing" secondItem="7rB-xZ-A2i" secondAttribute="trailing" id="IzJ-hZ-F29"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="BAC-4y-d12" secondAttribute="bottom" constant="20" id="LjD-JX-Rd6"/>
                             <constraint firstItem="DyU-jB-arc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="95" id="MK0-Dn-OSa"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="BAC-4y-d12" secondAttribute="bottom" constant="15" id="MMa-O7-XdO"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="gib-DC-2KC" secondAttribute="bottom" constant="15" id="NsI-l2-KKP"/>
@@ -470,7 +472,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6uu-HO-oJY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1765.5999999999999" y="31.934032983508249"/>
+            <point key="canvasLocation" x="1668" y="-421"/>
         </scene>
     </scenes>
     <resources>
