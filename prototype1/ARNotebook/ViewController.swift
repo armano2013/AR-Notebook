@@ -76,13 +76,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func updateText(_ sender: Any) {
         let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
         let node = createTextNode(text: keyText)
+       
+        // Uploading text to database
         let dbString = UserInputText.text
-        
         let userID = Auth.auth().currentUser?.uid
         ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
             
-            let textString = ["name":dbString]
-            let childUpdates = ["users/\(userID)/notebook": textString]
+            let textString = ["Update Text":dbString]
+            let childUpdates = ["users/\(userID)/notebook/page": textString]
             
             self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                 if  err != nil{
@@ -148,6 +149,26 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func addText(_ sender: Any) {
         let page = currentPageNode
         let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+        
+        //adding clipboard to database
+        let dbClipboard = getClipboard()
+        let userID = String(describing: Auth.auth().currentUser?.uid)
+        ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            let clipboardString = ["Update Clipboard":dbClipboard]
+            let childUpdates = ["users/\(userID)/notebook/page": clipboardString]
+            
+            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                if  err != nil{
+                    print(err as Any)
+                    return
+                }
+                print("clipboard successful")
+            })
+            
+        }) { (error) in
+            print(error.localizedDescription)
+        }
         text.isWrapped = true
         let material = SCNMaterial()
         if(pages.count % 2 == 0){
