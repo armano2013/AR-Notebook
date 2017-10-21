@@ -79,7 +79,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func updateText(_ sender: Any) {
-        if !UserInputText.text?.isEmpty {
+        if !(UserInputText.text?.isEmpty)! {
             let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
             let node = createTextNode(text: keyText)
             renderNode(node: node)
@@ -162,7 +162,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func addText(_ sender: Any) {
         let page = currentPageNode
         let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
-        
         //adding clipboard to database
         let dbClipboard = getClipboard()
         let userID = String(describing: Auth.auth().currentUser?.uid)
@@ -193,22 +192,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         page?.addChildNode(node) // add to screen
         
         lastNode.append(node) //add for undo
-        
-        /*
-         
-         Trying to contain the text to the page
-         ------
-         
-         credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
-         let (min, max) = node.boundingBox
-              //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
-        let dx = min.x + 0.5 * (max.x - min.x)
-        let dy = min.y + 0.5 * (max.y - min.y)
-        let dz = min.z + 0.5 * (max.z - min.z)
-        node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
-        */
-        
-        //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
     }
 
     @IBAction func chooseIMG(_ sender: Any) {
@@ -228,7 +211,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let page = currentPageNode
         if let page = currentPageNode {
           if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
               //send picked image to the database
@@ -244,8 +226,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                       print("There was an error")
                       return
                     }
-                    
-                }
                   //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
                   // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
                   print(metadata?.downloadURLs as Any)
@@ -265,14 +245,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                   }){ (error) in
                       print(error.localizedDescription)
                   }
-
               }
              let node = SCNNode()
             node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
             node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
             node.position = SCNVector3(0,0, 0.01)
-            page?.addChildNode(node)
+            page.addChildNode(node)
           }
+        }
         else{ //error for if there is no page
             dismiss(animated: true, completion: nil)
             let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
