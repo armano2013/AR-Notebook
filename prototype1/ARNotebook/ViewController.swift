@@ -9,6 +9,7 @@
 import UIKit
 import ARKit
 import FirebaseAuth
+import FirebaseDatabase
 
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
     /*
@@ -26,13 +27,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     
+    var ref: DatabaseReference!
+    
     /*
      -----
      Generic Session Setup
      -----
      */
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
     }
     
     override func didReceiveMemoryWarning() {
@@ -72,6 +77,24 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
             let node = createTextNode(text: keyText)
             renderNode(node: node)
+                  // Uploading text to database
+            let dbString = UserInputText.text
+            let userID = Auth.auth().currentUser?.uid
+            ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in 
+            let textString = ["Update Text":dbString]
+            let childUpdates = ["users/\(userID)/notebook/page": textString]
+            
+            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                if  err != nil{
+                    print(err as Any)
+                    return
+                }
+                print("text update successful")
+            })
+            
+        }){ (error) in
+            print(error.localizedDescription)
+          }
         }
         else {
             let alertController = UIAlertController(title: "Error", message: "You did not enter any text.", preferredStyle: UIAlertControllerStyle.alert)
@@ -79,6 +102,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }
+
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         updateText(self)
@@ -132,6 +156,26 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func addText(_ sender: Any) {
         let page = currentPageNode
         let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+        
+        //adding clipboard to database
+        let dbClipboard = getClipboard()
+        let userID = String(describing: Auth.auth().currentUser?.uid)
+        ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            let clipboardString = ["Update Clipboard":dbClipboard]
+            let childUpdates = ["users/\(userID)/notebook/page": clipboardString]
+            
+            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                if  err != nil{
+                    print(err as Any)
+                    return
+                }
+                print("clipboard successful")
+            })
+            
+        }) { (error) in
+            print(error.localizedDescription)
+        }
         text.isWrapped = true
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.black
