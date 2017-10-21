@@ -71,7 +71,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
     }
-    
+    //this function will shutdown the keyboard when touch else where
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // this ends the key boards
+        self.view.endEditing(true)
+    }
     /*
      -----
      Main Story - View Controller Buttons
@@ -82,6 +86,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if !(UserInputText.text?.isEmpty)! {
             let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
             let node = createTextNode(text: keyText)
+            lastNode.append(node) //add to array to keep track of undo
             renderNode(node: node)
                   // Uploading text to database
             let dbString = UserInputText.text
@@ -108,26 +113,24 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }
-
     }
+    // hitting enter on the keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         updateText(self)
         textField.resignFirstResponder()
         return true
     }
-    //this function will shutdown the keyboard when touch else where
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // this ends the key boards
-        self.view.endEditing(true)
-    }
-    
+
     @IBAction func undo(_ sender: Any) {
         if let last = (lastNode.last){
             last.removeFromParentNode()
             lastNode.removeLast()
         }
         else {
-            print("no last")
+            let alertController = UIAlertController(title: "Nothing to Undo", message: "There is nothing you are able to undo", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
         }
     }
     
@@ -144,7 +147,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
-        
         material.diffuse.contents = UIColor.red
         text.materials = [material]
         let node = SCNNode();
@@ -154,9 +156,22 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         return node;
     }
     func renderNode(node: SCNNode) {
-        let page = currentPageNode
-        lastNode.append(node)
-        page?.addChildNode(node)
+        if let page = currentPageNode {
+            lastNode.append(node)
+            page.addChildNode(node)
+        }
+        else {
+            dismiss(animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Error", message: "Please add a page before adding any text", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                self.addPage(self)
+            }
+            alertController.addAction(cancelAction)
+            alertController.addAction(addPageAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+
     }
 
     @IBAction func addText(_ sender: Any) {
@@ -181,24 +196,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }) { (error) in
             print(error.localizedDescription)
         }
+
         text.isWrapped = true
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.black
         text.materials = [material]
-        let node = SCNNode()
-        node.geometry = text
-        node.scale = SCNVector3Make(0.01, 0.01, 0.01)
-        node.position = SCNVector3(-0.7, 0.0, 0.05)
-        page?.addChildNode(node) // add to screen
-        
-        lastNode.append(node) //add for undo
+        let node = createTextNode(text: text)
+        renderNode(node: node)
     }
 
     @IBAction func chooseIMG(_ sender: Any) {
        if bookNode != nil {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
-            
             imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
             imagePicker.allowsEditing = false
             self.present(imagePicker, animated: true)
@@ -214,6 +224,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if let page = currentPageNode {
           if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
               //send picked image to the database
+              dismiss(animated: true, completion: nil)
               let userID = String(describing: Auth.auth().currentUser?.uid)
               let imageRef = storageRef?.child("images")
               let fileRef = imageRef?.child((userID))
@@ -246,10 +257,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                       print(error.localizedDescription)
                   }
               }
-             let node = SCNNode()
+            let node = SCNNode()
             node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
             node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
-            node.position = SCNVector3(0,0, 0.01)
+            node.position = SCNVector3(0,0, 0.001)
+            lastNode.append(node)
             page.addChildNode(node)
           }
         }
@@ -343,32 +355,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.addBook(hitTestResult: hitTest.first!)
         }
     }
-    //updated cover for only 2D
-//    func addBook(hitTestResult: ARHitTestResult) {
-//        let scene = SCNScene()
-//        let node = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
-//        node.name = "Book"
-//
-//        let coverMaterial = SCNMaterial()
-//        coverMaterial.diffuse.contents = UIImage(named: "BookCover(Ancient)_COLOR")
-//        coverMaterial.locksAmbientWithDiffuse = true
-//        node.geometry?.firstMaterial = coverMaterial
-//        //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
-//        let transform = hitTestResult.worldTransform
-//        let thirdColumn = transform.columns.3
-//        node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
-//        bookNode = node //assign the book node to the global variable for book node
-//        //check if another book object exists
-//        if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
-//            //this means theres already a book placed in the scene.. what do we want to do here??
-//            //user should only have one book open at a time.
-//        }
-//        else{
-//            self.sceneView.scene.rootNode.addChildNode(node)
-//
-//        }
-    //}
-    // original 3d model
+
     func addBook(hitTestResult: ARHitTestResult) {
         let scene = SCNScene(named: "art.scnassets/Book.dae")
         let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
@@ -395,7 +382,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     /*
-
      This section will show the 'focus square' when AR Kit detects a flat surface.
      This will help users know when the can click to set a notebook object
      
@@ -427,7 +413,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             childNode.removeFromParentNode()
         }
     }
-// functions to pass the image through to the VIEW CONTROLLER
+    // functions to pass the image through to the VIEW CONTROLLER
     func passImage(image: UIImage) {
         //let page = currentPageNode
         let node = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
