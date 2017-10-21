@@ -33,7 +33,7 @@ class ARScene: SKScene {
         // 0 1 0 0
         // 0 0 1 0
         // 0 0 0 1
-        translation.columns.3.z = -0.3
+        translation.columns.3.z = 0.001
         // 0 1 2 3
         // 1 0 0 0     x
         // 0 1 0 0     y
