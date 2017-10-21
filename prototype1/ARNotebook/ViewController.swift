@@ -152,7 +152,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let node = SCNNode();
         node.geometry = text
         node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
-        node.position = SCNVector3(-0.7, 0.0, 0.5)
+        node.position = SCNVector3(-0.5, 0.0, 0.001)
         return node;
     }
     func renderNode(node: SCNNode) {
