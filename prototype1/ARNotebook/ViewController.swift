@@ -173,7 +173,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let node = SCNNode()
             node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
             node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
-            node.position = SCNVector3(0,0, 0.01)
+            node.position = SCNVector3(0,0, 0.001)
             page?.addChildNode(node)
         }
         else{
@@ -208,10 +208,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //issues with y position here, the page isnt placed right ontop of the book.
-           // let offset = Float(pages.count) * Float(0.01);
+           let offset = Float(pages.count) * Float(0.01);
             //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
-            pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y, bookNode.position.z)
-            pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
+            pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+            pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count - 1) //minus one so 0 index array
             currentPageNode = pageNode
