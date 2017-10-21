@@ -281,11 +281,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                  pageNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
             }
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
-            //issues with y position here, the page isnt placed right ontop of the book.
-            let offset = Float(pages.count) * Float(0.01);
+            //issues with y position here, the page isnt placed right ontop of the book
+          
+           let offset = Float(pages.count) * Float(0.01);
             //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
-            pageNode.position = SCNVector3(bookNode.position.x, bookNode.position.y+offset, bookNode.position.z)
-            pageNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
+            pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+            pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count - 1) //minus one so 0 index array
             currentPageNode = pageNode
