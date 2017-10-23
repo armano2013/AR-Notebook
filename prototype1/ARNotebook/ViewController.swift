@@ -116,9 +116,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     // hitting enter on the keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+         if bookNode != nil {
         updateText(self)
         textField.resignFirstResponder()
         return true
+         }
+         else{ //error for if there is no book
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding text", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+            return false
+        }
     }
 
     @IBAction func undo(_ sender: Any) {
@@ -175,12 +184,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
 
     @IBAction func addText(_ sender: Any) {
-        let page = currentPageNode
-        let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
-        //adding clipboard to database
-        let dbClipboard = getClipboard()
-        let userID = String(describing: Auth.auth().currentUser?.uid)
-        ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+        if bookNode != nil {
+            let page = currentPageNode
+            let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+            //adding clipboard to database
+            let dbClipboard = getClipboard()
+            let userID = String(describing: Auth.auth().currentUser?.uid)
+            ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
             
             let clipboardString = ["Update Clipboard":dbClipboard]
             let childUpdates = ["users/\(userID)/notebook/page": clipboardString]
@@ -195,14 +205,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             
         }) { (error) in
             print(error.localizedDescription)
-        }
-
+            }
         text.isWrapped = true
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.black
         text.materials = [material]
         let node = createTextNode(text: text)
         renderNode(node: node)
+        }
+    else{ //error for if there is no book
+    let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding text", preferredStyle: UIAlertControllerStyle.alert)
+    let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+    alertController.addAction(cancelAction)
+    self.present(alertController, animated: true, completion: nil)
+    }
     }
 
     @IBAction func chooseIMG(_ sender: Any) {
@@ -300,31 +316,41 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     @IBAction func addPage(_ sender: Any) {
-        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
-            //gemoetry to figure out the size of the book placed //
-            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
-            //@FIXME have fixed hieght for now bounding box isnt working
+        if bookNode == nil {
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
             
-            if(pages.count % 2 == 0){
-                 pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+        }
+        else{ //error for if there is no book
+            if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+                //gemoetry to figure out the size of the book placed //
+                let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+                //@FIXME have fixed hieght for now bounding box isnt working
+                
+                if(pages.count % 2 == 0){
+                    pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+                }
+                else{
+                    pageNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                }
+                pageNode.geometry?.firstMaterial?.isDoubleSided = true
+                //issues with y position here, the page isnt placed right ontop of the book
+                
+                let offset = Float(pages.count) * Float(0.01);
+                //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
+                pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+                pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
+                pages.append(pageNode)
+                pageNode.name = String(pages.count - 1) //minus one so 0 index array
+                currentPageNode = pageNode
+                bookNode.addChildNode(pageNode)
+            
             }
-            else{
-                 pageNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-            }
-            pageNode.geometry?.firstMaterial?.isDoubleSided = true
-            //issues with y position here, the page isnt placed right ontop of the book
-          
-           let offset = Float(pages.count) * Float(0.01);
-            //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
-            pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
-            pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
-            pages.append(pageNode)
-            pageNode.name = String(pages.count - 1) //minus one so 0 index array
-            currentPageNode = pageNode
-            bookNode.addChildNode(pageNode)
+            
         }
     }
-  
     //page turns
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
