@@ -83,7 +83,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func updateText(_ sender: Any) {
-        if !(UserInputText.text?.isEmpty)! {
+        if !(UserInputText.text?.isEmpty)! && bookNode != nil && currentPageNode != nil{
             let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
             let node = createTextNode(text: keyText)
             lastNode.append(node) //add to array to keep track of undo
@@ -108,7 +108,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
           }
         }
         else {
-            let alertController = UIAlertController(title: "Error", message: "You did not enter any text.", preferredStyle: UIAlertControllerStyle.alert)
+            let alertController = UIAlertController(title: "Error", message: "You did not enter any text, or there is no page or notebook.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -116,13 +116,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     // hitting enter on the keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-         if bookNode != nil {
+         if bookNode != nil && currentPageNode != nil{
         updateText(self)
         textField.resignFirstResponder()
         return true
          }
          else{ //error for if there is no book
-            let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding text", preferredStyle: UIAlertControllerStyle.alert)
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -184,7 +184,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
 
     @IBAction func addText(_ sender: Any) {
-        if bookNode != nil {
+        if bookNode != nil && currentPageNode != nil{
             let page = currentPageNode
             let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
             //adding clipboard to database
@@ -214,7 +214,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         renderNode(node: node)
         }
     else{ //error for if there is no book
-    let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding text", preferredStyle: UIAlertControllerStyle.alert)
+    let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
     let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
     alertController.addAction(cancelAction)
     self.present(alertController, animated: true, completion: nil)
@@ -222,7 +222,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
 
     @IBAction func chooseIMG(_ sender: Any) {
-       if bookNode != nil {
+       if bookNode != nil && currentPageNode != nil{
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
