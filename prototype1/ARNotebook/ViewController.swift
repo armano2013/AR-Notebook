@@ -27,11 +27,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
+    var currentPage : Int = 1 // global variable to keep track of current page number
     
-    var ref: DatabaseReference!
-    var myStorage: Storage!
-
-    var storageRef: StorageReference!
+    var ref: DatabaseReference! //calling a reference to the firebase database
+    var storageRef: StorageReference! //calling a reference to the firebase storage
+    
     /*
      -----
      Generic Session Setup
@@ -41,8 +41,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     override func viewDidLoad() {
         super.viewDidLoad()
         ref = Database.database().reference()
-        myStorage = Storage.storage()
-        storageRef = myStorage?.reference()
+        storageRef = Storage.storage().reference()
         
     }
     
@@ -93,8 +92,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let userID = Auth.auth().currentUser?.uid
             ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in 
             let textString = ["Update Text":dbString]
-            let childUpdates = ["users/\(userID)/notebook/page": textString]
-            
+            let childUpdates = ["users/\(userID)/notebook/page " + "\(self.currentPage)": textString]
             self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                 if  err != nil{
                     print(err as Any)
@@ -102,6 +100,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
                 print("text update successful")
             })
+                let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.currentPage)")
+
             
         }){ (error) in
             print(error.localizedDescription)
@@ -187,13 +187,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if bookNode != nil && currentPageNode != nil{
             let page = currentPageNode
             let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+            
             //adding clipboard to database
             let dbClipboard = getClipboard()
             let userID = String(describing: Auth.auth().currentUser?.uid)
             ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
             
             let clipboardString = ["Update Clipboard":dbClipboard]
-            let childUpdates = ["users/\(userID)/notebook/page": clipboardString]
+                let childUpdates = ["users/\(userID)/notebook/page " + "\(self.currentPage)": clipboardString]
             
             self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                 if  err != nil{
@@ -202,6 +203,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
                 print("clipboard successful")
             })
+                
+                let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.currentPage)")
+
             
         }) { (error) in
             print(error.localizedDescription)
@@ -244,7 +248,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
               let userID = String(describing: Auth.auth().currentUser?.uid)
               let imageRef = storageRef?.child("images")
               let fileRef = imageRef?.child((userID))
-
               var data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
               //normally would have your error handling; in this case we just do a return
               let dataInfo = fileRef?.putData(data as Data, metadata: nil){
@@ -260,7 +263,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
 
                   self.ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
                       let urlString = ["image url":imageURL]
-                      let childUpdates = ["users/\(userID)/notebook/page": urlString]
+                    let childUpdates = ["users/\(userID)/notebook/page " + "\(self.currentPage)": urlString]
                       self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                           if  err != nil{
                               print(err as Any)
@@ -273,6 +276,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                       print(error.localizedDescription)
                   }
               }
+            let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.currentPage)")
+
+            
             let node = SCNNode()
             node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
             node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [pickedImage], duration: 0)
@@ -346,6 +352,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 pageNode.name = String(pages.count - 1) //minus one so 0 index array
                 currentPageNode = pageNode
                 bookNode.addChildNode(pageNode)
+                currentPage = Int((currentPageNode?.name)!)!
             
             }
             
@@ -355,11 +362,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
         if (pages.count > 1 && Int((currentPageNode?.name)!)! > 0) {
-                let i = Int((currentPageNode?.name)!)
-                let previous = i! - 1;
-                let turnPage = pages[previous]
-                currentPageNode?.isHidden = true;
-                currentPageNode = turnPage
+            let i = Int((currentPageNode?.name)!)
+            let previous = i! - 1;
+            let turnPage = pages[previous]
+            currentPageNode?.isHidden = true;
+            currentPageNode = turnPage
+            currentPage = Int((currentPageNode?.name)!)!
         }
     }
     
@@ -371,6 +379,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let turnPage = pages[previous]
             turnPage.isHidden = false
             currentPageNode = turnPage
+            currentPage = Int((currentPageNode?.name)!)!
         }
     }
     @objc func tapped(sender: UITapGestureRecognizer) {
