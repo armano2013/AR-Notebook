@@ -82,54 +82,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    @IBAction func updateText(_ sender: Any) {
-        if !(UserInputText.text?.isEmpty)! && bookNode != nil && currentPageNode != nil{
-            let keyText = SCNText(string: UserInputText.text, extrusionDepth: 0.1)
-            let node = createTextNode(text: keyText)
-            lastNode.append(node) //add to array to keep track of undo
-            renderNode(node: node)
-                  // Uploading text to database
-            let dbString = UserInputText.text
-            let userID = Auth.auth().currentUser?.uid
-            ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in 
-            let textString = ["Update Text":dbString]
-            let childUpdates = ["users/\(userID)/notebook/page " + "\(self.currentPage)": textString]
-            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
-                if  err != nil{
-                    print(err as Any)
-                    return
-                }
-                print("text update successful")
-            })
-                let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.currentPage)")
-
-            
-        }){ (error) in
-            print(error.localizedDescription)
-          }
-        }
-        else {
-            let alertController = UIAlertController(title: "Error", message: "You did not enter any text, or there is no page or notebook.", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
-        }
-    }
-    // hitting enter on the keyboard
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-         if bookNode != nil && currentPageNode != nil{
-        updateText(self)
-        textField.resignFirstResponder()
-        return true
-         }
-         else{ //error for if there is no book
-            let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
-            return false
-        }
-    }
+   
 
     @IBAction func undo(_ sender: Any) {
         if let last = (lastNode.last){
@@ -324,7 +277,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     
-    func passingClip(text: String) {
+    func passText(text: String) {
         dismiss(animated: true, completion: nil)
         if bookNode != nil && currentPageNode != nil{
             let textNode = SCNText(string: text, extrusionDepth: 0.1)
@@ -351,7 +304,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
             node.position = SCNVector3(0,0, 0.001)
             lastNode.append(node)
-            page?.addChildNode(node)
+            page.addChildNode(node)
         }
         else { //error for no page
             dismiss(animated: true, completion: nil)

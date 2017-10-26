@@ -14,8 +14,8 @@ import FirebaseDatabase
 
 protocol insertDelegate {
     var currentPage: Int {get set}
-    func passImage (image :UIImage)
-    func passingClip(text: String)
+    func passImage (image: UIImage)
+    func passText(text: String)
 }
 
 class insertViewController: UIViewController ,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
@@ -24,8 +24,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
-    
-    @IBOutlet weak var Insert: UIButton!
+    @IBOutlet weak var UserInputText: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,6 +35,51 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func updateText(_ sender: Any) {
+        if let keyText = UserInputText.text {
+            delegate?.passText(text: keyText)
+            
+            /*renderNode(node: node)
+            // Uploading text to database
+            let dbString = UserInputText.text
+            let userID = Auth.auth().currentUser?.uid
+            ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                let textString = ["Update Text":dbString]
+                let childUpdates = ["users/\(userID)/notebook/page " + "\(self.currentPage)": textString]
+                self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                    if  err != nil{
+                        print(err as Any)
+                        return
+                    }
+                    print("text update successful")
+                })
+                let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.currentPage)")
+                
+                
+            }){ (error) in
+                print(error.localizedDescription)
+            }*/
+        }
+        else {
+            let alertController = UIAlertController(title: "Error", message: "You did not enter any text.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // this ends the key boards
+        self.view.endEditing(true)
+    }
+    // hitting enter on the keyboard
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        dismiss(animated: true, completion: nil)
+        
+        updateText(self)
+        return true
+    }
+    
     func getClipboard() -> String{
         let pasteboard: String? = UIPasteboard.general.string
         if let string = pasteboard {
@@ -55,7 +99,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     
     @IBAction func addClipboardText(_ sender: Any) {
         let text = getClipboard()
-        delegate?.passingClip(text: text)
+        delegate?.passText(text: text)
         
         //adding clipboard to database
         /*let dbClipboard = getClipboard()

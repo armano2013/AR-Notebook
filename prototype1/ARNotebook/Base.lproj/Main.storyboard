@@ -304,13 +304,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Krg-RW-Dq0" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="127" y="446" width="120" height="175"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Krg-RW-Dq0" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="541" width="414" height="175"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iFk-Ws-onZ">
-                                        <rect key="frame" x="37" y="8" width="46" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iFk-Ws-onZ">
+                                        <rect key="frame" x="40" y="8" width="42" height="30"/>
                                         <state key="normal" title="Image">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -318,16 +316,8 @@
                                             <action selector="chooseGalleryImage:" destination="ylS-d8-bpH" eventType="touchUpInside" id="HhL-gE-yDb"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="37A-Lv-PuS">
-                                        <rect key="frame" x="37" y="72" width="46" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Text">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JHe-Nn-Rda">
-                                        <rect key="frame" x="26" y="137" width="68" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JHe-Nn-Rda">
+                                        <rect key="frame" x="307" y="8" width="67" height="30"/>
                                         <state key="normal" title="Clipboard">
                                             <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                         </state>
@@ -335,8 +325,38 @@
                                             <action selector="addClipboardText:" destination="ylS-d8-bpH" eventType="touchUpInside" id="xHy-qL-for"/>
                                         </connections>
                                     </button>
+                                    <textField opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-Gh-LMb">
+                                        <rect key="frame" x="87" y="89" width="240" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="RuA-RI-Od3"/>
+                                            <constraint firstAttribute="width" constant="240" id="SFa-kD-PBq"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="37A-Lv-PuS">
+                                        <rect key="frame" x="165" y="137" width="84" height="30"/>
+                                        <state key="normal" title="Update Text">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="updateText:" destination="ylS-d8-bpH" eventType="touchUpInside" id="YIB-4Z-KNe"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="175" id="AMk-R3-b2S"/>
+                                    <constraint firstItem="37A-Lv-PuS" firstAttribute="centerX" secondItem="Krg-RW-Dq0" secondAttribute="centerX" id="Bec-UU-sKR"/>
+                                    <constraint firstItem="iFk-Ws-onZ" firstAttribute="leading" secondItem="Krg-RW-Dq0" secondAttribute="leading" constant="40" id="FPp-Ph-e2Z"/>
+                                    <constraint firstAttribute="width" constant="414" id="JQR-Lc-A88"/>
+                                    <constraint firstAttribute="trailing" secondItem="JHe-Nn-Rda" secondAttribute="trailing" constant="40" id="MSC-ck-vTQ"/>
+                                    <constraint firstItem="JHe-Nn-Rda" firstAttribute="top" secondItem="Krg-RW-Dq0" secondAttribute="top" constant="8" id="T0x-Op-V8w"/>
+                                    <constraint firstItem="iFk-Ws-onZ" firstAttribute="top" secondItem="Krg-RW-Dq0" secondAttribute="top" constant="8" id="qtQ-9L-hTs"/>
+                                    <constraint firstItem="Dap-Gh-LMb" firstAttribute="centerX" secondItem="Krg-RW-Dq0" secondAttribute="centerX" id="ue6-Vy-IDr"/>
+                                    <constraint firstAttribute="bottom" secondItem="37A-Lv-PuS" secondAttribute="bottom" constant="8" id="vCR-HB-ah2"/>
+                                </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                         <real key="value" value="12"/>
@@ -345,9 +365,17 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Krg-RW-Dq0" firstAttribute="trailing" secondItem="afb-IR-b20" secondAttribute="trailing" id="4Oh-HR-hPG"/>
+                            <constraint firstItem="Krg-RW-Dq0" firstAttribute="leading" secondItem="afb-IR-b20" secondAttribute="leading" id="5Rb-8K-W4F"/>
+                            <constraint firstItem="afb-IR-b20" firstAttribute="bottom" secondItem="Krg-RW-Dq0" secondAttribute="bottom" constant="20" id="aNv-Jl-ArJ"/>
+                            <constraint firstItem="Krg-RW-Dq0" firstAttribute="centerX" secondItem="K8l-Bq-ec6" secondAttribute="centerX" id="nEP-JD-01d"/>
+                            <constraint firstItem="Krg-RW-Dq0" firstAttribute="centerX" secondItem="K8l-Bq-ec6" secondAttribute="centerX" id="sDe-se-Pl6"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="afb-IR-b20"/>
                     </view>
                     <connections>
+                        <outlet property="UserInputText" destination="Dap-Gh-LMb" id="8o0-U0-eOZ"/>
                         <segue destination="fsJ-kF-Ing" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="7Ak-qc-lx4"/>
                     </connections>
                 </viewController>
