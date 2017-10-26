@@ -43,11 +43,18 @@
                                     <outletCollection property="gestureRecognizers" destination="501-9a-cgW" appends="YES" id="cNr-nF-ZuY"/>
                                 </connections>
                             </arscnView>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tYF-ND-GVF">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tYF-ND-GVF">
                                 <rect key="frame" x="344" y="60" width="50" height="50"/>
                                 <state key="normal" image="undo"/>
                                 <connections>
                                     <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dGQ-F1-UVK"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eQn-zB-gg4">
+                                <rect key="frame" x="110" y="60" width="150" height="30"/>
+                                <state key="normal" title="Fake add Page Button"/>
+                                <connections>
+                                    <action selector="addPage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CFh-Ic-bqd"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXA-sQ-EEB">
@@ -86,9 +93,11 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tYF-ND-GVF" secondAttribute="trailing" constant="20" id="2QG-Af-kDw"/>
+                            <constraint firstItem="tYF-ND-GVF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="2nJ-lq-ZDo"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="52S-uA-7os"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="cFE-mw-2FI" secondAttribute="bottom" constant="8" id="6Bw-jn-DuW"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="FTP-3e-8mq"/>
+                            <constraint firstItem="eQn-zB-gg4" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="LhZ-gI-J5Y"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="P2R-p2-pD4"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Z4S-TT-Sg8"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eXA-sQ-EEB" secondAttribute="bottom" constant="8" id="eJt-gu-bye"/>
