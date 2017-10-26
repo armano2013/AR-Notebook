@@ -12,7 +12,9 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate {
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate {
+    
+    
   
     /*
      -----
@@ -383,6 +385,24 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func deleteNotebook(){
         print("VC Notebook")
     }
+    /*
+     -----
+     Page Color Deletegate Funcitons
+     -----
+     */
+    
+    func pageColor(color: UIColor) {
+        dismiss(animated: true, completion: nil)
+        if bookNode != nil && currentPageNode != nil{
+            // maybe an array for all the pages to change all or a single page at a time ?
+        }
+        else{ //error for if there is no book
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
     
     /*
      -----
@@ -397,6 +417,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
            destination.delegate = self
         }
         else if let destination = segue.destination as? deleteViewController {
+            destination.delegate = self
+        }
+        else if let destination = segue.destination as? addPageViewController{
             destination.delegate = self
         }
     }

@@ -62,15 +62,16 @@
                                     <constraint firstAttribute="width" constant="160" id="mMW-pO-2r2"/>
                                     <constraint firstItem="NdV-Wy-JQd" firstAttribute="centerX" secondItem="nd7-ti-qq5" secondAttribute="centerX" id="q3R-tS-h0l"/>
                                 </constraints>
-                            <viewLayoutGuide key="safeArea" id="Dsb-YY-Lo3"/>
+                                <viewLayoutGuide key="safeArea" id="Dsb-YY-Lo3"/>
                             </view>
-                         </subviews>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="O7S-rK-LRo"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M8W-KS-rUv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-           <point key="canvasLocation" x="532" y="496"/>
-         </scene>
+            <point key="canvasLocation" x="532" y="496"/>
+        </scene>
         <!--Page Color View Controller-->
         <scene sceneID="Won-td-MPy">
             <objects>
@@ -79,9 +80,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gJT-KZ-Oq5" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="87" y="549" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gJT-KZ-Oq5" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
+                                <rect key="frame" x="77" y="563" width="260" height="70"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y60-3s-nGX">
+                                        <rect key="frame" x="105" y="8" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.21479110409999999" green="0.2298358918" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <connections>
+                                            <action selector="blueColor:" destination="Na5-He-KwX" eventType="touchUpInside" id="PkX-5d-Cpc"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zuF-jb-2FC">
+                                        <rect key="frame" x="0.0" y="8" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KAg-u9-5hb">
+                                        <rect key="frame" x="202" y="7" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="yellowColor:" destination="Na5-He-KwX" eventType="touchUpInside" id="hOc-vp-fkt"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -90,14 +113,20 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
-               <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Ynb-Hu-NM8" firstAttribute="trailing" secondItem="gJT-KZ-Oq5" secondAttribute="trailing" constant="77" id="53s-V8-1pp"/>
+                            <constraint firstItem="gJT-KZ-Oq5" firstAttribute="top" secondItem="Ynb-Hu-NM8" secondAttribute="top" constant="543" id="DUl-cY-J4J"/>
+                            <constraint firstItem="gJT-KZ-Oq5" firstAttribute="leading" secondItem="Ynb-Hu-NM8" secondAttribute="leading" constant="77" id="ndP-f0-nBp"/>
+                            <constraint firstItem="Ynb-Hu-NM8" firstAttribute="bottom" secondItem="gJT-KZ-Oq5" secondAttribute="bottom" constant="103" id="tLU-Ub-waA"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Ynb-Hu-NM8"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CGQ-qs-Ix6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="373" y="385"/>
+            <point key="canvasLocation" x="-371.01449275362324" y="738.58695652173924"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -153,6 +182,9 @@
                                 <state key="normal" title="Edit" image="edit">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <segue destination="Na5-He-KwX" kind="presentation" id="Xle-3o-ASm"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gvf-9z-Pqb">
                                 <rect key="frame" x="20" y="60" width="107" height="50"/>
@@ -368,6 +400,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YEC-tU-mwD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="2500" y="79"/>
         </scene>
     </scenes>
     <resources>
