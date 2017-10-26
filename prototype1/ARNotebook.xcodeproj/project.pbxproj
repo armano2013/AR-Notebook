@@ -1,0 +1,486 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1F5A442D1F9AA917005EAB55 /* references.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A442C1F9AA917005EAB55 /* references.swift */; };
+		6DBF880E1F953ECB005C1456 /* designableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBF880D1F953ECB005C1456 /* designableView.swift */; };
+		89DA3783F4A25CD8BFA95048 /* Pods_ARNotebook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */; };
+		C267263C1F9551E400E6EEA1 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = C267263B1F9551E300E6EEA1 /* art.scnassets */; };
+		C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C267263D1F9552A100E6EEA1 /* arScene.swift */; };
+		E40171151F972719003CEB85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E40171141F972716003CEB85 /* GoogleService-Info.plist */; };
+		E40171161F972794003CEB85 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4CDB5231F93C12D00BBFE12 /* FBSDKLoginKit.framework */; };
+		E4CDB50F1F93BE1900BBFE12 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */; };
+		E4CDB5111F93BE1900BBFE12 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5101F93BE1900BBFE12 /* ViewController.swift */; };
+		E4CDB5141F93BE1900BBFE12 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5121F93BE1900BBFE12 /* Main.storyboard */; };
+		E4CDB5161F93BE1900BBFE12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */; };
+		E4CDB5191F93BE1900BBFE12 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */; };
+		E4CDB5211F93C12000BBFE12 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4CDB5201F93C11D00BBFE12 /* FBSDKCoreKit.framework */; };
+		E4CDB5251F93C25B00BBFE12 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */; };
+		E4CDB5291F93D44D00BBFE12 /* shareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5281F93D44D00BBFE12 /* shareViewController.swift */; };
+		E4CDB52B1F93D4C500BBFE12 /* addViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */; };
+		E4CDB52D1F93D53700BBFE12 /* newViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB52C1F93D53700BBFE12 /* newViewController.swift */; };
+		E4CDB52F1F93D64F00BBFE12 /* insertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB52E1F93D64F00BBFE12 /* insertViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1F5A442C1F9AA917005EAB55 /* references.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = references.swift; sourceTree = "<group>"; };
+		6DBF880D1F953ECB005C1456 /* designableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = designableView.swift; sourceTree = "<group>"; };
+		7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARNotebook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		82A9E091CB039DA3E9D0DA91 /* Pods-ARNotebook.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARNotebook.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook.debug.xcconfig"; sourceTree = "<group>"; };
+		C267263B1F9551E300E6EEA1 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
+		C267263D1F9552A100E6EEA1 /* arScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = arScene.swift; sourceTree = "<group>"; };
+		D13320603C063F665068EF3B /* Pods-ARNotebook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARNotebook.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook.release.xcconfig"; sourceTree = "<group>"; };
+		E40171141F972716003CEB85 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E4CDB50B1F93BE1900BBFE12 /* ARNotebook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARNotebook.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E4CDB5101F93BE1900BBFE12 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E4CDB5131F93BE1900BBFE12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E4CDB5181F93BE1900BBFE12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E4CDB51A1F93BE1900BBFE12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		E4CDB5201F93C11D00BBFE12 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		E4CDB5231F93C12D00BBFE12 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
+		E4CDB5281F93D44D00BBFE12 /* shareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = shareViewController.swift; path = Assets.xcassets/shareViewController.swift; sourceTree = "<group>"; };
+		E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addViewController.swift; sourceTree = "<group>"; };
+		E4CDB52C1F93D53700BBFE12 /* newViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newViewController.swift; sourceTree = "<group>"; };
+		E4CDB52E1F93D64F00BBFE12 /* insertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = insertViewController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E4CDB5081F93BE1900BBFE12 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89DA3783F4A25CD8BFA95048 /* Pods_ARNotebook.framework in Frameworks */,
+				E4CDB5211F93C12000BBFE12 /* FBSDKCoreKit.framework in Frameworks */,
+				E40171161F972794003CEB85 /* FBSDKLoginKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7E8572FD16503F307878D492 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */,
+				E4CDB5231F93C12D00BBFE12 /* FBSDKLoginKit.framework */,
+				E4CDB5201F93C11D00BBFE12 /* FBSDKCoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D45915F08A6A906A0FF0B4A6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				82A9E091CB039DA3E9D0DA91 /* Pods-ARNotebook.debug.xcconfig */,
+				D13320603C063F665068EF3B /* Pods-ARNotebook.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		E4CDB5021F93BE1900BBFE12 = {
+			isa = PBXGroup;
+			children = (
+				E4CDB50D1F93BE1900BBFE12 /* ARNotebook */,
+				E4CDB50C1F93BE1900BBFE12 /* Products */,
+				D45915F08A6A906A0FF0B4A6 /* Pods */,
+				7E8572FD16503F307878D492 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E4CDB50C1F93BE1900BBFE12 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E4CDB50B1F93BE1900BBFE12 /* ARNotebook.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E4CDB50D1F93BE1900BBFE12 /* ARNotebook */ = {
+			isa = PBXGroup;
+			children = (
+				E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */,
+				E4CDB5101F93BE1900BBFE12 /* ViewController.swift */,
+				E4CDB5121F93BE1900BBFE12 /* Main.storyboard */,
+				6DBF880D1F953ECB005C1456 /* designableView.swift */,
+				E4CDB52E1F93D64F00BBFE12 /* insertViewController.swift */,
+				E4CDB52C1F93D53700BBFE12 /* newViewController.swift */,
+				E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */,
+				E4CDB5281F93D44D00BBFE12 /* shareViewController.swift */,
+				E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */,
+				C267263D1F9552A100E6EEA1 /* arScene.swift */,
+				E4CDB51A1F93BE1900BBFE12 /* Info.plist */,
+				E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */,
+				E40171141F972716003CEB85 /* GoogleService-Info.plist */,
+				1F5A442C1F9AA917005EAB55 /* references.swift */,
+				E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */,
+				C267263B1F9551E300E6EEA1 /* art.scnassets */,
+			);
+			path = ARNotebook;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E4CDB50A1F93BE1900BBFE12 /* ARNotebook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4CDB51D1F93BE1900BBFE12 /* Build configuration list for PBXNativeTarget "ARNotebook" */;
+			buildPhases = (
+				860832C8F856FDF9ECB6DCB9 /* [CP] Check Pods Manifest.lock */,
+				E4CDB5071F93BE1900BBFE12 /* Sources */,
+				E4CDB5081F93BE1900BBFE12 /* Frameworks */,
+				E4CDB5091F93BE1900BBFE12 /* Resources */,
+				AF8E8E169F792029673DD313 /* [CP] Embed Pods Frameworks */,
+				245BDA837BCCF171DB25EEBD /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ARNotebook;
+			productName = ARNotebook;
+			productReference = E4CDB50B1F93BE1900BBFE12 /* ARNotebook.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E4CDB5031F93BE1900BBFE12 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0900;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "Artur Bushi";
+				TargetAttributes = {
+					E4CDB50A1F93BE1900BBFE12 = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = E4CDB5061F93BE1900BBFE12 /* Build configuration list for PBXProject "ARNotebook" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E4CDB5021F93BE1900BBFE12;
+			productRefGroup = E4CDB50C1F93BE1900BBFE12 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E4CDB50A1F93BE1900BBFE12 /* ARNotebook */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E4CDB5091F93BE1900BBFE12 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4CDB5191F93BE1900BBFE12 /* LaunchScreen.storyboard in Resources */,
+				C267263C1F9551E400E6EEA1 /* art.scnassets in Resources */,
+				E4CDB5161F93BE1900BBFE12 /* Assets.xcassets in Resources */,
+				E4CDB5141F93BE1900BBFE12 /* Main.storyboard in Resources */,
+				E40171151F972719003CEB85 /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		245BDA837BCCF171DB25EEBD /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		860832C8F856FDF9ECB6DCB9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ARNotebook-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AF8E8E169F792029673DD313 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKShareKit/FBSDKShareKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookShare/FacebookShare.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKShareKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookShare.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ARNotebook/Pods-ARNotebook-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E4CDB5071F93BE1900BBFE12 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6DBF880E1F953ECB005C1456 /* designableView.swift in Sources */,
+				E4CDB5111F93BE1900BBFE12 /* ViewController.swift in Sources */,
+				E4CDB5251F93C25B00BBFE12 /* AuthenticationViewController.swift in Sources */,
+				1F5A442D1F9AA917005EAB55 /* references.swift in Sources */,
+				E4CDB5291F93D44D00BBFE12 /* shareViewController.swift in Sources */,
+				E4CDB52B1F93D4C500BBFE12 /* addViewController.swift in Sources */,
+				E4CDB50F1F93BE1900BBFE12 /* AppDelegate.swift in Sources */,
+				E4CDB52F1F93D64F00BBFE12 /* insertViewController.swift in Sources */,
+				C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */,
+				E4CDB52D1F93D53700BBFE12 /* newViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E4CDB5121F93BE1900BBFE12 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E4CDB5131F93BE1900BBFE12 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E4CDB5181F93BE1900BBFE12 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E4CDB51B1F93BE1900BBFE12 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E4CDB51C1F93BE1900BBFE12 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E4CDB51E1F93BE1900BBFE12 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 82A9E091CB039DA3E9D0DA91 /* Pods-ARNotebook.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K2BLLYJAT9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = ARNotebook/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = WSU.ARNotebook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E4CDB51F1F93BE1900BBFE12 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D13320603C063F665068EF3B /* Pods-ARNotebook.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K2BLLYJAT9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = ARNotebook/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = WSU.ARNotebook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E4CDB5061F93BE1900BBFE12 /* Build configuration list for PBXProject "ARNotebook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4CDB51B1F93BE1900BBFE12 /* Debug */,
+				E4CDB51C1F93BE1900BBFE12 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E4CDB51D1F93BE1900BBFE12 /* Build configuration list for PBXNativeTarget "ARNotebook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4CDB51E1F93BE1900BBFE12 /* Debug */,
+				E4CDB51F1F93BE1900BBFE12 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E4CDB5031F93BE1900BBFE12 /* Project object */;
+}
