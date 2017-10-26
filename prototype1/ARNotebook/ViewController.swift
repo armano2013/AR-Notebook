@@ -12,7 +12,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate{
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate {
   
     /*
      -----
@@ -203,6 +203,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPage = Int((currentPageNode?.name)!)!
         }
     }
+    // tap outside any popup to dismiss
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+       dismiss(animated: true, completion: nil)
+    }
     @objc func tapped(sender: UITapGestureRecognizer) {
         let sceneView = sender.view as! ARSCNView
         let tapLocation = sender.location(in: sceneView)
@@ -334,10 +338,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     func deletePage(){
-        
+        print("VC")
     }
     func deleteNotebook(){
-        
+        print("VC Notebook")
     }
     
     /*
@@ -349,10 +353,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if let destination = segue.destination as? insertViewController{
             destination.delegate = self
         }
-        if let destination = segue.destination as? addPageViewController {
+        else if let destination = segue.destination as? addPageViewController {
            destination.delegate = self
         }
-        if let destination = segue.destination as? deleteViewController {
+        else if let destination = segue.destination as? deleteViewController {
             destination.delegate = self
         }
     }
