@@ -62,6 +62,25 @@
                                     <constraint firstAttribute="width" constant="160" id="mMW-pO-2r2"/>
                                     <constraint firstItem="NdV-Wy-JQd" firstAttribute="centerX" secondItem="nd7-ti-qq5" secondAttribute="centerX" id="q3R-tS-h0l"/>
                                 </constraints>
+                            <viewLayoutGuide key="safeArea" id="Dsb-YY-Lo3"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="M8W-KS-rUv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+           <point key="canvasLocation" x="532" y="496"/>
+         </scene>
+        <!--Page Color View Controller-->
+        <scene sceneID="Won-td-MPy">
+            <objects>
+                <viewController id="Na5-He-KwX" customClass="pageColorViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xwy-qo-XYN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gJT-KZ-Oq5" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
+                                <rect key="frame" x="87" y="549" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                         <real key="value" value="12"/>
@@ -69,12 +88,14 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="Dsb-YY-Lo3"/>
+               <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="Ynb-Hu-NM8"/>
                     </view>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="M8W-KS-rUv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CGQ-qs-Ix6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="532" y="496"/>
+            <point key="canvasLocation" x="373" y="385"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -331,6 +352,20 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wso-c7-ZSt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1696" y="-451"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="wsc-Bh-8QS">
+            <objects>
+                <viewController id="vdj-qN-L18" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="XH8-62-Epg">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="bDs-ce-Uhj"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YEC-tU-mwD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <resources>
