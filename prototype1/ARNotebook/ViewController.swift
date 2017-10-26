@@ -12,7 +12,11 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate {
+    func passingClip(string: String) {
+       //nothing
+    }
+    
     /*
      -----
      Global Variables
@@ -455,6 +459,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
         node.position = SCNVector3(-0.7, 0.0, 0.05)
         self.sceneView.scene.rootNode.addChildNode(node)
+        
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        dismiss(animated: true, completion: nil)
+        if let destination = segue.destination as? insertViewController{
+            destination.delegate = self
+        }
         
     }
 }

@@ -7,80 +7,60 @@
 //
 
 import UIKit
-import ARKit
-import SceneKit
 
-protocol imageDelegate : class {
+protocol insertDelegate {
     func passImage (image :UIImage)
-    
-}
-protocol textDelegate {
     func passingClip(string: String)
+    
 }
 
-class insertViewController: UIViewController, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITextViewDelegate  {
+class insertViewController: UIViewController ,UINavigationControllerDelegate, UIImagePickerControllerDelegate  {
     
+    var delegate : insertDelegate?
     
-    @IBOutlet weak var image: UIButton!
-    @IBOutlet weak var text: UIButton!
-    @IBOutlet weak var clipboard: UIButton!
-    var delegate : imageDelegate?
-    var delegate1 : textDelegate?
-    var one : String!
-    
-    
+    @IBOutlet weak var Insert: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Do any additional setup after loading the view.
     }
-
-    @IBAction func image(_ sender: Any) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    
+    @IBAction func chooseGalleryImage(_ sender: Any) {
+        let image = UIImagePickerController()
+        image.delegate = self
         
-        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
-        imagePicker.allowsEditing = false
-        self.present(imagePicker, animated: true)
+        image.sourceType = UIImagePickerControllerSourceType.photoLibrary
         
-        }
+        image.allowsEditing = false
+        
+        self.present(image, animated: true)
+    }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let imageOne = info[UIImagePickerControllerOriginalImage] as? UIImage{
-             print("xcode sucks")
             delegate?.passImage(image: imageOne)
         }
         else{
-                    print("xcode sucks")        }
-        dismiss(animated: true, completion: nil)        
-    }
-    @IBAction func Text(_ sender: Any) {
-        //
-    }
-    func getClipboard() -> String{
-        let pasteboard: String? = UIPasteboard.general.string
-        if let stringOne = pasteboard {
             
-            return stringOne
-            //update database here
-            
+            // error message
         }
-        return "No String Found on Clipboard"
+        
+        
     }
-    @IBAction func clipboard(_ sender: Any) {
-        one = getClipboard()
-        delegate1?.passingClip(string: one)
-        }
-  
-   
-   
-   
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 
