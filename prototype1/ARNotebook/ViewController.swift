@@ -12,7 +12,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate {
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate{
   
     /*
      -----
@@ -89,7 +89,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     // limit the text characters to be less than 140
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+   /* func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let startingLength = UserInputText.text?.characters.count ?? 0
         let lengthToAdd = string.characters.count
         let lengthToReplace = range.length
@@ -97,7 +97,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let newLength = startingLength + lengthToAdd - lengthToReplace
         
         return newLength <= 140
-    }
+    }*/
     /*
      -----
      Render SCNNodes for Text and Image
@@ -316,7 +316,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
     }
-    
+    /*
+     -----
+     Add Page Deletegate Funcitons
+     -----
+     */
+    func addPage(){
+        print("hello from main vc")
+    }
     /*
      -----
      Segue definitions
@@ -326,7 +333,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if let destination = segue.destination as? insertViewController{
             destination.delegate = self
         }
-        
+        if let destination = segue.destination as? addPageViewController {
+           destination.delegate = self
+        }
     }
 }
 
