@@ -7,18 +7,33 @@
 //
 
 import UIKit
+import ARKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 protocol insertDelegate {
-    func passImage (image :UIImage)
-    func passingClip(string: String)
-    
+    var currentPage: Int {get set}
+    func passImage (image: UIImage)
+    func passText(text: String)
 }
 
-class insertViewController: UIViewController ,UINavigationControllerDelegate, UIImagePickerControllerDelegate  {
-    
+class insertViewController: UIViewController ,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    /*
+     -----
+     Global Variables
+     -----
+     */
     var delegate : insertDelegate?
+    var ref: DatabaseReference! //calling a reference to the firebase database
+    var storageRef: StorageReference! //calling a reference to the firebase storage
+    @IBOutlet weak var UserInputText: UITextField!
     
-    @IBOutlet weak var Insert: UIButton!
+    /*
+     -----
+     Generic Set Up
+     -----
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,8 +44,70 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    /*
+     -----
+     Insert View Controller - Buttons
+     -----
+     */
     
-    
+    @IBAction func updateText(_ sender: Any) {
+        if let keyText = UserInputText.text {
+            delegate?.passText(text: keyText)
+            
+            /*renderNode(node: node)
+            // Uploading text to database
+            let dbString = UserInputText.text
+            let userID = Auth.auth().currentUser?.uid
+            ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                let textString = ["Update Text":dbString]
+                let childUpdates = ["users/\(userID)/notebook/page " + "\(self.currentPage)": textString]
+                self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                    if  err != nil{
+                        print(err as Any)
+                        return
+                    }
+                    print("text update successful")
+                })
+                let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.currentPage)")
+                
+                
+            }){ (error) in
+                print(error.localizedDescription)
+            }*/
+        }
+        else {
+            let alertController = UIAlertController(title: "Error", message: "You did not enter any text.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    @IBAction func addClipboardText(_ sender: Any) {
+        let text = getClipboard()
+        delegate?.passText(text: text)
+        
+        //adding clipboard to database
+        /*let dbClipboard = getClipboard()
+         let userID = String(describing: Auth.auth().currentUser?.uid)
+         ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+         
+         let clipboardString = ["Update Clipboard":dbClipboard]
+         let childUpdates = ["users/\(userID)/notebook/page " + "\(self.delegate?.currentPage ?? nil)": clipboardString]
+         
+         self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+         if  err != nil{
+         print(err as Any)
+         return
+         }
+         print("clipboard successful")
+         })
+         let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.delegate?.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.delegate?.currentPage)")
+         
+         
+         }) { (error) in
+         print(error.localizedDescription)
+         }*/
+    }
     @IBAction func chooseGalleryImage(_ sender: Any) {
         let image = UIImagePickerController()
         image.delegate = self
@@ -41,8 +118,93 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         
         self.present(image, animated: true)
     }
+    
+    /*
+     -----
+     Gesture Recognizers
+     -----
+     */
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // this ends the key boards
+        self.view.endEditing(true)
+    }
+    // hitting enter on the keyboard
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        dismiss(animated: true, completion: nil)
+        
+        updateText(self)
+        return true
+    }
+    
+    /*
+     -----
+     Insert View Controller - Logical functions, and database connections
+     -----
+     */
+    
+    func getClipboard() -> String{
+        let pasteboard: String? = UIPasteboard.general.string
+        if let string = pasteboard {
+            return string
+            //update database here
+        }
+        else{ //error for if there is nothing on the clipboard
+            dismiss(animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Error", message: "Your Clipboard is empty", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
+            }
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+            return ""
+        }
+    }
+    
+  
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
           dismiss(animated: true, completion: nil)
+        
+        /*
+         
+         Coppied DB Fucntion from view controller:
+         ------
+         
+         if let page = currentPageNode {
+         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+         //send picked image to the database
+         dismiss(animated: true, completion: nil)
+         let userID = String(describing: Auth.auth().currentUser?.uid)
+         let imageRef = storageRef?.child("images")
+         let fileRef = imageRef?.child((userID))
+         var data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
+         //normally would have your error handling; in this case we just do a return
+         let dataInfo = fileRef?.putData(data as Data, metadata: nil){
+         (metadata, error) in guard metadata != nil else {
+         
+         print("There was an error")
+         return
+         }
+         //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
+         // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
+         print(metadata?.downloadURLs as Any)
+         guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
+         
+         self.ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+         let urlString = ["image url":imageURL]
+         let childUpdates = ["users/\(userID)/notebook/page " + "\(self.currentPage)": urlString]
+         self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+         if  err != nil{
+         print(err as Any)
+         return
+         }
+         print("image url successful")
+         })
+         
+         }){ (error) in
+         print(error.localizedDescription)
+         }
+         }
+         let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.currentPage)")
+         */
         if let imageOne = info[UIImagePickerControllerOriginalImage] as? UIImage{
             delegate?.passImage(image: imageOne)
         }
@@ -50,18 +212,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             
             // error message
         }
-        
-        
     }
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }
 
