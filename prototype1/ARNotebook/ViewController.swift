@@ -321,8 +321,48 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Add Page Deletegate Funcitons
      -----
      */
+    /* added page, templates will be based on if else conditions,
+     if temp == single ( create single temp) geometry slight smaller than page node positioned center of page
+     else temp == two slot (create two slots) geometry ( height and width of noth nodes equal) positioned half
+     of page 
+     
+ */
     func addPage(){
         dismiss(animated: true, completion: nil)
+        if bookNode == nil {
+        let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
+        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
+        
+    }
+    else{ //error for if there is no book
+        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+            //gemoetry to figure out the size of the book placed //
+            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+            //@FIXME have fixed hieght for now bounding box isnt working
+            
+            if(pages.count % 2 == 0){
+                pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+            }
+            else{
+                pageNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+            }
+            pageNode.geometry?.firstMaterial?.isDoubleSided = true
+            //issues with y position here, the page isnt placed right ontop of the book
+            
+            let offset = Float(pages.count) * Float(0.01);
+            //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
+            pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+            pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
+            pages.append(pageNode)
+            pageNode.name = String(pages.count - 1) //minus one so 0 index array
+            currentPageNode = pageNode
+            bookNode.addChildNode(pageNode)
+            
+        }
+        
+        }
         print("hello from main vc")
     }
     /*
