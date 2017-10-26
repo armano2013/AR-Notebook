@@ -322,6 +322,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     func addPage(){
+        dismiss(animated: true, completion: nil)
         print("hello from main vc")
     }
     /*

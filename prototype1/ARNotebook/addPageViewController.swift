@@ -36,6 +36,7 @@ class addPageViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     /*
      -----
      newPageController - Buttons
@@ -47,6 +48,7 @@ class addPageViewController: UIViewController {
     }
     @IBAction func addOneSlotPage(_ sender: Any) {
         print("one slot page add")
+        delegate?.addPage()
     }
     
     /*

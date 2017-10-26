@@ -67,6 +67,21 @@
                                     <segue destination="ylS-d8-bpH" kind="presentation" id="UN5-yd-iFf"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qn-Z5-Zgq">
+                                <rect key="frame" x="154" y="698" width="106" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Edit Page Color"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gvf-9z-Pqb">
+                                <rect key="frame" x="21" y="578" width="45" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Delete"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0kK-Zk-BJV">
+                                <rect key="frame" x="305" y="577" width="89" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Open Recent"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -99,188 +114,6 @@
                 </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="640.57971014492762" y="-420.6521739130435"/>
-        </scene>
-        <!--New View Controller-->
-        <scene sceneID="6eN-b8-ap8">
-            <objects>
-                <viewController id="TCz-GK-AWa" customClass="newViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="X0x-vw-qx4">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Po-JZ-clU" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="127" y="433" width="120" height="175"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="12"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RlZ-Iu-rws">
-                                <rect key="frame" x="136" y="529" width="141" height="30"/>
-                                <state key="normal" title="New Notebook">
-                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tgb-u8-bOR">
-                                <rect key="frame" x="151" y="585" width="112" height="30"/>
-                                <state key="normal" title="New Page ">
-                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                </state>
-                                <connections>
-                                    <segue destination="t7h-HG-w0f" kind="presentation" id="g2a-gE-gDV"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="7Po-JZ-clU" firstAttribute="leading" secondItem="u1S-Sr-bTN" secondAttribute="leading" constant="67" id="8Sy-W9-YWq"/>
-                            <constraint firstItem="u1S-Sr-bTN" firstAttribute="trailing" secondItem="RlZ-Iu-rws" secondAttribute="trailing" constant="137" id="91H-10-Kq1"/>
-                            <constraint firstItem="u1S-Sr-bTN" firstAttribute="bottom" secondItem="tgb-u8-bOR" secondAttribute="bottom" constant="121" id="Cgz-LK-3yc"/>
-                            <constraint firstItem="tgb-u8-bOR" firstAttribute="top" secondItem="RlZ-Iu-rws" secondAttribute="bottom" constant="26" id="G6Q-GJ-84B"/>
-                            <constraint firstItem="u1S-Sr-bTN" firstAttribute="trailing" secondItem="tgb-u8-bOR" secondAttribute="trailing" constant="151" id="K5Q-0S-EHc"/>
-                            <constraint firstItem="RlZ-Iu-rws" firstAttribute="leading" secondItem="u1S-Sr-bTN" secondAttribute="leading" constant="136" id="d4g-nO-FjR"/>
-                            <constraint firstItem="u1S-Sr-bTN" firstAttribute="bottom" secondItem="7Po-JZ-clU" secondAttribute="bottom" constant="102" id="l9B-Lf-qjx"/>
-                            <constraint firstItem="tgb-u8-bOR" firstAttribute="leading" secondItem="u1S-Sr-bTN" secondAttribute="leading" constant="151" id="o4c-dO-pCa"/>
-                            <constraint firstItem="7Po-JZ-clU" firstAttribute="top" secondItem="u1S-Sr-bTN" secondAttribute="top" constant="417" id="voW-hb-CwM"/>
-                            <constraint firstItem="7Po-JZ-clU" firstAttribute="centerX" secondItem="X0x-vw-qx4" secondAttribute="centerX" id="vxq-9v-IEG"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="u1S-Sr-bTN"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hXq-hZ-BYw" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-644" y="921.58920539730138"/>
-        </scene>
-        <!--Add View Controller-->
-        <scene sceneID="3qd-hZ-UHU">
-            <objects>
-                <viewController modalPresentationStyle="overCurrentContext" id="db3-xQ-AWA" customClass="addViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="efq-KT-xBc">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jJZ-mS-djh" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="166" y="541" width="120" height="175"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Oi-Y1-gRQ">
-                                        <rect key="frame" x="45" y="8" width="31" height="30"/>
-                                        <state key="normal" title="New">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zSj-VL-6va">
-                                        <rect key="frame" x="36" y="54" width="48" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Recent">
-                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        </state>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ecF-8M-y9Q">
-                                        <rect key="frame" x="38" y="111" width="46" height="30"/>
-                                        <state key="normal" title="Insert">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="insert:" destination="db3-xQ-AWA" eventType="touchUpInside" id="72D-om-FPy"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="ecF-8M-y9Q" secondAttribute="trailing" constant="36" id="1eP-0i-EGd"/>
-                                    <constraint firstItem="2Oi-Y1-gRQ" firstAttribute="top" secondItem="jJZ-mS-djh" secondAttribute="top" constant="8" id="8Vm-qT-UtS"/>
-                                    <constraint firstAttribute="bottom" secondItem="ecF-8M-y9Q" secondAttribute="bottom" constant="34" id="Jmp-X2-gwM"/>
-                                    <constraint firstItem="2Oi-Y1-gRQ" firstAttribute="leading" secondItem="jJZ-mS-djh" secondAttribute="leading" constant="45" id="bfj-K5-Fh5"/>
-                                    <constraint firstAttribute="trailing" secondItem="2Oi-Y1-gRQ" secondAttribute="trailing" constant="44" id="fPG-RR-suu"/>
-                                    <constraint firstAttribute="bottom" secondItem="2Oi-Y1-gRQ" secondAttribute="bottom" constant="137" id="n1l-7b-KpE"/>
-                                    <constraint firstItem="ecF-8M-y9Q" firstAttribute="leading" secondItem="jJZ-mS-djh" secondAttribute="leading" constant="38" id="wc8-hN-uMr"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="12"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="CIT-6X-cg2" firstAttribute="trailing" secondItem="jJZ-mS-djh" secondAttribute="trailing" constant="128" id="4I9-Ge-GzG"/>
-                            <constraint firstItem="CIT-6X-cg2" firstAttribute="bottom" secondItem="jJZ-mS-djh" secondAttribute="bottom" constant="20" id="zSC-7v-BQh"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="CIT-6X-cg2"/>
-                    </view>
-                    <connections>
-                        <outlet property="insert" destination="ecF-8M-y9Q" id="Zqn-ag-vmh"/>
-                        <outlet property="new" destination="2Oi-Y1-gRQ" id="6g2-KL-hAr"/>
-                        <outlet property="recent" destination="zSj-VL-6va" id="FUa-1a-i5J"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1RY-BD-rh4" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="670" y="885"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="oTQ-wP-6zA">
-            <objects>
-                <viewController id="t7h-HG-w0f" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Jq5-7B-0mx">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qvv-Ec-SaT" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="127" y="442" width="160" height="244"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dcQ-P3-4lC">
-                                        <rect key="frame" x="32" y="174" width="97" height="30"/>
-                                        <state key="normal" title="Temp 2">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <connections>
-                                            <segue destination="qXQ-Gx-K79" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="GEQ-B4-CRX"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iRo-OW-wZM">
-                                        <rect key="frame" x="32" y="114" width="97" height="30"/>
-                                        <state key="normal" title="Temp 1">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <connections>
-                                            <segue destination="qXQ-Gx-K79" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="yQw-S4-cAL"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="dcQ-P3-4lC" secondAttribute="trailing" constant="31" id="74l-Bd-uAj"/>
-                                    <constraint firstItem="iRo-OW-wZM" firstAttribute="leading" secondItem="Qvv-Ec-SaT" secondAttribute="leading" constant="32" id="ULQ-2V-4Op"/>
-                                    <constraint firstItem="dcQ-P3-4lC" firstAttribute="top" secondItem="iRo-OW-wZM" secondAttribute="bottom" constant="30" id="XfF-yk-1CT"/>
-                                    <constraint firstAttribute="trailing" secondItem="iRo-OW-wZM" secondAttribute="trailing" constant="31" id="ozP-MP-1Rh"/>
-                                    <constraint firstAttribute="bottom" secondItem="dcQ-P3-4lC" secondAttribute="bottom" constant="40" id="vad-zO-ftF"/>
-                                    <constraint firstItem="dcQ-P3-4lC" firstAttribute="leading" secondItem="Qvv-Ec-SaT" secondAttribute="leading" constant="32" id="wRF-er-jcY"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="12"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="Qvv-Ec-SaT" firstAttribute="centerX" secondItem="Jq5-7B-0mx" secondAttribute="centerX" id="2n8-pS-0sY"/>
-                            <constraint firstItem="Qvv-Ec-SaT" firstAttribute="leading" secondItem="YUf-o7-iG8" secondAttribute="leading" constant="127" id="79G-K1-3EM"/>
-                            <constraint firstItem="YUf-o7-iG8" firstAttribute="bottom" secondItem="Qvv-Ec-SaT" secondAttribute="bottom" constant="50" id="cVr-Ys-AN4"/>
-                            <constraint firstItem="Qvv-Ec-SaT" firstAttribute="top" secondItem="YUf-o7-iG8" secondAttribute="top" constant="422" id="hfq-Sy-qtQ"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="YUf-o7-iG8"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Z6h-qX-1nf" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="qXQ-Gx-K79" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="-644" y="1764.4677661169417"/>
         </scene>
         <!--Insert View Controller-->
         <scene sceneID="9CG-wg-Kx1">
@@ -371,40 +204,6 @@
             </objects>
             <point key="canvasLocation" x="1667" y="563"/>
         </scene>
-        <!--Text View Controller-->
-        <scene sceneID="B09-Uv-cAC">
-            <objects>
-                <viewController id="Ew9-Ja-XIM" customClass="textViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="YAO-N8-aPV">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QeC-6v-JKx">
-                                <rect key="frame" x="139" y="335" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <action selector="textField:" destination="Ew9-Ja-XIM" eventType="editingDidEnd" id="il5-N6-LTe"/>
-                                    <segue destination="ZiT-vW-dz5" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="17v-hG-IAy"/>
-                                </connections>
-                            </textField>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <viewLayoutGuide key="safeArea" id="LQp-Hk-H8Z"/>
-                    </view>
-                    <connections>
-                        <outlet property="text" destination="QeC-6v-JKx" id="VQ3-Hu-EQa"/>
-                        <outlet property="userTextInput" destination="QeC-6v-JKx" id="PJh-yG-gTP"/>
-                        <segue destination="ZiT-vW-dz5" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="dhh-KY-46k"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="QoV-xL-1LC" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="ZiT-vW-dz5" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="2752.8000000000002" y="905.3973013493254"/>
-        </scene>
         <!--Add Page View Controller-->
         <scene sceneID="Be6-hA-khY">
             <objects>
@@ -458,21 +257,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wso-c7-ZSt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1696" y="-451"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="VfK-77-Qpu">
-            <objects>
-                <viewController id="pMZ-SD-yNg" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="rwt-2S-VAb">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <viewLayoutGuide key="safeArea" id="1BE-yJ-PtC"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ii4-bJ-SmD" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="641" y="456"/>
         </scene>
     </scenes>
     <resources>

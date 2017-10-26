@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F5A442D1F9AA917005EAB55 /* references.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A442C1F9AA917005EAB55 /* references.swift */; };
 		1FE350D51FA24C03006AADA7 /* addPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE350D41FA24C03006AADA7 /* addPageViewController.swift */; };
 		6DBF880E1F953ECB005C1456 /* designableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBF880D1F953ECB005C1456 /* designableView.swift */; };
 		89DA3783F4A25CD8BFA95048 /* Pods_ARNotebook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */; };
@@ -22,13 +21,10 @@
 		E4CDB5191F93BE1900BBFE12 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */; };
 		E4CDB5211F93C12000BBFE12 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4CDB5201F93C11D00BBFE12 /* FBSDKCoreKit.framework */; };
 		E4CDB5251F93C25B00BBFE12 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */; };
-		E4CDB52B1F93D4C500BBFE12 /* addViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */; };
-		E4CDB52D1F93D53700BBFE12 /* newViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB52C1F93D53700BBFE12 /* newViewController.swift */; };
 		E4CDB52F1F93D64F00BBFE12 /* insertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CDB52E1F93D64F00BBFE12 /* insertViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1F5A442C1F9AA917005EAB55 /* references.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = references.swift; sourceTree = "<group>"; };
 		1FE350D41FA24C03006AADA7 /* addPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addPageViewController.swift; sourceTree = "<group>"; };
 		6DBF880D1F953ECB005C1456 /* designableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = designableView.swift; sourceTree = "<group>"; };
 		7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARNotebook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,8 +43,6 @@
 		E4CDB5201F93C11D00BBFE12 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		E4CDB5231F93C12D00BBFE12 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
-		E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addViewController.swift; sourceTree = "<group>"; };
-		E4CDB52C1F93D53700BBFE12 /* newViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newViewController.swift; sourceTree = "<group>"; };
 		E4CDB52E1F93D64F00BBFE12 /* insertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = insertViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -111,15 +105,12 @@
 				E4CDB5121F93BE1900BBFE12 /* Main.storyboard */,
 				6DBF880D1F953ECB005C1456 /* designableView.swift */,
 				E4CDB52E1F93D64F00BBFE12 /* insertViewController.swift */,
-				E4CDB52C1F93D53700BBFE12 /* newViewController.swift */,
-				E4CDB52A1F93D4C500BBFE12 /* addViewController.swift */,
 				1FE350D41FA24C03006AADA7 /* addPageViewController.swift */,
 				E4CDB5241F93C25B00BBFE12 /* AuthenticationViewController.swift */,
 				C267263D1F9552A100E6EEA1 /* arScene.swift */,
 				E4CDB51A1F93BE1900BBFE12 /* Info.plist */,
 				E4CDB5171F93BE1900BBFE12 /* LaunchScreen.storyboard */,
 				E40171141F972716003CEB85 /* GoogleService-Info.plist */,
-				1F5A442C1F9AA917005EAB55 /* references.swift */,
 				E4CDB5151F93BE1900BBFE12 /* Assets.xcassets */,
 				C267263B1F9551E300E6EEA1 /* art.scnassets */,
 			);
@@ -280,13 +271,10 @@
 				6DBF880E1F953ECB005C1456 /* designableView.swift in Sources */,
 				E4CDB5111F93BE1900BBFE12 /* ViewController.swift in Sources */,
 				E4CDB5251F93C25B00BBFE12 /* AuthenticationViewController.swift in Sources */,
-				1F5A442D1F9AA917005EAB55 /* references.swift in Sources */,
 				1FE350D51FA24C03006AADA7 /* addPageViewController.swift in Sources */,
-				E4CDB52B1F93D4C500BBFE12 /* addViewController.swift in Sources */,
 				E4CDB50F1F93BE1900BBFE12 /* AppDelegate.swift in Sources */,
 				E4CDB52F1F93D64F00BBFE12 /* insertViewController.swift in Sources */,
 				C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */,
-				E4CDB52D1F93D53700BBFE12 /* newViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
