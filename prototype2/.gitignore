@@ -1,0 +1,16 @@
+# See LICENSE folder for this sample’s licensing information.
+#
+# Apple sample code gitignore configuration.
+
+# Finder
+.DS_Store
+
+# Xcode - User files
+xcuserdata/
+
+# add sql ignore
+SQLite.xcodeproj
+
+Pods/
+FBSDKCoreKit.framework
+FBSDKLoginKit.framework
