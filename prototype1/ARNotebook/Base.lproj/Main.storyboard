@@ -63,6 +63,7 @@
                                     <constraint firstItem="NdV-Wy-JQd" firstAttribute="centerX" secondItem="nd7-ti-qq5" secondAttribute="centerX" id="q3R-tS-h0l"/>
                                 </constraints>
                             <viewLayoutGuide key="safeArea" id="Dsb-YY-Lo3"/>
+                         </subviews>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M8W-KS-rUv" userLabel="First Responder" sceneMemberID="firstResponder"/>
