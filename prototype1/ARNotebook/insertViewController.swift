@@ -19,12 +19,21 @@ protocol insertDelegate {
 }
 
 class insertViewController: UIViewController ,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-    
+    /*
+     -----
+     Global Variables
+     -----
+     */
     var delegate : insertDelegate?
-    
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     @IBOutlet weak var UserInputText: UITextField!
+    
+    /*
+     -----
+     Generic Set Up
+     -----
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,6 +44,11 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    /*
+     -----
+     Insert View Controller - Buttons
+     -----
+     */
     
     @IBAction func updateText(_ sender: Any) {
         if let keyText = UserInputText.text {
@@ -68,6 +82,48 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    @IBAction func addClipboardText(_ sender: Any) {
+        let text = getClipboard()
+        delegate?.passText(text: text)
+        
+        //adding clipboard to database
+        /*let dbClipboard = getClipboard()
+         let userID = String(describing: Auth.auth().currentUser?.uid)
+         ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+         
+         let clipboardString = ["Update Clipboard":dbClipboard]
+         let childUpdates = ["users/\(userID)/notebook/page " + "\(self.delegate?.currentPage ?? nil)": clipboardString]
+         
+         self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+         if  err != nil{
+         print(err as Any)
+         return
+         }
+         print("clipboard successful")
+         })
+         let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.delegate?.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.delegate?.currentPage)")
+         
+         
+         }) { (error) in
+         print(error.localizedDescription)
+         }*/
+    }
+    @IBAction func chooseGalleryImage(_ sender: Any) {
+        let image = UIImagePickerController()
+        image.delegate = self
+        
+        image.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        
+        image.allowsEditing = false
+        
+        self.present(image, animated: true)
+    }
+    
+    /*
+     -----
+     Gesture Recognizers
+     -----
+     */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // this ends the key boards
         self.view.endEditing(true)
@@ -79,6 +135,12 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         updateText(self)
         return true
     }
+    
+    /*
+     -----
+     Insert View Controller - Logical functions, and database connections
+     -----
+     */
     
     func getClipboard() -> String{
         let pasteboard: String? = UIPasteboard.general.string
@@ -97,42 +159,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         }
     }
     
-    @IBAction func addClipboardText(_ sender: Any) {
-        let text = getClipboard()
-        delegate?.passText(text: text)
-        
-        //adding clipboard to database
-        /*let dbClipboard = getClipboard()
-        let userID = String(describing: Auth.auth().currentUser?.uid)
-        ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            let clipboardString = ["Update Clipboard":dbClipboard]
-            let childUpdates = ["users/\(userID)/notebook/page " + "\(self.delegate?.currentPage ?? nil)": clipboardString]
-            
-            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
-                if  err != nil{
-                    print(err as Any)
-                    return
-                }
-                print("clipboard successful")
-            })
-            let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.delegate?.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.delegate?.currentPage)")
-
-            
-        }) { (error) in
-            print(error.localizedDescription)
-        }*/
-    }
-    @IBAction func chooseGalleryImage(_ sender: Any) {
-        let image = UIImagePickerController()
-        image.delegate = self
-        
-        image.sourceType = UIImagePickerControllerSourceType.photoLibrary
-        
-        image.allowsEditing = false
-        
-        self.present(image, animated: true)
-    }
+  
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
           dismiss(animated: true, completion: nil)
         

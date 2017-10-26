@@ -20,11 +20,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    @IBOutlet weak var UserInputText: UITextField!
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     var bookNode: SCNNode?
-    let imagePicker = UIImagePickerController()
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
@@ -58,7 +56,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        UserInputText.delegate = self as? UITextFieldDelegate
         /// Create a session configuration
          self.registerGestureRecognizers()
          self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -71,19 +68,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
     }
-    //this function will shutdown the keyboard when touch else where
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // this ends the key boards
-        self.view.endEditing(true)
-    }
+
     /*
      -----
      Main Story - View Controller Buttons
      -----
      */
     
-   
-
     @IBAction func undo(_ sender: Any) {
         if let last = (lastNode.last){
             last.removeFromParentNode()
@@ -107,6 +98,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         
         return newLength <= 140
     }
+    /*
+     -----
+     Render SCNNodes for Text and Image
+     -----
+     */
     
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
@@ -179,7 +175,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             
         }
     }
-    //page turns
+    /*
+     -----
+     Tap Interactions
+     -----
+     */
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
         if (pages.count > 1 && Int((currentPageNode?.name)!)! > 0) {
@@ -238,9 +238,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     /*
-     This section will show the 'focus square' when AR Kit detects a flat surface.
-     This will help users know when the can click to set a notebook object
-     
+     -----
+     Focus Square
+     -----
      */
     func createPlaneFocusSquare(planeAnchor: ARPlaneAnchor)->SCNNode{
         //.extent means the width and height of horizontal surface detected
@@ -275,8 +275,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Insert View Controller Callback Functions
      -----
      */
-    
-    
     func passText(text: String) {
         dismiss(animated: true, completion: nil)
         if bookNode != nil && currentPageNode != nil{
@@ -317,8 +315,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(addPageAction)
             self.present(alertController, animated: true, completion: nil)
         }
-        
     }
+    
+    /*
+     -----
+     Segue definitions
+     -----
+     */
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? insertViewController{
             destination.delegate = self
@@ -326,6 +329,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         
     }
 }
+
 //converts degrees to radians, since objects are oriented according to radians
 //credit to udemy video
 extension Int {

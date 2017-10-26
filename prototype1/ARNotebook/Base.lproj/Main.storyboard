@@ -51,27 +51,12 @@
                                     <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dGQ-F1-UVK"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DyU-jB-arc">
-                                <rect key="frame" x="95" y="652" width="224" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXA-sQ-EEB">
                                 <rect key="frame" x="20" y="691" width="69" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="New Page"/>
                                 <connections>
                                     <action selector="addPage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qqg-9b-4RJ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BAC-4y-d12">
-                                <rect key="frame" x="165" y="691" width="84" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Update Text"/>
-                                <connections>
-                                    <action selector="updateText:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lj5-Ib-squ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFE-mw-2FI">
@@ -96,7 +81,6 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="UserInputText" destination="DyU-jB-arc" id="TEG-u4-9Db"/>
                         <outlet property="sceneView" destination="7rB-xZ-A2i" id="KUY-j7-7m4"/>
                     </connections>
                 </viewController>
