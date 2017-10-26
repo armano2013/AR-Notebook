@@ -42,6 +42,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         self.present(image, animated: true)
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+          dismiss(animated: true, completion: nil)
         if let imageOne = info[UIImagePickerControllerOriginalImage] as? UIImage{
             delegate?.passImage(image: imageOne)
         }

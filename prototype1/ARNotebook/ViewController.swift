@@ -455,10 +455,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     // functions to pass the image through to the VIEW CONTROLLER
     func passImage(image: UIImage) {
         //let page = currentPageNode
-        let node = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+        let node = SCNNode()
+        let page = currentPageNode
+        node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
         node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-        node.position = SCNVector3(-0.7, 0.0, 0.05)
-        self.sceneView.scene.rootNode.addChildNode(node)
+        node.position = SCNVector3(0,0, 0.001)
+        lastNode.append(node)
+        page?.addChildNode(node)
         
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
