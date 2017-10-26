@@ -12,7 +12,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate{
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate{
   
     /*
      -----
@@ -325,6 +325,21 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         print("hello from main vc")
     }
+    
+    
+    /*
+     -----
+     Delete Deletegate Funcitons
+     -----
+     */
+    
+    func deletePage(){
+        
+    }
+    func deleteNotebook(){
+        
+    }
+    
     /*
      -----
      Segue definitions
@@ -336,6 +351,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
         if let destination = segue.destination as? addPageViewController {
            destination.delegate = self
+        }
+        if let destination = segue.destination as? deleteViewController {
+            destination.delegate = self
         }
     }
 }

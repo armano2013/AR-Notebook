@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F777BAA1FA25632006C59E4 /* deleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F777BA91FA25632006C59E4 /* deleteViewController.swift */; };
 		1FE350D51FA24C03006AADA7 /* addPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE350D41FA24C03006AADA7 /* addPageViewController.swift */; };
 		6DBF880E1F953ECB005C1456 /* designableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBF880D1F953ECB005C1456 /* designableView.swift */; };
 		89DA3783F4A25CD8BFA95048 /* Pods_ARNotebook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F777BA91FA25632006C59E4 /* deleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = deleteViewController.swift; sourceTree = "<group>"; };
 		1FE350D41FA24C03006AADA7 /* addPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addPageViewController.swift; sourceTree = "<group>"; };
 		6DBF880D1F953ECB005C1456 /* designableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = designableView.swift; sourceTree = "<group>"; };
 		7EC11A4D3D916B0366D0DA6E /* Pods_ARNotebook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARNotebook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +105,7 @@
 				E4CDB50E1F93BE1900BBFE12 /* AppDelegate.swift */,
 				E4CDB5101F93BE1900BBFE12 /* ViewController.swift */,
 				E4CDB5121F93BE1900BBFE12 /* Main.storyboard */,
+				1F777BA91FA25632006C59E4 /* deleteViewController.swift */,
 				6DBF880D1F953ECB005C1456 /* designableView.swift */,
 				E4CDB52E1F93D64F00BBFE12 /* insertViewController.swift */,
 				1FE350D41FA24C03006AADA7 /* addPageViewController.swift */,
@@ -275,6 +278,7 @@
 				E4CDB50F1F93BE1900BBFE12 /* AppDelegate.swift in Sources */,
 				E4CDB52F1F93D64F00BBFE12 /* insertViewController.swift in Sources */,
 				C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */,
+				1F777BAA1FA25632006C59E4 /* deleteViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
