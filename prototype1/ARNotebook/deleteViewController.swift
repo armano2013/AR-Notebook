@@ -7,7 +7,10 @@
 //
 
 import UIKit
-
+import ARKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 protocol deleteDelegate {
     func deletePage()
     func deleteNotebook()
@@ -19,7 +22,8 @@ class deleteViewController : UIViewController {
      -----
      */
     var delegate : deleteDelegate?
-    
+    var ref: DatabaseReference! //calling a reference to the firebase database
+    var storageRef: StorageReference! //calling a reference to the firebase storage
     /*
      -----
      Generic Set Up
@@ -27,7 +31,8 @@ class deleteViewController : UIViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        ref = Database.database().reference()
+        storageRef = Storage.storage().reference()
         // Do any additional setup after loading the view.
     }
     override func didReceiveMemoryWarning() {
