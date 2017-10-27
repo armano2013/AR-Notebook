@@ -12,13 +12,16 @@ import FirebaseAuth
 import FacebookCore
 import FirebaseDatabase
 
-class AuthenticationViewController: UIViewController, LoginButtonDelegate {
+
+class AuthenticationViewController: UIViewController, LoginButtonDelegate, profileNameDelegate {
     
     func loginButtonDidLogOut(_ loginButton: LoginButton) {
     }
     
     var ref: DatabaseReference!
+    var profileName : String!
     
+
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -60,8 +63,7 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
                     print("successfull")
                 })
                 
-                userName  = user?.displayName
-                
+                self.profileName  = user?.displayName
             })
             
             performSegue(withIdentifier: "loginSegue", sender: self)
@@ -70,7 +72,12 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
         }
     }
     
-
+   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as?  ViewController {
+            destination.nameDelegate = self
+        }
+    
+    }
 
     
     /*
@@ -86,4 +93,4 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate {
 }
 
 //FB Name Global
-var userName : String?
+

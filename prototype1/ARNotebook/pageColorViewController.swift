@@ -7,12 +7,19 @@
 //
 
 import UIKit
-
+import ARKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 class pageColorViewController: UIViewController {
 
+    var ref: DatabaseReference! //calling a reference to the firebase database
+    var storageRef: StorageReference! //calling a reference to the firebase storage
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        ref = Database.database().reference()
+        storageRef = Storage.storage().reference()
         // Do any additional setup after loading the view.
     }
 

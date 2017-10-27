@@ -7,7 +7,10 @@
 //
 
 import UIKit
-
+import ARKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 protocol addPageDelegate {
     var currentPage: Int {get set}
     func addPage()
@@ -20,6 +23,8 @@ class addPageViewController: UIViewController {
      Global Variables
      -----
      */
+    var ref: DatabaseReference! //calling a reference to the firebase database
+    var storageRef: StorageReference! //calling a reference to the firebase storage
     var delegate : addPageDelegate?
     
     /*
@@ -29,7 +34,8 @@ class addPageViewController: UIViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        ref = Database.database().reference()
+        storageRef = Storage.storage().reference()
         // Do any additional setup after loading the view.
     }
     override func didReceiveMemoryWarning() {

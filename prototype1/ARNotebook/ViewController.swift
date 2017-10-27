@@ -12,7 +12,12 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
+protocol profileNameDelegate {
+    var profileName : String! {get set}
+}
+
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate {
+    
   
     /*
      -----
@@ -27,7 +32,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     var currentPage : Int = 1 // global variable to keep track of current page number
-    
+    var nameDelegate : profileNameDelegate? // calling the delegate to the AuthViewCont to get user's profile name
+    var currentProfile : String!
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     
@@ -192,6 +198,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
+    
     @IBAction func leftSwipe(_ sender: Any) {
            //if there is more than one page and the current page node is the last one in the array turn the page forward
         if (pages.count > 1 && ((Int((currentPageNode?.name)!)!) < Int(pages.count - 1))) {
@@ -204,9 +211,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     // tap outside any popup to dismiss
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    /*override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
        dismiss(animated: true, completion: nil)
-    }
+    }*/
     @objc func tapped(sender: UITapGestureRecognizer) {
         let sceneView = sender.view as! ARSCNView
         let tapLocation = sender.location(in: sceneView)
@@ -239,6 +246,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.sceneView.scene.rootNode.addChildNode(node)
 
         }
+        currentProfile = (self.nameDelegate?.profileName!)!
+
     }
     
     /*
@@ -360,10 +369,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
-            pageNode.name = String(pages.count - 1) //minus one so 0 index array
+            pageNode.name = String(pages.count) //minus one so 0 index array  why??
             currentPageNode = pageNode
             bookNode.addChildNode(pageNode)
-            
+            currentPage = Int((currentPageNode?.name)!)!
         }
         
         }
