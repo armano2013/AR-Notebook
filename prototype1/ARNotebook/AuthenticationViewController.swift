@@ -32,7 +32,6 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate, profi
         FBLogin.center = view.center
         view.addSubview(FBLogin)
         FBLogin.delegate = self as LoginButtonDelegate
-        
         ref = Database.database().reference().child("users")
         
     }
@@ -71,6 +70,7 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate, profi
             break
         }
     }
+    
     
    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as?  ViewController {
