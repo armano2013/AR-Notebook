@@ -181,7 +181,6 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="fmC-4i-eLe"/>
-
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CGQ-qs-Ix6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -209,13 +208,6 @@
                                 <state key="normal" image="undo"/>
                                 <connections>
                                     <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dGQ-F1-UVK"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eQn-zB-gg4">
-                                <rect key="frame" x="132" y="60" width="150" height="30"/>
-                                <state key="normal" title="Fake add Page Button"/>
-                                <connections>
-                                    <action selector="addPage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CFh-Ic-bqd"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXA-sQ-EEB">
@@ -272,14 +264,12 @@
                             <constraint firstItem="tYF-ND-GVF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="2nJ-lq-ZDo"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="52S-uA-7os"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="FTP-3e-8mq"/>
-                            <constraint firstItem="eQn-zB-gg4" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="LhZ-gI-J5Y"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="P2R-p2-pD4"/>
                             <constraint firstItem="gvf-9z-Pqb" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="TJv-Wk-sWe"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Z4S-TT-Sg8"/>
                             <constraint firstItem="1qn-Z5-Zgq" firstAttribute="top" secondItem="gvf-9z-Pqb" secondAttribute="bottom" constant="40" id="d1e-Zs-Pun"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eXA-sQ-EEB" secondAttribute="bottom" constant="8" id="eJt-gu-bye"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="0kK-Zk-BJV" secondAttribute="trailing" constant="20" id="fvA-He-EfC"/>
-                            <constraint firstItem="eQn-zB-gg4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="g9L-Je-ezg"/>
                             <constraint firstItem="eXA-sQ-EEB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="mNQ-4b-lUp"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="0kK-Zk-BJV" secondAttribute="bottom" constant="8" id="qgy-ch-j4V"/>
                             <constraint firstItem="1qn-Z5-Zgq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="tFi-mF-ftL"/>
