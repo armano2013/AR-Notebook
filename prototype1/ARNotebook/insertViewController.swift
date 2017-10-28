@@ -13,6 +13,7 @@ import FirebaseAuth
 import FirebaseDatabase
 
 protocol insertDelegate {
+    var currentProfile: String!  {get set}
     var currentPage: Int {get set}
     func passImage (image: UIImage)
     func passText(text: String)
@@ -36,7 +37,8 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        ref = Database.database().reference()
+        storageRef = Storage.storage().reference()
         // Do any additional setup after loading the view.
     }
     
@@ -54,13 +56,15 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         if let keyText = UserInputText.text {
             delegate?.passText(text: keyText)
             
-            /*renderNode(node: node)
+            
+            //delegate?.renderNode(node: node)
+            
             // Uploading text to database
             let dbString = UserInputText.text
-            let userID = Auth.auth().currentUser?.uid
-            ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+            let userID = (self.delegate?.currentProfile!)!
+            ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
                 let textString = ["Update Text":dbString]
-                let childUpdates = ["users/\(userID)/notebook/page " + "\(self.currentPage)": textString]
+                let childUpdates = ["users/\(userID)/notebook/page " + "\((self.delegate?.currentPage)!)": textString]
                 self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                     if  err != nil{
                         print(err as Any)
@@ -68,12 +72,12 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
                     }
                     print("text update successful")
                 })
-                let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.currentPage)")
+               // let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\((self.delegate?.currentPage)!)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\((self.delegate?.currentPage)!)")
                 
                 
             }){ (error) in
                 print(error.localizedDescription)
-            }*/
+            }
         }
         else {
             let alertController = UIAlertController(title: "Error", message: "You did not enter any text.", preferredStyle: UIAlertControllerStyle.alert)
@@ -87,12 +91,12 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         delegate?.passText(text: text)
         
         //adding clipboard to database
-        /*let dbClipboard = getClipboard()
-         let userID = String(describing: Auth.auth().currentUser?.uid)
+        let dbClipboard = getClipboard()
+        let userID = (self.delegate?.currentProfile!)!
          ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
          
          let clipboardString = ["Update Clipboard":dbClipboard]
-         let childUpdates = ["users/\(userID)/notebook/page " + "\(self.delegate?.currentPage ?? nil)": clipboardString]
+         let childUpdates = ["users/\(userID)/notebook/page " + "\((self.delegate?.currentPage)!)": clipboardString]
          
          self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
          if  err != nil{
@@ -101,12 +105,12 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
          }
          print("clipboard successful")
          })
-         let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.delegate?.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.delegate?.currentPage)")
+        // let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\((self.delegate?.currentPage)!)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.delegate?.currentPage)")
          
          
          }) { (error) in
          print(error.localizedDescription)
-         }*/
+         }
     }
     @IBAction func chooseGalleryImage(_ sender: Any) {
         let image = UIImagePickerController()
@@ -163,16 +167,15 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
           dismiss(animated: true, completion: nil)
         
-        /*
+        
          
-         Coppied DB Fucntion from view controller:
-         ------
+         //Coppied DB Fucntion from view controller:
+         //------
          
-         if let page = currentPageNode {
          if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
          //send picked image to the database
          dismiss(animated: true, completion: nil)
-         let userID = String(describing: Auth.auth().currentUser?.uid)
+            let userID = (self.delegate?.currentProfile!)!
          let imageRef = storageRef?.child("images")
          let fileRef = imageRef?.child((userID))
          var data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
@@ -190,7 +193,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
          
          self.ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
          let urlString = ["image url":imageURL]
-         let childUpdates = ["users/\(userID)/notebook/page " + "\(self.currentPage)": urlString]
+         let childUpdates = ["users/\(userID)/notebook/page " + "\((self.delegate?.currentPage)!)": urlString]
          self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
          if  err != nil{
          print(err as Any)
@@ -203,8 +206,10 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
          print(error.localizedDescription)
          }
          }
-         let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\(self.currentPage)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\(self.currentPage)")
-         */
+         //let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\((self.delegate?.currentPage)!)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\((self.delegate?.currentPage)!)")
+         
+         }
+ 
         if let imageOne = info[UIImagePickerControllerOriginalImage] as? UIImage{
             delegate?.passImage(image: imageOne)
         }
@@ -212,7 +217,8 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             
             // error message
         }
+        }
     }
     
-}
+
 
