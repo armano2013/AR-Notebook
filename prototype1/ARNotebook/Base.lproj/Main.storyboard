@@ -342,6 +342,14 @@
                                             <action selector="updateText:" destination="ylS-d8-bpH" eventType="touchUpInside" id="YIB-4Z-KNe"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N9v-bT-rW9">
+                                        <rect key="frame" x="356" y="100" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="back" image="back"/>
+                                        <connections>
+                                            <action selector="backButton:" destination="ylS-d8-bpH" eventType="touchUpInside" id="b48-4Z-C3M"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -365,13 +373,13 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Krg-RW-Dq0" firstAttribute="trailing" secondItem="afb-IR-b20" secondAttribute="trailing" id="4Oh-HR-hPG"/>
-                            <constraint firstItem="Krg-RW-Dq0" firstAttribute="leading" secondItem="afb-IR-b20" secondAttribute="leading" id="5Rb-8K-W4F"/>
-                            <constraint firstItem="afb-IR-b20" firstAttribute="bottom" secondItem="Krg-RW-Dq0" secondAttribute="bottom" constant="20" id="aNv-Jl-ArJ"/>
+                            <constraint firstItem="Krg-RW-Dq0" firstAttribute="trailing" secondItem="K8l-Bq-ec6" secondAttribute="trailing" id="4Oh-HR-hPG"/>
+                            <constraint firstItem="Krg-RW-Dq0" firstAttribute="leading" secondItem="K8l-Bq-ec6" secondAttribute="leading" id="5Rb-8K-W4F"/>
+                            <constraint firstAttribute="bottom" secondItem="Krg-RW-Dq0" secondAttribute="bottom" constant="20" id="aNv-Jl-ArJ"/>
                             <constraint firstItem="Krg-RW-Dq0" firstAttribute="centerX" secondItem="K8l-Bq-ec6" secondAttribute="centerX" id="nEP-JD-01d"/>
                             <constraint firstItem="Krg-RW-Dq0" firstAttribute="centerX" secondItem="K8l-Bq-ec6" secondAttribute="centerX" id="sDe-se-Pl6"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="afb-IR-b20"/>
+                        <viewLayoutGuide key="safeArea" id="ySw-hE-dtB"/>
                     </view>
                     <connections>
                         <outlet property="UserInputText" destination="Dap-Gh-LMb" id="8o0-U0-eOZ"/>
@@ -440,6 +448,7 @@
     </scenes>
     <resources>
         <image name="add" width="50" height="50"/>
+        <image name="back" width="483" height="480"/>
         <image name="delete" width="50" height="50"/>
         <image name="edit" width="50" height="50"/>
         <image name="newpage" width="50" height="50"/>
