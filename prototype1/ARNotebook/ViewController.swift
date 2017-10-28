@@ -14,10 +14,9 @@ import FirebaseDatabase
 
 protocol profileNameDelegate {
     var profileName : String! {get set}
-}
+
 
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate {
-    
   
     /*
      -----
@@ -392,6 +391,35 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func deleteNotebook(){
         print("VC Notebook")
     }
+    /*
+     -----
+     Page Color Deletegate Funcitons
+     -----
+     */
+    
+    func pageColor(image: UIImage) {
+        if bookNode != nil && currentPageNode != nil{
+            if pages != nil{
+            for page in pages {
+                page.geometry?.firstMaterial?.diffuse.contents = image
+            }
+            }
+            else{
+                let alertController = UIAlertController(title: "Error", message: "Please add a page before selecting color", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+            // maybe an array for all the pages to change all or a single page at a time ?
+        }
+        else{ //error for if there is no book
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        dismiss(animated: true, completion: nil)
+    }
     
     /*
      -----
@@ -406,6 +434,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
            destination.delegate = self
         }
         else if let destination = segue.destination as? deleteViewController {
+            destination.delegate = self
+        }
+        else if let destination = segue.destination as? pageColorViewController{
             destination.delegate = self
         }
     }

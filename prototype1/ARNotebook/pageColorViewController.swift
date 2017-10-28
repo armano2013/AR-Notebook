@@ -7,36 +7,99 @@
 //
 
 import UIKit
-import ARKit
-import Firebase
-import FirebaseAuth
-import FirebaseDatabase
-class pageColorViewController: UIViewController {
 
-    var ref: DatabaseReference! //calling a reference to the firebase database
-    var storageRef: StorageReference! //calling a reference to the firebase storage
+protocol pageColorDelegate {
+    func pageColor(image : UIImage)
+}
+
+class pageColorViewController: UIViewController {
+    /*
+     -----
+     Global Variables
+     -----
+     */
+    var delegate : pageColorDelegate?
     
+    /*
+     -----
+     Generic Set Up
+     -----
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
-        ref = Database.database().reference()
-        storageRef = Storage.storage().reference()
+
         // Do any additional setup after loading the view.
     }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func redButton(_ sender: Any) {
+        print("page color red")
+        let red = #imageLiteral(resourceName: "RedPage")
+        delegate?.pageColor(image : red)
     }
-    */
+    @IBAction func blueColor(_ sender: Any) {
+        print("page color blue")
+        let blue = #imageLiteral(resourceName: "BluePage")
+        delegate?.pageColor(image : blue)
+    }
+    @IBAction func greenColor(_ sender: Any) {
+        print("page color green")
+        let green = #imageLiteral(resourceName: "GreenPage")
+        delegate?.pageColor(image : green)
+    }
+    @IBAction func purpleColor(_ sender: Any) {
+        print("page color purple")
+        let purple = #imageLiteral(resourceName: "PurplePage")
+        delegate?.pageColor(image : purple)
+    }
+    @IBAction func yellowPage(_ sender: Any) {
+        print("page color yellow")
+        let yellow = #imageLiteral(resourceName: "YellowPage")
+        delegate?.pageColor(image : yellow)
+    }
+    @IBAction func DefaultPage(_ sender: Any) {
+        print("page color default")
+        let plain = #imageLiteral(resourceName: "page")
+        delegate?.pageColor(image : plain)
+    }
+    
+    
+    /*
+     -----
+     Delete View Controller - Buttons
+     -----
+     */
+ 
 
 }
+// Thought about using collection View as a method heres the code
+
+//    @IBOutlet weak var menuCell: UICollectionView!
+//
+//    let menuArray :[UIColor] = [UIColor.red, UIColor.blue, UIColor.brown]
+//     self.menuCell.dataSource = self
+//    self.menuCell.delegate = self
+
+//       func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//            return menuArray.count
+//        }
+//        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "menu", for: indexPath)
+//            cell.backgroundColor = self.menuArray[indexPath.row]
+//
+//            return cell
+//        }
+//       func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//            let cell = collectionView.cellForItem(at: indexPath)
+//            cell?.backgroundColor = UIColor.gray
+//        }
+//        func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+//            let cell = collectionView.cellForItem(at: indexPath)
+//            cell?.backgroundColor = UIColor.white
+//        }
+//        func dissMissview (){
+//            dismiss(animated: true, completion: nil)
+//        }
