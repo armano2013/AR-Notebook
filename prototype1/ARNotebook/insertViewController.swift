@@ -180,7 +180,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
          //send picked image to the database
          dismiss(animated: true, completion: nil)
             let userID = (self.delegate?.currentProfile!)!
-         let imageRef = storageRef?.child("images")
+         let imageRef = storageRef?.child("images").child(userID)
          let fileRef = imageRef?.child((userID))
          var data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
          //normally would have your error handling; in this case we just do a return
