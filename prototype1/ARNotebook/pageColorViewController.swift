@@ -10,6 +10,8 @@ import UIKit
 
 protocol pageColorDelegate {
     func pageColor(image : UIImage)
+    func bookColor(imageOne : UIImage)
+    
 }
 
 class pageColorViewController: UIViewController {
@@ -19,7 +21,7 @@ class pageColorViewController: UIViewController {
      -----
      */
     var delegate : pageColorDelegate?
-    
+
     /*
      -----
      Generic Set Up
@@ -33,6 +35,24 @@ class pageColorViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func blueButton(_ sender: Any) {
+        print("blue")
+        let blueOne = #imageLiteral(resourceName: "spiral")
+        delegate?.bookColor(imageOne: blueOne)
+    }
+    
+    @IBAction func purpleRain(_ sender: Any) {
+         print("purple")
+        let purpleOne = #imageLiteral(resourceName: "purpleRain")
+        delegate?.bookColor(imageOne:purpleOne)
+    }
+    
+    @IBAction func blackButton(_ sender: Any) {
+         print("black")
+        let blackONe = #imageLiteral(resourceName: "black")
+        delegate?.bookColor(imageOne: blackONe)
     }
     
     @IBAction func redButton(_ sender: Any) {

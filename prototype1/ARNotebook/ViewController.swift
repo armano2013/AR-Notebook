@@ -227,7 +227,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.name = "Book"
 
         let coverMaterial = SCNMaterial()
-        coverMaterial.diffuse.contents = UIImage(named: "BookCover(Ancient)_COLOR")
+        coverMaterial.diffuse.contents = UIImage(named: "scn")
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
         //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
@@ -418,6 +418,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
         dismiss(animated: true, completion: nil)
+    }
+    /*
+     -----
+     book Color Deletegate Funcitons
+     -----
+     */
+    
+    func bookColor(imageOne: UIImage) {
+        bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
     }
     
     /*
