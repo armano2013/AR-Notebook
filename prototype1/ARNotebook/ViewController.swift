@@ -428,7 +428,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }
-        dismiss(animated: true, completion: nil)
     }
     /*
      -----
@@ -459,7 +458,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             destination.delegate = self
         }
     }
+    @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
+        //
+    }
 }
+
 
 //converts degrees to radians, since objects are oriented according to radians
 //credit to udemy video
