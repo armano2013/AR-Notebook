@@ -11,6 +11,8 @@ import ARKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import FacebookLogin
+
 
 protocol insertDelegate {
     var currentProfile: String!  {get set}
@@ -122,7 +124,9 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         
         self.present(image, animated: true)
     }
-    
+    @IBAction func backButton(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
     /*
      -----
      Gesture Recognizers
