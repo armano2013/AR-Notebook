@@ -9,7 +9,7 @@
 import UIKit
 
 protocol pageColorDelegate {
-    func pageColor(color : UIColor)
+    func pageColor(image : UIImage)
 }
 
 class pageColorViewController: UIViewController {
@@ -37,18 +37,33 @@ class pageColorViewController: UIViewController {
     
     @IBAction func redButton(_ sender: Any) {
         print("page color red")
-        let colorOne = UIColor.red
-        delegate?.pageColor(color : colorOne)
+        let red = #imageLiteral(resourceName: "RedPage")
+        delegate?.pageColor(image : red)
     }
     @IBAction func blueColor(_ sender: Any) {
         print("page color blue")
-        let colorOne = UIColor.blue
-        delegate?.pageColor(color : colorOne)
+        let blue = #imageLiteral(resourceName: "BluePage")
+        delegate?.pageColor(image : blue)
     }
     @IBAction func greenColor(_ sender: Any) {
         print("page color green")
-        let colorOne = UIColor.green
-        delegate?.pageColor(color : colorOne)
+        let green = #imageLiteral(resourceName: "GreenPage")
+        delegate?.pageColor(image : green)
+    }
+    @IBAction func purpleColor(_ sender: Any) {
+        print("page color purple")
+        let purple = #imageLiteral(resourceName: "PurplePage")
+        delegate?.pageColor(image : purple)
+    }
+    @IBAction func yellowPage(_ sender: Any) {
+        print("page color yellow")
+        let yellow = #imageLiteral(resourceName: "YellowPage")
+        delegate?.pageColor(image : yellow)
+    }
+    @IBAction func DefaultPage(_ sender: Any) {
+        print("page color default")
+        let plain = #imageLiteral(resourceName: "page")
+        delegate?.pageColor(image : plain)
     }
     
     

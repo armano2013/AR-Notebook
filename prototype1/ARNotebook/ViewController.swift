@@ -391,11 +391,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    func pageColor(color: UIColor) {
+    func pageColor(image: UIImage) {
         if bookNode != nil && currentPageNode != nil{
             if pages != nil{
             for page in pages {
-                page.geometry?.firstMaterial?.diffuse.contents = color
+                page.geometry?.firstMaterial?.diffuse.contents = image
             }
             }
             else{
