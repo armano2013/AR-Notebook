@@ -342,9 +342,12 @@
                                             <action selector="updateText:" destination="ylS-d8-bpH" eventType="touchUpInside" id="YIB-4Z-KNe"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N9v-bT-rW9">
+                                    <button opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N9v-bT-rW9">
                                         <rect key="frame" x="356" y="100" width="50" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="Rau-aT-oal"/>
+                                            <constraint firstAttribute="height" constant="50" id="Xbf-wZ-U8v"/>
+                                        </constraints>
                                         <state key="normal" title="back" image="back"/>
                                         <connections>
                                             <action selector="backButton:" destination="ylS-d8-bpH" eventType="touchUpInside" id="b48-4Z-C3M"/>
@@ -356,10 +359,12 @@
                                     <constraint firstItem="Dap-Gh-LMb" firstAttribute="top" secondItem="JHe-Nn-Rda" secondAttribute="bottom" constant="51" id="7d2-rt-rv4"/>
                                     <constraint firstAttribute="height" constant="175" id="AMk-R3-b2S"/>
                                     <constraint firstItem="37A-Lv-PuS" firstAttribute="centerX" secondItem="Krg-RW-Dq0" secondAttribute="centerX" id="Bec-UU-sKR"/>
+                                    <constraint firstAttribute="bottom" secondItem="N9v-bT-rW9" secondAttribute="bottom" constant="25" id="DuK-cp-gKO"/>
                                     <constraint firstItem="iFk-Ws-onZ" firstAttribute="leading" secondItem="Krg-RW-Dq0" secondAttribute="leading" constant="40" id="FPp-Ph-e2Z"/>
                                     <constraint firstAttribute="width" constant="414" id="JQR-Lc-A88"/>
                                     <constraint firstAttribute="trailing" secondItem="JHe-Nn-Rda" secondAttribute="trailing" constant="40" id="MSC-ck-vTQ"/>
                                     <constraint firstItem="JHe-Nn-Rda" firstAttribute="top" secondItem="Krg-RW-Dq0" secondAttribute="top" constant="8" id="T0x-Op-V8w"/>
+                                    <constraint firstAttribute="trailing" secondItem="N9v-bT-rW9" secondAttribute="trailing" constant="8" id="fTa-mR-Jvk"/>
                                     <constraint firstItem="iFk-Ws-onZ" firstAttribute="top" secondItem="Krg-RW-Dq0" secondAttribute="top" constant="8" id="qtQ-9L-hTs"/>
                                     <constraint firstItem="Dap-Gh-LMb" firstAttribute="centerX" secondItem="Krg-RW-Dq0" secondAttribute="centerX" id="ue6-Vy-IDr"/>
                                     <constraint firstAttribute="bottom" secondItem="37A-Lv-PuS" secondAttribute="bottom" constant="8" id="vCR-HB-ah2"/>
