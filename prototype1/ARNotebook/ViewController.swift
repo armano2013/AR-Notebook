@@ -110,7 +110,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func createTextNode(text: SCNText) -> SCNNode {
         let material = SCNMaterial()
-        material.diffuse.contents = UIColor.red
+        material.diffuse.contents = UIColor.black
         text.materials = [material]
         let node = SCNNode();
         node.geometry = text
@@ -174,6 +174,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 currentPageNode = pageNode
                 bookNode.addChildNode(pageNode)
                 currentPage = Int((currentPageNode?.name)!)!
+                
+                
+                
+                
+                
             
             }
             
@@ -186,7 +191,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
-        if (pages.count > 1 && Int((currentPageNode?.name)!)! > 0) {
+        if (pages.count > 0 && Int((currentPageNode?.name)!)! > 0) {
             let i = Int((currentPageNode?.name)!)
             let previous = i! - 1;
             let turnPage = pages[previous]
@@ -199,7 +204,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     @IBAction func leftSwipe(_ sender: Any) {
            //if there is more than one page and the current page node is the last one in the array turn the page forward
-        if (pages.count > 1 && ((Int((currentPageNode?.name)!)!) < Int(pages.count - 1))) {
+        if (pages.count > 0 && ((Int((currentPageNode?.name)!)!) < Int(pages.count - 1))) {
             let i = Int((currentPageNode?.name)!)
             let previous = i! + 1;
             let turnPage = pages[previous]
@@ -353,12 +358,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
             
-            if(pages.count % 2 == 0){
-                pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
-            }
-            else{
-                pageNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-            }
+            pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //issues with y position here, the page isnt placed right ontop of the book
             
@@ -371,6 +372,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPageNode = pageNode
             bookNode.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
+            
+            let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
+            pageNumberNode.isWrapped = true
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor.black
+            pageNumberNode.materials = [material]
+            let node = createTextNode(text: pageNumberNode)
+            node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
+            node.position = SCNVector3(0.55, -0.888, 0.001)
+            renderNode(node: node)
         }
         
         }
