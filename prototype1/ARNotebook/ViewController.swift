@@ -191,9 +191,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
-        if (pages.count > 0 && Int((currentPageNode?.name)!)! > 0) {
+        if (pages.count > 0 && currentPage > 1) {
             let i = Int((currentPageNode?.name)!)
-            let previous = i! - 1;
+            let previous = i! - 2;
             let turnPage = pages[previous]
             currentPageNode?.isHidden = true;
             currentPageNode = turnPage
@@ -204,9 +204,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     @IBAction func leftSwipe(_ sender: Any) {
            //if there is more than one page and the current page node is the last one in the array turn the page forward
-        if (pages.count > 0 && ((Int((currentPageNode?.name)!)!) < Int(pages.count - 1))) {
+        if (pages.count > 0 && (currentPage <= Int(pages.count - 1))) {
             let i = Int((currentPageNode?.name)!)
-            let previous = i! + 1;
+            let previous = i! + 2;
             let turnPage = pages[previous]
             turnPage.isHidden = false
             currentPageNode = turnPage
