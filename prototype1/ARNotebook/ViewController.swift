@@ -392,8 +392,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     func pageColor(color: UIColor) {
-        dismiss(animated: true, completion: nil)
         if bookNode != nil && currentPageNode != nil{
+            if pages != nil{
+            for page in pages {
+                page.geometry?.firstMaterial?.diffuse.contents = color
+            }
+            }
+            else{
+                let alertController = UIAlertController(title: "Error", message: "Please add a page before selecting color", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
             // maybe an array for all the pages to change all or a single page at a time ?
         }
         else{ //error for if there is no book
@@ -402,6 +412,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }
+        dismiss(animated: true, completion: nil)
     }
     
     /*
@@ -419,7 +430,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else if let destination = segue.destination as? deleteViewController {
             destination.delegate = self
         }
-        else if let destination = segue.destination as? addPageViewController{
+        else if let destination = segue.destination as? pageColorViewController{
             destination.delegate = self
         }
     }

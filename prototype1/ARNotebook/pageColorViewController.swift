@@ -34,21 +34,21 @@ class pageColorViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    @IBAction func redColor(_ sender: Any) {
-        print("page color red")
-        let color = UIColor.red
-        delegate?.pageColor(color : color)
-    }
     
+    @IBAction func redButton(_ sender: Any) {
+        print("page color red")
+        let colorOne = UIColor.red
+        delegate?.pageColor(color : colorOne)
+    }
     @IBAction func blueColor(_ sender: Any) {
         print("page color blue")
-        let color = UIColor.blue
-        delegate?.pageColor(color : color)
+        let colorOne = UIColor.blue
+        delegate?.pageColor(color : colorOne)
     }
-    @IBAction func yellowColor(_ sender: Any) {
-        print("page color yellow")
-        let color = UIColor.yellow
-        delegate?.pageColor(color : color)
+    @IBAction func greenColor(_ sender: Any) {
+        print("page color green")
+        let colorOne = UIColor.green
+        delegate?.pageColor(color : colorOne)
     }
     
     
