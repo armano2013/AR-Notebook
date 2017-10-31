@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -451,7 +451,7 @@
                                 <rect key="frame" x="8" y="596" width="160" height="100"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyE-Fh-IKV">
-                                        <rect key="frame" x="18.666666666666671" y="8" width="123.00000000000001" height="30"/>
+                                        <rect key="frame" x="18.666666666666664" y="8" width="123" height="30"/>
                                         <state key="normal" title="Two Slot Tempate"/>
                                         <connections>
                                             <action selector="addTwoSlotPage:" destination="5N4-j2-ApC" eventType="touchUpInside" id="1ol-RH-zs2"/>
@@ -496,6 +496,7 @@
     </scenes>
     <resources>
         <image name="add" width="50" height="50"/>
+        <image name="back" width="483" height="480"/>
         <image name="black" width="700" height="700"/>
         <image name="delete" width="50" height="50"/>
         <image name="edit" width="50" height="50"/>
