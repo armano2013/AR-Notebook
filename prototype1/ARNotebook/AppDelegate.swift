@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //FirebaseOptions.defaultOptions()?.deepLinkURLScheme = self.customURLScheme
         FirebaseApp.configure()
         Firebase.Database().isPersistenceEnabled = true
        
@@ -31,6 +32,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         return SDKApplicationDelegate.shared.application(app, open: url, options:options)
     }
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        guard let dynamicLinks = DynamicLinks.dynamicLinks() else {
+            return false
+        }
+        let handled = dynamicLinks.handleUniversalLink(userActivity.webpageURL!) { (dynamiclink, error) in
+            if let dynamiclink = dynamiclink, let _ = dynamiclink.url {
+                self.handleIncomingLink(dynamiclink: dynamiclink)
+            }
+        }
+        return handled
+    }
+    
+    func handleIncomingLink(dynamiclink: DynamicLink) {
+        print("Youre incoming link parameter is \(dynamiclink.url)")
+    }
+    
+    //func application()
     
 }
 
