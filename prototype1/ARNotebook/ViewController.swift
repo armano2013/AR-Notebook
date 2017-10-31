@@ -128,7 +128,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let alertController = UIAlertController(title: "Error", message: "Please add a page before adding any text", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                self.addPage(self)
+                //self.addPage(self)
             }
             alertController.addAction(cancelAction)
             alertController.addAction(addPageAction)
@@ -277,7 +277,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                self.addPage(self)
+                //@FIXME Add page needs to call other view controller.
+                //self.addPage(self)
             }
             alertController.addAction(cancelAction)
             alertController.addAction(addPageAction)
