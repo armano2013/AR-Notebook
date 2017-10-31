@@ -201,7 +201,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.sceneView.scene.rootNode.addChildNode(node)
 
         }
-        currentProfile = (self.nameDelegate?.profileName!)!
+        //commenting out since we moved the facebook detection for now
+        //currentProfile = (self.nameDelegate?.profileName!)!
 
     }
     
