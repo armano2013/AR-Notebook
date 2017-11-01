@@ -133,7 +133,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
             
             let clipboardString = ["content":text]
-            let childUpdates = ["users/\(userID)/notebook/page" + "\((self.delegate?.currentPage)!)": clipboardString]
+            let childUpdates = ["users/\(userID)/notebook/\((self.delegate?.currentPage)!)": clipboardString]
             
             self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                 if  err != nil{
@@ -149,54 +149,51 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         dismiss(animated: true, completion: nil)
-        
-        //Coppied DB Fucntion from view controller:
-        //------
-        
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            //send picked image to the database
-            dismiss(animated: true, completion: nil)
-            let userID = (self.delegate?.currentProfile!)!
-            let imageRef = storageRef?.child("images").child(userID)
-            let fileRef = imageRef?.child((userID))
-            var data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
-            //normally would have your error handling; in this case we just do a return
-            let dataInfo = fileRef?.putData(data as Data, metadata: nil){
-                (metadata, error) in guard metadata != nil else {
-                    
-                    print("There was an error")
-                    return
-                }
-                //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
-                // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
-                print(metadata?.downloadURLs as Any)
-                guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
-                
-                self.ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
-                    let urlString = ["image url":imageURL]
-                    let childUpdates = ["users/\(userID)/notebook/page " + "\((self.delegate?.currentPage)!)": urlString]
-                    self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
-                        if  err != nil{
-                            print(err as Any)
-                            return
-                        }
-                        print("image url successful")
-                    })
-                    
-                }){ (error) in
-                    print(error.localizedDescription)
-                }
+    
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage{
+            if ((self.delegate?.currentProfile) != nil){
+                let profile = self.delegate?.currentProfile!
+                saveImage(profile: profile!, pickedImage: pickedImage)
             }
-            //let pageOrder = (self.ref.child("users/\(userID)/notebook/page " + "\((self.delegate?.currentPage)!)").child((Auth.auth().currentUser?.uid)!)).queryOrdered(byChild: "page " + "\((self.delegate?.currentPage)!)")
-            
-        }
-        
-        if let imageOne = info[UIImagePickerControllerOriginalImage] as? UIImage{
-            delegate?.passImage(image: imageOne)
+            delegate?.passImage(image: pickedImage)
         }
         else{
             
             // error message
         }
     }
+    
+    func saveImage(profile: String, pickedImage: UIImage){
+        let imageRef = storageRef?.child("images").child(profile)
+        let fileRef = imageRef?.child(profile)
+        var data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
+        //normally would have your error handling; in this case we just do a return
+        let dataInfo = fileRef?.putData(data as Data, metadata: nil){
+            (metadata, error) in guard metadata != nil else {
+                
+                print("There was an error")
+                return
+            }
+            //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
+            // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
+            print(metadata?.downloadURLs as Any)
+            guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
+            
+            self.ref.child("users").child(profile).observeSingleEvent(of: .value, with: { (snapshot) in
+                let urlString = ["image url":imageURL]
+                let childUpdates = ["users/\(profile)/notebook/\((self.delegate?.currentPage)!)": urlString]
+                self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                    if  err != nil{
+                        print(err as Any)
+                        return
+                    }
+                    return
+                })
+                
+            }){ (error) in
+                print(error.localizedDescription)
+            }
+        }
+        }
+
 }

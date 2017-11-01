@@ -34,6 +34,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var currentProfile : String!
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
+    var notebookID: Int = 0 //unique id of notebook
     
     /*
      -----
@@ -179,6 +180,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
 
     func addBook(hitTestResult: ARHitTestResult) {
+        //commenting out since we moved the facebook detection for now
+        currentProfile = (self.nameDelegate?.profileName!)!
+        
         let scene = SCNScene(named: "art.scnassets/Book.dae")
         let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
         node.name = "Book"
@@ -200,10 +204,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else{
             //add book to database
             saveBook(node: node)
+            //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
         }
-        //commenting out since we moved the facebook detection for now
-        currentProfile = (self.nameDelegate?.profileName!)!
 
     }
     
@@ -344,8 +347,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func saveBook(node: SCNNode) {
         //generate a unique id for the notebook
         let id = generateUniqueNotebookID(node: node)
-        print(id)
-        //store the notebook under the user
+        let update = ["id": id]
+        ref.child("users").child(self.currentProfile).child("notebook").setValue(update)
     }
     func generateUniqueNotebookID(node: SCNNode) ->Int {
         return ObjectIdentifier(node).hashValue
