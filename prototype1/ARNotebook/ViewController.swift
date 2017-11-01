@@ -347,8 +347,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func saveBook(node: SCNNode) {
         //generate a unique id for the notebook
         let id = generateUniqueNotebookID(node: node)
-        let update = ["id": id]
-        ref.child("users").child(self.currentProfile).child("notebook").setValue(update)
+        let update = ["id": id, "owner": self.currentProfile] as [String : Any]
+        //add ref to notebook in notebook table
+        ref.child("notebooks").child("notebook").setValue(update)
+        //add user to user table
+        ref.child("users").child(self.currentProfile).child("lastnotebook").setValue(id)
     }
     func generateUniqueNotebookID(node: SCNNode) ->Int {
         return ObjectIdentifier(node).hashValue
