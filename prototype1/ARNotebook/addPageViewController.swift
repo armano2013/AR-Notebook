@@ -49,11 +49,9 @@ class addPageViewController: UIViewController {
      -----
      */
     @IBAction func addTwoSlotPage(_ sender: Any) {
-        print("two slot page add")
         delegate?.addPage()
     }
     @IBAction func addOneSlotPage(_ sender: Any) {
-        print("one slot page add")
         delegate?.addPage()
     }
     

@@ -198,11 +198,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             //user should only have one book open at a time.
         }
         else{
+            //add book to database
+            saveBook(node: node)
             self.sceneView.scene.rootNode.addChildNode(node)
-
         }
         //commenting out since we moved the facebook detection for now
-        //currentProfile = (self.nameDelegate?.profileName!)!
+        currentProfile = (self.nameDelegate?.profileName!)!
 
     }
     
@@ -300,48 +301,55 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func addPage(){
         dismiss(animated: true, completion: nil)
         if bookNode == nil {
-        let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
-        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-        alertController.addAction(cancelAction)
-        self.present(alertController, animated: true, completion: nil)
-        
-    }
-    else{ //error for if there is no book
-        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
-            //gemoetry to figure out the size of the book placed //
-            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
-            //@FIXME have fixed hieght for now bounding box isnt working
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
             
-            pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+        }
+        else{ //error for if there is no book
+            if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+                //gemoetry to figure out the size of the book placed //
+                let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+                //@FIXME have fixed hieght for now bounding box isnt working
+                
+                pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
 
-            pageNode.geometry?.firstMaterial?.isDoubleSided = true
-            //issues with y position here, the page isnt placed right ontop of the book
-            
-            let offset = Float(pages.count) * Float(0.01);
-            //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
-            pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
-            pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
-            pages.append(pageNode)
-            pageNode.name = String(pages.count) //minus one so 0 index array  why??
-            currentPageNode = pageNode
-            bookNode.addChildNode(pageNode)
-            currentPage = Int((currentPageNode?.name)!)!
-            
-            let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
-            pageNumberNode.isWrapped = true
-            let material = SCNMaterial()
-            material.diffuse.contents = UIColor.black
-            pageNumberNode.materials = [material]
-            let node = createTextNode(text: pageNumberNode)
-            node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
-            node.position = SCNVector3(0.55, -0.888, 0.001)
-            renderNode(node: node)
-        }
+                pageNode.geometry?.firstMaterial?.isDoubleSided = true
+                //@FIXME issues with y position here, the page isnt placed right ontop of the book
+                
+                let offset = Float(pages.count) * Float(0.01);
+                //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
+                pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+                pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
+                pages.append(pageNode)
+                pageNode.name = String(pages.count) //minus one so 0 index array  why??
+                currentPageNode = pageNode
+                bookNode.addChildNode(pageNode)
+                currentPage = Int((currentPageNode?.name)!)!
+                
+                let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
+                pageNumberNode.isWrapped = true
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor.black
+                pageNumberNode.materials = [material]
+                let node = createTextNode(text: pageNumberNode)
+                node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
+                node.position = SCNVector3(0.55, -0.888, 0.001)
+                renderNode(node: node)
+            }
         
         }
-        print("hello from main vc")
     }
-    
+    func saveBook(node: SCNNode) {
+        //generate a unique id for the notebook
+        let id = generateUniqueNotebookID(node: node)
+        print(id)
+        //store the notebook under the user
+    }
+    func generateUniqueNotebookID(node: SCNNode) ->Int {
+        return ObjectIdentifier(node).hashValue
+    }
     
     /*
      -----
