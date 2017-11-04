@@ -36,6 +36,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
     var retrieveNotebookFlag = false // adding book: False = new book True = retrieving
+    
 
     /*
      -----
@@ -351,6 +352,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         
         //generate a unique id for the notebook
         let id = generateUniqueNotebookID(node: node)
+        notebookID = id
         let currentBook = notebookAttributes(owner: self.currentProfile, notebookID: id)
         let update = ["owner": currentBook.owner] as [String : Any]
         //add ref to notebook in notebook table
@@ -360,7 +362,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func generateUniqueNotebookID(node: SCNNode) ->Int {
-        retrieveNotebook()
         return ObjectIdentifier(node).hashValue
     }
     
@@ -436,31 +437,50 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
     }
-    struct notebookAttributes {
+    struct notebookAttributes: Decodable {
         let owner : String!
         let notebookID: Int!
         //let cover: Int?  Need to learn how to differentiate between cover styles
         ///let pageColor = Int? same for this
     }
-    struct pageContent {
+    struct pageContent: Decodable {
         //let pageTemplate: Int? //same for this
         let pageString: String?
         let pageImageURL: String?
         
+        
     }
     func retrieveNotebook(){
-        ref.observeSingleEvent(of: .value) { (snapshot) in
-            print(snapshot.childrenCount)
-            /*let enumerator = snapshot.children
-            while let rest = enumerator.nextObject() as? DataSnapshot{
-                print(rest.value ?? String.self)
-            }*/
+        currentPage = 1
+        retrieveNotebookFlag = true
+        registerGestureRecognizers()
+        ref.child("notebooks").observeSingleEvent(of: .value) { (snapshot) in
+            //print(snapshot.childrenCount)
+            let iterator = snapshot.children
+            while let jsonStuff = iterator.nextObject() as? DataSnapshot{
+                let url = URL(fileURLWithPath: "https://console.firebase.google.com/u/2/project/arnotebook-16d10/database/data/")
+                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, err) in
+                    //self.addPage()
+                    guard let data = data else { return }
+                    do {
+                        let pages = try JSONDecoder().decode(pageContent.self, from: data)
+                        print (pages.pageString as Any)
+                        self.passText(text: pages.pageString!)
+                    }
+                    catch let error{
+                        print(error)
+                    }
+                }).resume()
+
+                //print(jsonStuff)
+            }
         }
 
     }
     @IBAction func openNotebook(_ sender: Any) {
-        retrieveNotebookFlag = true
-        registerGestureRecognizers()
+        retrieveNotebook()
+        retrieveNotebookFlag = false
+        print(retrieveNotebookFlag)
     }
 }
 
