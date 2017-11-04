@@ -297,6 +297,7 @@
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
+                                    <action selector="openNotebook:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wI1-Ju-AFJ"/>
                                     <segue destination="VTS-dt-pDS" kind="presentation" id="QEb-3e-mHc"/>
                                 </connections>
                             </button>
@@ -324,6 +325,7 @@
                     </view>
                     <connections>
                         <outlet property="sceneView" destination="7rB-xZ-A2i" id="KUY-j7-7m4"/>
+                        <outletCollection property="openBook" destination="0kK-Zk-BJV" collectionClass="NSMutableArray" id="3HM-N0-M7x"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -35,7 +35,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
-    
+    var retrieveNotebookFlag = false // adding book: False = new book True = retrieving
+
     /*
      -----
      Generic Session Setup
@@ -200,6 +201,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
             //this means theres already a book placed in the scene.. what do we want to do here??
             //user should only have one book open at a time.
+        }else if retrieveNotebookFlag == true{
+            self.sceneView.scene.rootNode.addChildNode(node)
         }
         else{
             //add book to database
@@ -345,15 +348,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     func saveBook(node: SCNNode) {
+        
         //generate a unique id for the notebook
         let id = generateUniqueNotebookID(node: node)
-        let update = ["id": id, "owner": self.currentProfile] as [String : Any]
+        let currentBook = notebookAttributes(owner: self.currentProfile, notebookID: id)
+        let update = ["owner": currentBook.owner] as [String : Any]
         //add ref to notebook in notebook table
-        ref.child("notebooks").child("notebook").setValue(update)
+        ref.child("notebooks").child(String(id)).setValue(update)
         //add user to user table
         ref.child("users").child(self.currentProfile).child("lastnotebook").setValue(id)
     }
+    
     func generateUniqueNotebookID(node: SCNNode) ->Int {
+        retrieveNotebook()
         return ObjectIdentifier(node).hashValue
     }
     
@@ -429,6 +436,32 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
     }
+    struct notebookAttributes {
+        let owner : String!
+        let notebookID: Int!
+        //let cover: Int?  Need to learn how to differentiate between cover styles
+        ///let pageColor = Int? same for this
+    }
+    struct pageContent {
+        //let pageTemplate: Int? //same for this
+        let pageString: String?
+        let pageImageURL: String?
+        
+    }
+    func retrieveNotebook(){
+        ref.observeSingleEvent(of: .value) { (snapshot) in
+            print(snapshot.childrenCount)
+            /*let enumerator = snapshot.children
+            while let rest = enumerator.nextObject() as? DataSnapshot{
+                print(rest.value ?? String.self)
+            }*/
+        }
+
+    }
+    @IBAction func openNotebook(_ sender: Any) {
+        retrieveNotebookFlag = true
+        registerGestureRecognizers()
+    }
 }
 
 
@@ -437,3 +470,5 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
 extension Int {
     var degreesToRadians: Double {return Double(self) * .pi/180}
 }
+
+

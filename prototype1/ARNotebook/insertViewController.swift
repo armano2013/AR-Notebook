@@ -129,8 +129,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     //called after check if the user profile is null. if not null add text to the database at the correct page num
     func addTextToDatabase(profile: String, text: String){
         //adding clipboard to database
-        let userID = profile
-        ref.child("users").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+        ref.child("users").child(profile).observeSingleEvent(of: .value, with: { (snapshot) in
             
             let clipboardString = ["content":text]
             let childUpdates = ["notebooks/notebook/\((self.delegate?.currentPage)!)": clipboardString]
