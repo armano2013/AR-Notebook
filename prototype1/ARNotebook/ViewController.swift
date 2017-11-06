@@ -434,6 +434,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func deleteNotebook(){
         print("VC Notebook")
+        bookNode?.removeFromParentNode()
     }
     /*
      -----
