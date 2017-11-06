@@ -430,11 +430,56 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     func deletePage(){
-        print("VC")
+        dismiss(animated: true, completion: nil)
+        if currentPageNode == nil && pages == nil {
+            let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a page.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else if  bookNode == nil && currentPageNode == nil{
+            let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book and page.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else {
+            let deletePageNode = SCNNode()
+            deletePageNode == currentPageNode
+            let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+            let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                self.currentPageNode?.removeFromParentNode()
+                self.pages.removeLast()
+                self.currentPageNode = self.pages.last
+                
+            }
+            alertController.addAction(cancelAction)
+            alertController.addAction(deletePageAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     func deleteNotebook(){
-        print("VC Notebook")
-        bookNode?.removeFromParentNode()
+        dismiss(animated: true, completion: nil)
+        
+        if  bookNode == nil {
+            let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else {
+            let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+            let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                self.bookNode?.removeFromParentNode()
+                self.bookNode = nil
+            }
+            alertController.addAction(cancelAction)
+            alertController.addAction(deletePageAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        
     }
     /*
      -----
