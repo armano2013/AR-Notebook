@@ -15,7 +15,7 @@ import FirebaseDatabase
 protocol profileNameDelegate {
     var profileName : String! {get set}
 }
-class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate {
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate, retrieveDelegate {
   
     /*
      -----
@@ -37,7 +37,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var notebookID: Int = 0 //unique id of notebook
     var retrieveNotebookFlag = false // adding book: False = new book True = retrieving
     
-
+    struct notebookAttributes: Decodable {
+        let owner : String
+        let notebookID: Int!
+        //let cover: Int?  Need to learn how to differentiate between cover styles
+        ///let pageColor = Int? same for this
+    }
     /*
      -----
      Generic Session Setup
@@ -312,7 +317,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
-            
         }
         else{ //error for if there is no book
             if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
@@ -356,7 +360,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let currentBook = notebookAttributes(owner: self.currentProfile, notebookID: id)
         let update = ["owner": currentBook.owner] as [String : Any]
         //add ref to notebook in notebook table
-        ref.child("notebooks").child(String(id)).setValue(update)
+        ref.child("notebooks").child("notebook").setValue(update)
         //add user to user table
         ref.child("users").child(self.currentProfile).child("lastnotebook").setValue(id)
     }
@@ -414,7 +418,73 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func bookColor(imageOne: UIImage) {
         bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
     }
+    /*
+     -----
+     Retrieve delegate function
+     -----
+     */
+    func addPageWithContent(content: String){
+            if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+                //gemoetry to figure out the size of the book placed //
+                let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+                //@FIXME have fixed hieght for now bounding box isnt working
+                
+                pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+                
+                pageNode.geometry?.firstMaterial?.isDoubleSided = true
+                //@FIXME issues with y position here, the page isnt placed right ontop of the book
+                
+                let offset = Float(pages.count) * Float(0.01);
+                //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
+                pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+                pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
+                pages.append(pageNode)
+                pageNode.name = String(pages.count) //minus one so 0 index array  why??
+                currentPageNode = pageNode
+                bookNode.addChildNode(pageNode)
+                currentPage = Int((currentPageNode?.name)!)!
+                
+                let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
+                pageNumberNode.isWrapped = true
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor.black
+                pageNumberNode.materials = [material]
+                let node = createTextNode(text: pageNumberNode)
+                node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
+                node.position = SCNVector3(0.55, -0.888, 0.001)
+                renderNode(node: node)
+                
+                //text stuff
+                if content.range(of:"firebasestorage.googleapis.com") != nil {
+                    if let page = currentPageNode {
+                        let url = URL(string: content)
+                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                            guard let image = UIImage(data: data!) else {return}
+                            let node = SCNNode()
+                            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                            node.position = SCNVector3(0,0, 0.001)
+                            self.lastNode.append(node)
+                            page.addChildNode(node)
+                        }).resume()
+                    }
+                }
+                else{
+                    let textNode = SCNText(string: content, extrusionDepth: 0.1)
+                    textNode.materials = [material]
+                    let text = createTextNode(text: textNode)
+                    renderNode(node: text)
+                }
+        }
+    }
     
+    func addContent(numPages: Int, content: [String]) {
+        dismiss(animated: true, completion: nil)
+        let end = numPages - 2
+        for i in 0...end {
+            addPageWithContent(content: content[i])
+        }
+    }
     /*
      -----
      Segue definitions
@@ -433,54 +503,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else if let destination = segue.destination as? pageColorViewController{
             destination.delegate = self
         }
+        else if let destination = segue.destination as? retrieveViewController {
+            destination.delegate = self
+        }
     }
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
-    }
-    struct notebookAttributes: Decodable {
-        let owner : String!
-        let notebookID: Int!
-        //let cover: Int?  Need to learn how to differentiate between cover styles
-        ///let pageColor = Int? same for this
-    }
-    struct pageContent: Decodable {
-        //let pageTemplate: Int? //same for this
-        let pageString: String?
-        let pageImageURL: String?
-        
-        
-    }
-    func retrieveNotebook(){
-        currentPage = 1
-        retrieveNotebookFlag = true
-        registerGestureRecognizers()
-        ref.child("notebooks").observeSingleEvent(of: .value) { (snapshot) in
-            //print(snapshot.childrenCount)
-            let iterator = snapshot.children
-            while let jsonStuff = iterator.nextObject() as? DataSnapshot{
-                let url = URL(fileURLWithPath: "https://console.firebase.google.com/u/2/project/arnotebook-16d10/database/data/")
-                URLSession.shared.dataTask(with: url, completionHandler: { (data, response, err) in
-                    //self.addPage()
-                    guard let data = data else { return }
-                    do {
-                        let pages = try JSONDecoder().decode(pageContent.self, from: data)
-                        print (pages.pageString as Any)
-                        self.passText(text: pages.pageString!)
-                    }
-                    catch let error{
-                        print(error)
-                    }
-                }).resume()
-
-                //print(jsonStuff)
-            }
-        }
-
-    }
-    @IBAction func openNotebook(_ sender: Any) {
-        retrieveNotebook()
-        retrieveNotebookFlag = false
-        print(retrieveNotebookFlag)
     }
 }
 
