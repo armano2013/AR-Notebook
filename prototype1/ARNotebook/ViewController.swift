@@ -15,7 +15,7 @@ import FirebaseDatabase
 protocol profileNameDelegate {
     var profileName : String! {get set}
 }
-class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate {
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate, retrieveDelegate {
   
     /*
      -----
@@ -35,7 +35,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
-    
+
     /*
      -----
      Generic Session Setup
@@ -137,6 +137,34 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
 
     }
+    
+    func createPage(){
+        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true)  {
+            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+            //@FIXME have fixed hieght for now bounding box isnt working
+            
+            pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+            
+            pageNode.geometry?.firstMaterial?.isDoubleSided = true
+            //@FIXME issues with y position here, the page isnt placed right ontop of the book
+            
+            let offset = Float(pages.count) * Float(0.01);
+            //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
+            pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+            pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
+            pages.append(pageNode)
+            pageNode.name = String(pages.count) //minus one so 0 index array  why??
+            currentPageNode = pageNode
+            bookNode.addChildNode(pageNode)
+            currentPage = Int((currentPageNode?.name)!)!
+        }
+        else{//book error
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
     /*
      -----
      Tap Interactions
@@ -153,8 +181,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPage = Int((currentPageNode?.name)!)!
         }
     }
-    
-    
     @IBAction func leftSwipe(_ sender: Any) {
            //if there is more than one page and the current page node is the last one in the array turn the page forward
         if (pages.count > 1 && (currentPage <= Int(pages.count - 1))) {
@@ -166,10 +192,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPage = Int((currentPageNode?.name)!)!
         }
     }
+    
     // tap outside any popup to dismiss
+    //@FIXME with Facebook Enabled we need to catch this touch so that it doesnt dismiss all the way back to auth view controller
+    //should be possible with an if statement??
     /*override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
        dismiss(animated: true, completion: nil)
     }*/
+    
     @objc func tapped(sender: UITapGestureRecognizer) {
         let sceneView = sender.view as! ARSCNView
         let tapLocation = sender.location(in: sceneView)
@@ -308,29 +338,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
-            
         }
-        else{ //error for if there is no book
-            if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
-                //gemoetry to figure out the size of the book placed //
-                let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
-                //@FIXME have fixed hieght for now bounding box isnt working
-                
-                pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
-
-                pageNode.geometry?.firstMaterial?.isDoubleSided = true
-                //@FIXME issues with y position here, the page isnt placed right ontop of the book
-                
-                let offset = Float(pages.count) * Float(0.01);
-                //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
-                pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
-                pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
-                pages.append(pageNode)
-                pageNode.name = String(pages.count) //minus one so 0 index array  why??
-                currentPageNode = pageNode
-                bookNode.addChildNode(pageNode)
-                currentPage = Int((currentPageNode?.name)!)!
-                
+        else{
+                createPage()
+            
+                //@ARTUR: Fix this so that render page nums dont use render node
+                //Probably can extract method since we create page numbs in 2 places
                 let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
                 pageNumberNode.isWrapped = true
                 let material = SCNMaterial()
@@ -339,20 +352,29 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 let node = createTextNode(text: pageNumberNode)
                 node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
                 node.position = SCNVector3(0.55, -0.888, 0.001)
+            
+                //@ ARTUR: Fix this so that render page nums dont use render node
+                //Probably can extract method since we create page numbs in 2 places
                 renderNode(node: node)
             }
-        
-        }
     }
     func saveBook(node: SCNNode) {
         //generate a unique id for the notebook
-        let id = generateUniqueNotebookID(node: node)
-        let update = ["id": id, "owner": self.currentProfile] as [String : Any]
-        //add ref to notebook in notebook table
-        ref.child("notebooks").child("notebook").setValue(update)
-        //add user to user table
-        ref.child("users").child(self.currentProfile).child("lastnotebook").setValue(id)
+        guard let profile = currentProfile else {print("error"); return}
+        let id = self.generateUniqueNotebookID(node: node)
+        self.notebookID = id
+        
+        let childUpdates = ["users/\((profile))/notebooks/\(id)": id]
+        
+        self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+            if  err != nil{
+                print(err as Any)
+                return
+            }
+            return
+        })
     }
+    
     func generateUniqueNotebookID(node: SCNNode) ->Int {
         return ObjectIdentifier(node).hashValue
     }
@@ -376,11 +398,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     func pageColor(image: UIImage) {
-        if bookNode != nil && currentPageNode != nil{
-            if pages != nil{
-            for page in pages {
-                page.geometry?.firstMaterial?.diffuse.contents = image
-            }
+        if bookNode != nil {
+            if currentPageNode != nil{
+                for page in pages {
+                    page.geometry?.firstMaterial?.diffuse.contents = image
+                }
             }
             else{
                 let alertController = UIAlertController(title: "Error", message: "Please add a page before selecting color", preferredStyle: UIAlertControllerStyle.alert)
@@ -406,7 +428,61 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func bookColor(imageOne: UIImage) {
         bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
     }
+    /*
+     -----
+     Retrieve delegate function
+     -----
+     */
+    func addPageWithContent(content: String){
+            if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+                createPage()
+                //@ARTUR: Fix this so that render page nums dont use render node
+                //This is the second place we generate page numbers- put it in a method.
+                let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
+                pageNumberNode.isWrapped = true
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor.black
+                pageNumberNode.materials = [material]
+                let node = createTextNode(text: pageNumberNode)
+                node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
+                node.position = SCNVector3(0.55, -0.888, 0.001)
+                renderNode(node: node)
+                
+                //check to see if the content is a sotrage url - which means its an image.
+                if content.range(of:"firebasestorage.googleapis.com") != nil {
+                    if let page = currentPageNode {
+                        let url = URL(string: content)
+                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                            guard let image = UIImage(data: data!) else {return}
+                            let node = SCNNode()
+                            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                            node.position = SCNVector3(0,0, 0.001)
+                            self.lastNode.append(node)
+                            page.addChildNode(node)
+                        }).resume()
+                    }
+                }
+                //if its not a url then its just regular text.
+                else{
+                    let textNode = SCNText(string: content, extrusionDepth: 0.1)
+                    textNode.materials = [material]
+                    let text = createTextNode(text: textNode)
+                    renderNode(node: text)
+                }
+        }
+        else{
+         //error no book
+        }
+    }
     
+    func addContent(numPages: Int, content: [String]) {
+        dismiss(animated: true, completion: nil)
+        let end = numPages - 2
+        for i in 0...end {
+            addPageWithContent(content: content[i])
+        }
+    }
     /*
      -----
      Segue definitions
@@ -425,6 +501,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else if let destination = segue.destination as? pageColorViewController{
             destination.delegate = self
         }
+        else if let destination = segue.destination as? retrieveViewController {
+            destination.delegate = self
+        }
     }
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
@@ -437,3 +516,5 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
 extension Int {
     var degreesToRadians: Double {return Double(self) * .pi/180}
 }
+
+
