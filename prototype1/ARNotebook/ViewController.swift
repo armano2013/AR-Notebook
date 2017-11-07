@@ -445,7 +445,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
         else {
             let deletePageNode = SCNNode()
-            deletePageNode == currentPageNode
             let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
@@ -474,6 +473,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
                 self.bookNode?.removeFromParentNode()
                 self.bookNode = nil
+                self.pages.removeAll()
+                self.lastNode.removeAll()
+                self.currentPageNode = nil
+                
             }
             alertController.addAction(cancelAction)
             alertController.addAction(deletePageAction)
