@@ -16,11 +16,15 @@ class retrieveViewController: UIViewController {
     var delegate : retrieveDelegate?
     var pageNum : Int = 1
     
+    /*keeping this here to use for templates later
+     
     struct Page {
-        //id = somethingc
         //template id
         //color
     }
+     */
+    
+    
     /*
      -----
      Generic Set Up
@@ -28,7 +32,12 @@ class retrieveViewController: UIViewController {
      */
     override func viewDidLoad() {
         ref = Database.database().reference()
-        ref.child("notebooks").child("7585393408").observeSingleEvent(of: .value, with: { (snapshot) in
+    }
+    @IBAction func selectNotebookID() {
+        retrievePreviousNotebookWithID(id: "7585393408")
+    }
+    func retrievePreviousNotebookWithID(id: String){
+        ref.child("notebooks").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
             let enumPages = snapshot.children
             self.pageNum = Int(snapshot.childrenCount)
             while let pages = enumPages.nextObject() as? DataSnapshot {
@@ -39,7 +48,7 @@ class retrieveViewController: UIViewController {
                     self.pageContent.append(contentVal)
                 }
             }
-          self.delegate?.addContent(numPages: self.pageNum, content: self.pageContent)
+            self.delegate?.addContent(numPages: self.pageNum, content: self.pageContent)
         })
     }
 }
