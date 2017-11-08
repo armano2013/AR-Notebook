@@ -28,10 +28,10 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate, profi
         view.addSubview(FBLogin)
         FBLogin.delegate = self as LoginButtonDelegate
         ref = Database.database().reference().child("users")
-        profileName = Auth.auth().currentUser!.uid
     }
     override func viewDidAppear(_ animated: Bool) {
         if Auth.auth().currentUser != nil {
+            profileName = (Auth.auth().currentUser?.uid)!
             performSegue(withIdentifier: "loginSegue", sender: self)
         }
     }
