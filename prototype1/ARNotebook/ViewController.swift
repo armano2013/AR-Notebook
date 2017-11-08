@@ -30,12 +30,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     var currentPage : Int = 1 // global variable to keep track of current page number
+    var pageColor : UIImage? // global variable to keep track of the page color when the user changes it
     var nameDelegate : profileNameDelegate? // calling the delegate to the AuthViewCont to get user's profile name
     var currentProfile : String!
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
-
     /*
      -----
      Generic Session Setup
@@ -115,7 +115,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         text.materials = [material]
         let node = SCNNode();
         node.geometry = text
-        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
+        node.scale = SCNVector3(x: 0.1, y:0.1, z:0.1)
         node.position = SCNVector3(-0.5, 0.0, 0.001)
         return node;
     }
@@ -135,7 +135,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(addPageAction)
             self.present(alertController, animated: true, completion: nil)
         }
-
     }
     
     func createPage(){
@@ -239,7 +238,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
 
     }
-    
     /*
      -----
      Focus Square
@@ -282,12 +280,44 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         if bookNode != nil && currentPageNode != nil{
             let textNode = SCNText(string: text, extrusionDepth: 0.1)
+            textNode.font = UIFont(name: "Arial", size:1)
+            textNode.containerFrame = CGRect(origin: .zero, size: CGSize(width: 10, height: 10))
+            textNode.truncationMode = kCATruncationEnd
+            textNode.alignmentMode = kCAAlignmentLeft
             textNode.isWrapped = true
             let material = SCNMaterial()
             material.diffuse.contents = UIColor.black
             textNode.materials = [material]
             let node = createTextNode(text: textNode)
             renderNode(node: node)
+//            let page = currentPageNode
+//            let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+//
+//            //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
+//            text.isWrapped = true
+//            let material = SCNMaterial()
+//            if(pages.count % 2 == 0){
+//                material.diffuse.contents = UIColor.black
+//            }
+//            else {
+//                material.diffuse.contents = UIColor.blue
+//            }
+//            text.materials = [material]
+//            let node = SCNNode()
+//            node.geometry = text
+//            node.scale = SCNVector3Make(0.01, 0.01, 0.01)
+//
+//            /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
+//             let (min, max) = node.boundingBox
+//
+//             let dx = min.x + 0.5 * (max.x - min.x)
+//             let dy = min.y + 0.5 * (max.y - min.y)
+//             let dz = min.z + 0.5 * (max.z - min.z)
+//             node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+//             */
+//            node.position = SCNVector3(-0.7, 0.0, 0.05)
+//            //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
+//            page?.addChildNode(node)
         }
         else{ //error for if there is no book
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -331,7 +361,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      of page 
      
  */
-    func addPage(){
+    func addPage(string: String){
         dismiss(animated: true, completion: nil)
         if bookNode == nil {
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
@@ -363,7 +393,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         guard let profile = currentProfile else {print("error"); return}
         let id = self.generateUniqueNotebookID(node: node)
         self.notebookID = id
-        
         let childUpdates = ["users/\((profile))/notebooks/\(id)": id]
         
         self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
@@ -386,10 +415,59 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     func deletePage(){
-        print("VC")
+        dismiss(animated: true, completion: nil)
+        if currentPageNode == nil && pages == nil {
+            let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a page.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else if  bookNode == nil && currentPageNode == nil{
+            let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book and page.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else {
+            let deletePageNode = SCNNode()
+            let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+            let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                self.currentPageNode?.removeFromParentNode()
+                self.pages.removeLast()
+                self.currentPageNode = self.pages.last
+                
+            }
+            alertController.addAction(cancelAction)
+            alertController.addAction(deletePageAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     func deleteNotebook(){
-        print("VC Notebook")
+        dismiss(animated: true, completion: nil)
+        
+        if  bookNode == nil {
+            let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else {
+            let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+            let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                self.bookNode?.removeFromParentNode()
+                self.bookNode = nil
+                self.pages.removeAll()
+                self.lastNode.removeAll()
+                self.currentPageNode = nil
+                
+            }
+            alertController.addAction(cancelAction)
+            alertController.addAction(deletePageAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        
     }
     /*
      -----

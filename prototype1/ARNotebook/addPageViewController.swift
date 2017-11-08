@@ -14,7 +14,7 @@ import FirebaseDatabase
 
 protocol addPageDelegate {
     var currentPage: Int {get set}
-    func addPage()
+    func addPage(string : String)
 }
 
 class addPageViewController: UIViewController {
@@ -27,6 +27,7 @@ class addPageViewController: UIViewController {
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var delegate : addPageDelegate?
+    var selection : String?
     
     /*
      -----
@@ -50,10 +51,14 @@ class addPageViewController: UIViewController {
      -----
      */
     @IBAction func addTwoSlotPage(_ sender: Any) {
-        delegate?.addPage()
+        print("two slot page add")
+        selection = "two"
+        delegate?.addPage(string: selection!)
     }
     @IBAction func addOneSlotPage(_ sender: Any) {
-        delegate?.addPage()
+        print("one slot page add")
+        selection = "one"
+        delegate?.addPage(string: selection!)
     }
     
     /*
