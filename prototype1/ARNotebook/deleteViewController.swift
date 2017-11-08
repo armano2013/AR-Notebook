@@ -14,6 +14,9 @@ import FirebaseDatabase
 protocol deleteDelegate {
     func deletePage()
     func deleteNotebook()
+    var currentProfile: String!  {get set}
+    var currentPage: Int {get set}
+    var notebookID : Int { get set }
 }
 class deleteViewController : UIViewController {
     /*
@@ -54,4 +57,9 @@ class deleteViewController : UIViewController {
         print("Delete Notebook")
         delegate?.deleteNotebook()
     }
+    /*
+     -----
+    Database Function 
+     -----
+     */
 }
