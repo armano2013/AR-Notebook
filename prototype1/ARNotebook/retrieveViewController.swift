@@ -9,7 +9,7 @@ protocol retrieveDelegate {
     func addContent(numPages: Int, content: [String])
 }
 
-class retrieveViewController: UIViewController {
+class retrieveViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     
     /*
@@ -20,8 +20,9 @@ class retrieveViewController: UIViewController {
     var ref: DatabaseReference!
     var pageContent = [String]()
     var delegate : retrieveDelegate?
-    var delegate2 : profileNameDelegate?
     var pageNum : Int = 1
+    var notebookArray =  [String]()
+    var retrievedNotebookID: Int!
     
     /*keeping this here to use for templates later
      
@@ -38,7 +39,17 @@ class retrieveViewController: UIViewController {
      -----
      */
     
+    override func viewDidLoad() {
+        ref = Database.database().reference()
+        getList()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear( animated )
+        tableView.reloadData()
+    }
 
+    @IBOutlet weak var tableView: UITableView!
     @IBAction func logOutFacebook(_ sender: Any) {
         let manager = LoginManager()
         manager.logOut()
@@ -47,12 +58,23 @@ class retrieveViewController: UIViewController {
             print(error)
         }
     }
-    
-    override func viewDidLoad() {
-        ref = Database.database().reference()
+    func getList() {
+        ref.child("users").child((Auth.auth().currentUser?.uid)!).observeSingleEvent(of: .value) { (snapshot) in
+            let notebooksChildren = snapshot.children
+            while let ids = notebooksChildren.nextObject() as? DataSnapshot{
+                let notebookcontent = ids.children
+                while let content = notebookcontent.nextObject() as? DataSnapshot{
+                    let ID = content.value as! Int
+                    if !self.notebookArray.contains(String(ID)) { // only appends if a new and unique notebook is added
+                        self.notebookArray.append(String(ID))
+                    }
+                }
+            }
+        }
     }
+    
     @IBAction func selectNotebookID() {
-        retrievePreviousNotebookWithID(id: "7585393408")
+        retrievePreviousNotebookWithID(id: "7585394688")
     }
     func retrievePreviousNotebookWithID(id: String){
         ref.child("notebooks").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
@@ -62,11 +84,34 @@ class retrieveViewController: UIViewController {
                 let enumContent = pages.children
                 while let content = enumContent.nextObject() as? DataSnapshot {
                     let contentVal = content.value as! String
-                    print(contentVal)
                     self.pageContent.append(contentVal)
                 }
             }
             self.delegate?.addContent(numPages: self.pageNum, content: self.pageContent)
         })
     }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.notebookArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "notebookIDCell", for: indexPath)
+        
+        cell.textLabel?.text = self.notebookArray[indexPath.row]
+        cell.accessoryType = .detailDisclosureButton
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        retrievePreviousNotebookWithID(id: self.notebookArray[indexPath.row])
+    }
+    /*func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
+    }*/
 }

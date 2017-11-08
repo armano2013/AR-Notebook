@@ -71,6 +71,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.configuration.planeDetection = .horizontal
         sceneView.session.run(configuration)
         self.sceneView.delegate = self
+        currentProfile = nameDelegate?.profileName
+        
     }
     func registerGestureRecognizers() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
@@ -118,7 +120,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         text.materials = [material]
         let node = SCNNode();
         node.geometry = text
-        node.scale = SCNVector3(x: 0.1, y:0.1, z:0.1)
+        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
         node.position = SCNVector3(-0.5, 0.0, 0.001)
         return node;
     }
@@ -212,8 +214,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
 
     func addBook(hitTestResult: ARHitTestResult) {
-        //commenting out since we moved the facebook detection for now
-        currentProfile = (self.nameDelegate?.profileName!)!
         
         let scene = SCNScene(named: "art.scnassets/Book.dae")
         let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
@@ -223,11 +223,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         coverMaterial.diffuse.contents = UIImage(named: "purpleRain")
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
+        
         //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
         let transform = hitTestResult.worldTransform
         let thirdColumn = transform.columns.3
         node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
         bookNode = node //assign the book node to the global variable for book node
+        
         //check if another book object exists
         if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
             //this means theres already a book placed in the scene.. what do we want to do here??
@@ -559,7 +561,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addContent(numPages: Int, content: [String]) {
         dismiss(animated: true, completion: nil)
-        let end = numPages - 2
+        let end = numPages - 1
         for i in 0...end {
             addPageWithContent(content: content[i])
         }
