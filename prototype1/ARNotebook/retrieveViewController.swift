@@ -1,10 +1,16 @@
 import UIKit
-import Firebase
+import FacebookLogin
+import FacebookCore
+import FirebaseAuth
+import FacebookCore
+import FirebaseDatabase
 
 protocol retrieveDelegate {
     func addContent(numPages: Int, content: [String])
 }
+
 class retrieveViewController: UIViewController {
+    
     
     /*
      -----
@@ -14,6 +20,7 @@ class retrieveViewController: UIViewController {
     var ref: DatabaseReference!
     var pageContent = [String]()
     var delegate : retrieveDelegate?
+    var delegate2 : profileNameDelegate?
     var pageNum : Int = 1
     
     /*keeping this here to use for templates later
@@ -30,6 +37,17 @@ class retrieveViewController: UIViewController {
      Generic Set Up
      -----
      */
+    
+
+    @IBAction func logOutFacebook(_ sender: Any) {
+        let manager = LoginManager()
+        manager.logOut()
+        do {try Auth.auth().signOut()}
+        catch {
+            print(error)
+        }
+    }
+    
     override func viewDidLoad() {
         ref = Database.database().reference()
     }

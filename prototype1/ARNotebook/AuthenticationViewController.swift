@@ -15,31 +15,32 @@ import FirebaseDatabase
 
 class AuthenticationViewController: UIViewController, LoginButtonDelegate, profileNameDelegate {
     
-    func loginButtonDidLogOut(_ loginButton: LoginButton) {
-    }
-    
     var ref: DatabaseReference!
     var profileName : String!
     
-
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        
         let FBLogin = LoginButton(readPermissions: [.publicProfile])
         FBLogin.center = view.center
         view.addSubview(FBLogin)
         FBLogin.delegate = self as LoginButtonDelegate
         ref = Database.database().reference().child("users")
-        
+        profileName = Auth.auth().currentUser!.uid
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        if Auth.auth().currentUser != nil {
+            performSegue(withIdentifier: "loginSegue", sender: self)
+        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
         switch result {
@@ -53,22 +54,25 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate, profi
                     print("error: \(describing: error?.localizedDescription)")
                     return
                 }
-                let names = ["name":user?.displayName]
-                self.ref.updateChildValues(names as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
+                //let names = ["name":user?.displayName] old version
+                let IDs = ["ID":self.profileName]
+                self.ref.updateChildValues(IDs as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                     if  err != nil{
                         print(err as Any)
                         return
                     }
-                    print("successfull")
                 })
                 
-                self.profileName  = user?.displayName
             })
             
             performSegue(withIdentifier: "loginSegue", sender: self)
         default:
             break
         }
+    }
+    
+    func loginButtonDidLogOut(_ loginButton: LoginButton) {
+        
     }
     
     

@@ -526,8 +526,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KYR-Pc-t8u" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="234" y="616" width="160" height="100"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KYR-Pc-t8u" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
+                                <rect key="frame" x="234" y="346" width="160" height="370"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vHr-9x-3pZ">
                                         <rect key="frame" x="26" y="35" width="109" height="30"/>
@@ -537,10 +537,19 @@
                                             <action selector="selectNotebookID" destination="YWK-Lm-eqQ" eventType="touchUpInside" id="XyR-Jg-uhb"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kGN-WG-19R">
+                                        <rect key="frame" x="53" y="94" width="55" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Log Out"/>
+                                        <connections>
+                                            <action selector="logOutFacebook:" destination="YWK-Lm-eqQ" eventType="touchUpInside" id="5Cy-ni-Xfi"/>
+                                            <segue destination="vQs-GR-sQ3" kind="presentation" identifier="logOutSegue" id="SMK-rv-Ow6"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="N6c-HK-dar"/>
+                                    <constraint firstAttribute="height" constant="100" id="N6c-HK-dar" userLabel="height = 250"/>
                                     <constraint firstAttribute="width" constant="160" id="PtW-ly-6ZQ"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="bkI-Ba-QmV"/>
                                 </constraints>
@@ -560,7 +569,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f5E-0J-vm8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2364" y="-170"/>
+            <point key="canvasLocation" x="2362.3188405797105" y="-170.38043478260872"/>
         </scene>
     </scenes>
     <resources>

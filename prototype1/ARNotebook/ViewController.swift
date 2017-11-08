@@ -11,10 +11,13 @@ import ARKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import FacebookLogin
+import FacebookCore
 
 protocol profileNameDelegate {
     var profileName : String! {get set}
 }
+
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate, retrieveDelegate {
   
     /*
@@ -586,6 +589,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
     }
+
 }
 
 
