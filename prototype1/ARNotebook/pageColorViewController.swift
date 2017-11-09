@@ -19,7 +19,7 @@ protocol pageColorDelegate {
     var notebookID : Int { get set }
     var currentPage: Int {get set}
     var currentPageColor: String {get set}
-    
+
 }
 
 class pageColorViewController: UIViewController {
@@ -32,7 +32,7 @@ class pageColorViewController: UIViewController {
     var ref: DatabaseReference!
     var storageref : StorageReference!
     var pageColorString : String?
-    
+
     /*
      -----
      Generic Set Up
@@ -42,7 +42,7 @@ class pageColorViewController: UIViewController {
         super.viewDidLoad()
         ref = Database.database().reference()
         storageref = Storage.storage().reference()
-        
+
         // Do any additional setup after loading the view.
     }
     override func didReceiveMemoryWarning() {
@@ -50,8 +50,9 @@ class pageColorViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     /*
-     -----
+     ----
      BookCover Functions
+
      -----
      */
     
@@ -154,13 +155,16 @@ class pageColorViewController: UIViewController {
     
     /*
      -----
+
      Database function
+
      -----
      */
     func addPageColorDatabse(profile: String, text: String){
         ref.child("Users").child(profile).observeSingleEvent(of: .value, with: { (snapshot) in
-            let pageColorString = ["color": text]
-            let childUpdates = ["notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)/\((self.delegate?.currentPageColor)!)": pageColorString]
+            let pageColorString = ["content": text]
+            let childUpdates = ["notebooks/\((self.delegate?.currentPage)!)": pageColorString]
+
             self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                 if  err != nil{
                     print(err as Any)

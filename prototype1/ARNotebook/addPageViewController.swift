@@ -27,6 +27,7 @@ class addPageViewController: UIViewController {
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var delegate : addPageDelegate?
+    var selection : String?
     
     /*
      -----
@@ -56,6 +57,7 @@ class addPageViewController: UIViewController {
     @IBAction func addOneSlotPage(_ sender: Any) {
         let string = "single"
         delegate?.addPage(text : string)
+
     }
     
     /*

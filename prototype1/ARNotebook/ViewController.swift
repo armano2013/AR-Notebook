@@ -11,10 +11,13 @@ import ARKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import FacebookLogin
+import FacebookCore
 
 protocol profileNameDelegate {
     var profileName : String! {get set}
 }
+
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate, retrieveDelegate {
     
     
@@ -33,11 +36,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
     var currentPage : Int = 1 // global variable to keep track of current page number
+    var pageColor : UIImage? // global variable to keep track of the page color when the user changes it
     var nameDelegate : profileNameDelegate? // calling the delegate to the AuthViewCont to get user's profile name
     var currentProfile : String!
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
+
     var currentPageColor: String = ""
     var template : String = ""
     var topTempNode : SCNNode?
@@ -47,8 +52,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var currentTemplate : Int = 1
     var topTempNodeContent :String = ""
     var bottomTempNodeContent :String = ""
-    
-
     /*
      -----
      Generic Session Setup
@@ -81,6 +84,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.configuration.planeDetection = .horizontal
         sceneView.session.run(configuration)
         self.sceneView.delegate = self
+        currentProfile = nameDelegate?.profileName
+        
     }
     func registerGestureRecognizers() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
@@ -163,6 +168,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
             }
         }
+
             else {
                 dismiss(animated: true, completion: nil)
                 let alertController = UIAlertController(title: "Error", message: "Please add a page before adding any text", preferredStyle: UIAlertControllerStyle.alert)
@@ -174,7 +180,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 alertController.addAction(addPageAction)
                 self.present(alertController, animated: true, completion: nil)
             }
-
     }
     
     func createPage(){
@@ -251,8 +256,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
 
     func addBook(hitTestResult: ARHitTestResult) {
-        //commenting out since we moved the facebook detection for now
-        currentProfile = (self.nameDelegate?.profileName!)!
         
         let scene = SCNScene(named: "art.scnassets/Book.dae")
         let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
@@ -262,11 +265,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         coverMaterial.diffuse.contents = UIImage(named: "purpleRain")
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
+        
         //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
         let transform = hitTestResult.worldTransform
         let thirdColumn = transform.columns.3
         node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
         bookNode = node //assign the book node to the global variable for book node
+        
         //check if another book object exists
         if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
             //this means theres already a book placed in the scene.. what do we want to do here??
@@ -280,7 +285,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
 
     }
-    
     /*
      -----
      Focus Square
@@ -323,12 +327,44 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         if bookNode != nil && currentPageNode != nil{
             let textNode = SCNText(string: text, extrusionDepth: 0.1)
+            textNode.font = UIFont(name: "Arial", size:1)
+            textNode.containerFrame = CGRect(origin: .zero, size: CGSize(width: 10, height: 10))
+            textNode.truncationMode = kCATruncationEnd
+            textNode.alignmentMode = kCAAlignmentLeft
             textNode.isWrapped = true
             let material = SCNMaterial()
             material.diffuse.contents = UIColor.black
             textNode.materials = [material]
             let node = createTextNode(text: textNode)
             renderNode(node: node)
+//            let page = currentPageNode
+//            let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
+//
+//            //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
+//            text.isWrapped = true
+//            let material = SCNMaterial()
+//            if(pages.count % 2 == 0){
+//                material.diffuse.contents = UIColor.black
+//            }
+//            else {
+//                material.diffuse.contents = UIColor.blue
+//            }
+//            text.materials = [material]
+//            let node = SCNNode()
+//            node.geometry = text
+//            node.scale = SCNVector3Make(0.01, 0.01, 0.01)
+//
+//            /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
+//             let (min, max) = node.boundingBox
+//
+//             let dx = min.x + 0.5 * (max.x - min.x)
+//             let dy = min.y + 0.5 * (max.y - min.y)
+//             let dz = min.z + 0.5 * (max.z - min.z)
+//             node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
+//             */
+//            node.position = SCNVector3(-0.7, 0.0, 0.05)
+//            //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
+//            page?.addChildNode(node)
         }
         else{ //error for if there is no book
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -389,7 +425,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      of page 
      
  */
-    func addPage(text : String){
+
+    func addPage(string: String){
         dismiss(animated: true, completion: nil)
         if bookNode == nil {
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
@@ -428,7 +465,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         guard let profile = currentProfile else {print("error"); return}
         let id = self.generateUniqueNotebookID(node: node)
         self.notebookID = id
-        
         let childUpdates = ["users/\((profile))/notebooks/\(id)": id]
         
         self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
@@ -483,6 +519,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
         else {
+
+            let deletePageNode = SCNNode()
             let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
@@ -510,6 +548,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+
                 if self.bookNode != nil && self.pages == nil{
                     self.bookNode?.removeFromParentNode()
                 }
@@ -522,6 +561,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     self.bookNode = nil
                     self.currentTemplateNode = nil
                 }
+                self.bookNode?.removeFromParentNode()
+                self.bookNode = nil
+                self.pages.removeAll()
+                self.lastNode.removeAll()
+                self.currentPageNode = nil
             }
             alertController.addAction(cancelAction)
             alertController.addAction(deletePageAction)
@@ -654,7 +698,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addContent(numPages: Int, content: [String]) {
         dismiss(animated: true, completion: nil)
-        let end = numPages - 2
+        let end = numPages
         for i in 0...end {
             addPageWithContent(content: content[i])
         }
@@ -684,6 +728,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
     }
+
 }
 
 
