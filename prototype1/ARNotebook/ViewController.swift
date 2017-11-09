@@ -39,6 +39,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
     var currentPageColor: String = ""
+    var template : String = ""
+    var topTempNode : SCNNode?
+    var bottomTempNode : SCNNode?
+    var templateNode : SCNNode?
+    var currentTemplateNode : SCNNode?
+    var currentTemplate : Int = 1
+    var topTempNodeContent :String = ""
+    var bottomTempNodeContent :String = ""
+    
 
     /*
      -----
@@ -125,8 +134,27 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func renderNode(node: SCNNode) {
         if let page = currentPageNode {
+            if template == "single"{
+            let temp = currentTemplateNode
             lastNode.append(node)
-            page.addChildNode(node)
+            temp?.addChildNode(node)
+            }
+            else if template == "double"{
+                if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
+                    
+                }
+                else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
+                    
+                }
+                else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
+                    dismiss(animated: true, completion: nil)
+                    let alertController = UIAlertController(title: "Error", message: "both templates are full", preferredStyle: UIAlertControllerStyle.alert)
+                    let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
+                    }
+                    alertController.addAction(cancelAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            }
         }
         else {
             dismiss(animated: true, completion: nil)
@@ -161,6 +189,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPageNode = pageNode
             bookNode.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
+            topTempNodeContent = "empty"
+            bottomTempNodeContent = "empty"
         }
         else{//book error
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -304,13 +334,28 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func passImage(image: UIImage) {
         dismiss(animated: true, completion: nil)
         if let page = currentPageNode {
-            let node = SCNNode()
-            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
-            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-            node.position = SCNVector3(0,0, 0.001)
-            lastNode.append(node)
-            page.addChildNode(node)
-        }
+            if template == "single"{
+                templateNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                }
+            else if template == "double"{
+                if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
+                    topTempNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    topTempNodeContent = "full"
+                    }
+                else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
+//                    bottomTempNode = currentTemplateNode
+                    bottomTempNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    bottomTempNodeContent = "full"
+                    }
+                else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
+                    let alertController = UIAlertController(title: "Error", message: "both templates are full", preferredStyle: UIAlertControllerStyle.alert)
+                    let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
+                }
+                    alertController.addAction(cancelAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+                
+            }
         else { //error for no page
             dismiss(animated: true, completion: nil)
             let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
@@ -324,6 +369,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    }
     /*
      -----
      Add Page Deletegate Funcitons
@@ -335,7 +381,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      of page 
      
  */
-    func addPage(){
+    func addPage(text : String){
         dismiss(animated: true, completion: nil)
         if bookNode == nil {
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
@@ -344,8 +390,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
         else{
+            if text == "single" {
                 createPage()
-            
+                oneSlotTemplate()
+                template = text
+            }
+            else if text == "double"{
+                createPage()
+                twoSlotTemplate()
+                template = text
+                }
                 //@ARTUR: Fix this so that render page nums dont use render node
                 //Probably can extract method since we create page numbs in 2 places
                 let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
@@ -356,12 +410,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 let node = createTextNode(text: pageNumberNode)
                 node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
                 node.position = SCNVector3(0.55, -0.888, 0.001)
-            
                 //@ ARTUR: Fix this so that render page nums dont use render node
                 //Probably can extract method since we create page numbs in 2 places
                 renderNode(node: node)
-            }
-    }
+           }
+        }
     func saveBook(node: SCNNode) {
         //generate a unique id for the notebook
         guard let profile = currentProfile else {print("error"); return}
@@ -449,13 +502,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                self.bookNode?.removeFromParentNode()
-                self.deleteBook(node: self.bookNode!)
-                self.pages.removeAll()
-                self.lastNode.removeAll()
-                self.currentPageNode = nil
-                self.bookNode = nil
-               
+                if self.bookNode != nil && self.pages == nil{
+                    self.bookNode?.removeFromParentNode()
+                }
+                else if self.bookNode != nil && self.pages != nil{
+                    self.bookNode?.removeFromParentNode()
+                    self.deleteBook(node: self.bookNode!)
+                    self.pages.removeAll()
+                    self.lastNode.removeAll()
+                    self.currentPageNode = nil
+                    self.bookNode = nil
+                    self.currentTemplateNode = nil
+                }
             }
             alertController.addAction(cancelAction)
             alertController.addAction(deletePageAction)
@@ -499,6 +557,44 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func bookColor(imageOne: UIImage) {
         bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
+    }
+    /*
+     -----
+     Template Functions
+     -----
+     */
+    
+    func oneSlotTemplate(){
+            if let page = currentPageNode{
+                let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+                node.geometry?.firstMaterial?.diffuse.contents = UIColor.lightGray
+                node.position = SCNVector3(0,0, 0.001)
+                page.addChildNode(node)
+                templateNode = node
+                currentTemplateNode = node
+        }
+    }
+
+    func twoSlotTemplate(){
+        if let page = currentPageNode{
+            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+            let node2 = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+            //creating the first slot of the two slot template
+    
+            node.geometry?.firstMaterial?.diffuse.contents = UIColor.lightGray
+            node.position = SCNVector3(0,0.4, 0.001)
+            //creating the second slot of the two slot template
+            
+            node2.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+            node2.position = SCNVector3(0,-0.4, 0.001)
+            //adding both to the page
+            page.addChildNode(node)
+            page.addChildNode(node2)
+            topTempNode = node
+            bottomTempNode = node2
+            
+    }
+
     }
     /*
      -----

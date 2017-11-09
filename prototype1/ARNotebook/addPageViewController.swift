@@ -14,7 +14,7 @@ import FirebaseDatabase
 
 protocol addPageDelegate {
     var currentPage: Int {get set}
-    func addPage()
+    func addPage(text : String)
 }
 
 class addPageViewController: UIViewController {
@@ -50,10 +50,12 @@ class addPageViewController: UIViewController {
      -----
      */
     @IBAction func addTwoSlotPage(_ sender: Any) {
-        delegate?.addPage()
+        let string = "double"
+        delegate?.addPage(text : string)
     }
     @IBAction func addOneSlotPage(_ sender: Any) {
-        delegate?.addPage()
+        let string = "single"
+        delegate?.addPage(text : string)
     }
     
     /*
