@@ -135,19 +135,26 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func renderNode(node: SCNNode) {
         if let page = currentPageNode {
             if template == "single"{
-            let temp = currentTemplateNode
-            lastNode.append(node)
-            temp?.addChildNode(node)
+                let temp = currentTemplateNode
+                lastNode.append(node)
+                temp?.addChildNode(node)
             }
             else if template == "double"{
+                
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
-                    
+                    lastNode.append(node)
+                    topTempNode?.addChildNode(node)
+                    print("Top full")
+                    topTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-                    
+                    lastNode.append(node)
+                    bottomTempNode?.addChildNode(node)
+                    bottomTempNodeContent = "full"
+                     print("bottom full")
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
-                    dismiss(animated: true, completion: nil)
+                    print("both are full")
                     let alertController = UIAlertController(title: "Error", message: "both templates are full", preferredStyle: UIAlertControllerStyle.alert)
                     let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
                     }
@@ -156,17 +163,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
             }
         }
-        else {
-            dismiss(animated: true, completion: nil)
-            let alertController = UIAlertController(title: "Error", message: "Please add a page before adding any text", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                //self.addPage(self)
+            else {
+                dismiss(animated: true, completion: nil)
+                let alertController = UIAlertController(title: "Error", message: "Please add a page before adding any text", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                    //self.addPage(self)
+                }
+                alertController.addAction(cancelAction)
+                alertController.addAction(addPageAction)
+                self.present(alertController, animated: true, completion: nil)
             }
-            alertController.addAction(cancelAction)
-            alertController.addAction(addPageAction)
-            self.present(alertController, animated: true, completion: nil)
-        }
 
     }
     
@@ -348,6 +355,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     bottomTempNodeContent = "full"
                     }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
+                     print("both are full")
                     let alertController = UIAlertController(title: "Error", message: "both templates are full", preferredStyle: UIAlertControllerStyle.alert)
                     let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
                 }
@@ -412,7 +420,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 node.position = SCNVector3(0.55, -0.888, 0.001)
                 //@ ARTUR: Fix this so that render page nums dont use render node
                 //Probably can extract method since we create page numbs in 2 places
-                renderNode(node: node)
+                //renderNode(node: node)
            }
         }
     func saveBook(node: SCNNode) {
