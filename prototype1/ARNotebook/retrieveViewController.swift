@@ -77,17 +77,38 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         retrievePreviousNotebookWithID(id: "7585394688")
     }
     func retrievePreviousNotebookWithID(id: String){
+        //id = Int(id)
         ref.child("notebooks").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
-            let enumPages = snapshot.children
-            self.pageNum = Int(snapshot.childrenCount)
-            while let pages = enumPages.nextObject() as? DataSnapshot {
-                let enumContent = pages.children
-                while let content = enumContent.nextObject() as? DataSnapshot {
-                    let contentVal = content.value as! String
-                    self.pageContent.append(contentVal)
+            print(snapshot)
+            if snapshot.exists(){
+                let enumPages = snapshot.children
+                self.pageNum = Int(snapshot.childrenCount)
+                while let pages = enumPages.nextObject() as? DataSnapshot {
+                    let enumContent = pages.children
+                    while let content = enumContent.nextObject() as? DataSnapshot {
+                        let contentVal = content.value as! String
+                        self.pageContent.append(contentVal)
+                    }
+                }
+                if(!self.pageContent.isEmpty){
+                    self.delegate?.addContent(numPages: self.pageNum, content: self.pageContent)
+                }
+                else{
+                    let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view has no content.", preferredStyle: UIAlertControllerStyle.alert)
+                    let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
+                    }
+                    alertController.addAction(cancelAction)
+                    self.present(alertController, animated: true, completion: nil)
                 }
             }
-            self.delegate?.addContent(numPages: self.pageNum, content: self.pageContent)
+            else {
+                let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view could not be retrieved.", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
+                }
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+            
         })
     }
     

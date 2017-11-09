@@ -529,14 +529,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KYR-Pc-t8u" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
                                 <rect key="frame" x="234" y="346" width="160" height="370"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vHr-9x-3pZ">
-                                        <rect key="frame" x="26" y="35" width="109" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Open Notebook"/>
-                                        <connections>
-                                            <action selector="selectNotebookID" destination="YWK-Lm-eqQ" eventType="touchUpInside" id="XyR-Jg-uhb"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kGN-WG-19R">
                                         <rect key="frame" x="53" y="94" width="55" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -568,8 +560,6 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="dd5-Xc-WWn" firstAttribute="top" secondItem="KYR-Pc-t8u" secondAttribute="top" constant="132" id="8l1-9A-NJ9"/>
-                                    <constraint firstAttribute="height" constant="100" id="N6c-HK-dar" userLabel="height = 250"/>
-                                    <constraint firstAttribute="width" constant="160" id="PtW-ly-6ZQ"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="bkI-Ba-QmV"/>
                                     <constraint firstAttribute="trailing" secondItem="dd5-Xc-WWn" secondAttribute="trailing" constant="4" id="h4p-c0-eCv"/>
                                     <constraint firstAttribute="bottom" secondItem="dd5-Xc-WWn" secondAttribute="bottom" constant="8" id="rwc-31-3Fe"/>
@@ -584,7 +574,7 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="KYR-Pc-t8u" firstAttribute="leading" secondItem="MVk-Jb-1pH" secondAttribute="leading" constant="234" id="1OG-f3-dV1"/>
-                            <constraint firstItem="KYR-Pc-t8u" firstAttribute="top" secondItem="MVk-Jb-1pH" secondAttribute="top" constant="326" id="PgW-o1-RQo"/>
+                            <constraint firstItem="KYR-Pc-t8u" firstAttribute="top" secondItem="MVk-Jb-1pH" secondAttribute="top" constant="326" id="PgW-o1-RQo" userLabel="Designable View.top = Safe Area.top + 400"/>
                             <constraint firstItem="MVk-Jb-1pH" firstAttribute="bottom" secondItem="KYR-Pc-t8u" secondAttribute="bottom" constant="20" id="Wa3-mo-oOJ"/>
                             <constraint firstItem="MVk-Jb-1pH" firstAttribute="bottom" secondItem="KYR-Pc-t8u" secondAttribute="bottom" constant="20" id="a3Y-uS-rLn"/>
                             <constraint firstItem="MVk-Jb-1pH" firstAttribute="trailing" secondItem="KYR-Pc-t8u" secondAttribute="trailing" constant="20" id="iou-lY-xTl"/>

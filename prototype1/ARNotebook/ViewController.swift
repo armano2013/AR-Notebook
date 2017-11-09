@@ -561,7 +561,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addContent(numPages: Int, content: [String]) {
         dismiss(animated: true, completion: nil)
-        let end = numPages - 1
+        let end = numPages
         for i in 0...end {
             addPageWithContent(content: content[i])
         }
