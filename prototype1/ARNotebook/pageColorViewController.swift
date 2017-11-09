@@ -1,4 +1,4 @@
-//
+
 //  pageColorViewController.swift
 //  ARNotebook
 //
@@ -16,8 +16,10 @@ protocol pageColorDelegate {
     func pageColor(image : UIImage)
     func bookColor(imageOne : UIImage)
     var currentProfile: String!  {get set}
+    var notebookID : Int { get set }
     var currentPage: Int {get set}
-    
+    var currentPageColor: String {get set}
+
 }
 
 class pageColorViewController: UIViewController {
@@ -48,8 +50,9 @@ class pageColorViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     /*
-     -----
-    BookCover Functions
+     ----
+     BookCover Functions
+
      -----
      */
     
@@ -60,13 +63,13 @@ class pageColorViewController: UIViewController {
     }
     
     @IBAction func purpleRain(_ sender: Any) {
-         print("purple")
+        print("purple")
         let purpleOne = #imageLiteral(resourceName: "purpleRain")
         delegate?.bookColor(imageOne:purpleOne)
     }
     
     @IBAction func blackButton(_ sender: Any) {
-         print("black")
+        print("black")
         let blackONe = #imageLiteral(resourceName: "black")
         delegate?.bookColor(imageOne: blackONe)
     }
@@ -152,13 +155,16 @@ class pageColorViewController: UIViewController {
     
     /*
      -----
-    Database function
+
+     Database function
+
      -----
      */
     func addPageColorDatabse(profile: String, text: String){
         ref.child("Users").child(profile).observeSingleEvent(of: .value, with: { (snapshot) in
             let pageColorString = ["content": text]
             let childUpdates = ["notebooks/\((self.delegate?.currentPage)!)": pageColorString]
+
             self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
                 if  err != nil{
                     print(err as Any)
