@@ -31,6 +31,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
+    var hitResult : ARHitTestResult? = nil
+    var offset = Float(0.025);
     var bookNode: SCNNode?
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
@@ -192,9 +194,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //@FIXME issues with y position here, the page isnt placed right ontop of the book
             
-            let offset = Float(pages.count) * Float(0.01);
-            //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
-            pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+           
+            if(pages.count != 0){
+               offset = offset + Float(0.02);
+            }
+
+      
+            //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
+            let transform = hitResult?.localTransform
+            guard let thirdColumn = transform?.columns.3 else{return}
+           
+            //let thirdColumn = transform?.columns.3
+            pageNode.position = SCNVector3(thirdColumn.x, thirdColumn.y + offset, thirdColumn.z)
+            
+           // pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count) //minus one so 0 index array  why??
@@ -261,12 +274,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let scene = SCNScene(named: "art.scnassets/Book.dae")
         let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
         node.name = "Book"
-
+        
         let coverMaterial = SCNMaterial()
         coverMaterial.diffuse.contents = UIImage(named: "purpleRain")
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
         
+        //for adding pages ontop
+        hitResult = hitTestResult
         //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
         let transform = hitTestResult.worldTransform
         let thirdColumn = transform.columns.3
