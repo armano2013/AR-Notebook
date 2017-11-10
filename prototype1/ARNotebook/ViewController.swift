@@ -29,6 +29,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
+    var maxScale: CGFloat = 0
+    var minScale: CGFloat = 5
+    
+    
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     var bookNode: SCNNode?
@@ -77,6 +81,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.registerGestureRecognizers()
         /// Create a session configuration
         self.registerGestureRecognizers()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -85,12 +90,56 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         sceneView.session.run(configuration)
         self.sceneView.delegate = self
         currentProfile = nameDelegate?.profileName
+        self.sceneView.autoenablesDefaultLighting = true
+
         
     }
     func registerGestureRecognizers() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
+        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinch))
+        self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
     }
+    
+    //@objc becuse selector is an object c
+    @objc func pinch(sender: UIPinchGestureRecognizer) {
+
+        if sender.state == .began{
+            
+        }else if sender.state == .ended{
+            //stops all actions once user removes finger
+            
+        }
+        let scale: CGFloat = sender.scale
+        if scale > 1 {
+            maxScale += scale
+            //scale = 1
+        }
+        else if scale < 1 {
+            minScale -= scale
+        }
+        
+        let sceneView = sender.view as! ARSCNView
+        let pinchLocation = sender.location(in: sceneView)
+        let hitTest = sceneView.hitTest(pinchLocation)
+        
+        if !hitTest.isEmpty {
+            
+            let results = hitTest.first!
+            _ = results.boneNode
+            let pinchAction = SCNAction.scale(by: sender.scale, duration: 1)
+            print(sender.scale)
+            
+            topTempNode?.runAction(pinchAction)
+            bottomTempNode?.runAction(pinchAction)
+            currentPageNode?.runAction(pinchAction)
+            sender.scale = 1.0
+        }
+        
+        
+        
+    }
+
     
     /*
      -----
