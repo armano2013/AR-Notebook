@@ -378,16 +378,23 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         if let page = currentPageNode {
             if template == "single"{
-                templateNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                lastNode.append(node)
                 }
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
-                    topTempNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    lastNode.append(node)
+                    topTempNode?.addChildNode(node)
                     topTempNodeContent = "full"
                     }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-//                    bottomTempNode = currentTemplateNode
-                    bottomTempNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    lastNode.append(node)
+                    bottomTempNode?.addChildNode(node)
                     bottomTempNodeContent = "full"
                     }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
@@ -426,7 +433,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      
  */
 
-    func addPage(string: String){
+    func addPage(text: String){
         dismiss(animated: true, completion: nil)
         if bookNode == nil {
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
@@ -506,7 +513,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func deletePage(){
         dismiss(animated: true, completion: nil)
-        if currentPageNode == nil && pages == nil {
+        if currentPageNode == nil && pages.isEmpty {
             let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a page.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
@@ -549,10 +556,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
 
-                if self.bookNode != nil && self.pages == nil{
+                if self.bookNode != nil && self.pages.isEmpty{
                     self.bookNode?.removeFromParentNode()
                 }
-                else if self.bookNode != nil && self.pages != nil{
+                else if self.bookNode != nil && self.pages.isEmpty == false{
                     self.bookNode?.removeFromParentNode()
                     self.deleteBook(node: self.bookNode!)
                     self.pages.removeAll()
