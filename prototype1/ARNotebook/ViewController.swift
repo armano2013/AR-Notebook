@@ -203,6 +203,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPage = Int((currentPageNode?.name)!)!
             topTempNodeContent = "empty"
             bottomTempNodeContent = "empty"
+            addPageNum()
         }
         else{//book error
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -445,21 +446,24 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 twoSlotTemplate()
                 template = text
             }
-                //@ARTUR: Fix this so that render page nums dont use render node
-                //Probably can extract method since we create page numbs in 2 places
-                let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
-                pageNumberNode.isWrapped = true
-                let material = SCNMaterial()
-                material.diffuse.contents = UIColor.black
-                pageNumberNode.materials = [material]
-                let node = createTextNode(text: pageNumberNode)
-                node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
-                node.position = SCNVector3(0.55, -0.888, 0.001)
-                //@ ARTUR: Fix this so that render page nums dont use render node
-                //Probably can extract method since we create page numbs in 2 places
-                //renderNode(node: node)
+
            }
         }
+    
+    func addPageNum () {
+        if let pageNumberNode = currentPageNode{
+            let node = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
+            node.isWrapped = true
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor.black
+            node.materials = [material]
+            let pageNode = createTextNode(text: node)
+            pageNode.scale = SCNVector3(x: 0.006, y: 0.006, z: 0.006)
+            pageNode.position = SCNVector3(0.55, -0.888, 0.001)
+            pageNumberNode.addChildNode(pageNode)
+        }
+    }
+    
     func saveBook(node: SCNNode) {
         //generate a unique id for the notebook
         guard let profile = currentProfile else {print("error"); return}
@@ -655,19 +659,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     func addPageWithContent(content: String){
             if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+                
                 createPage()
-                //@ARTUR: Fix this so that render page nums dont use render node
-                //This is the second place we generate page numbers- put it in a method.
-                let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
-                pageNumberNode.isWrapped = true
                 let material = SCNMaterial()
                 material.diffuse.contents = UIColor.black
-                pageNumberNode.materials = [material]
-                let node = createTextNode(text: pageNumberNode)
-                node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
-                node.position = SCNVector3(0.55, -0.888, 0.001)
-                renderNode(node: node)
-                
+
                 //check to see if the content is a sotrage url - which means its an image.
                 if content.range(of:"firebasestorage.googleapis.com") != nil {
                     if let page = currentPageNode {
