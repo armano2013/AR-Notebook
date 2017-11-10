@@ -426,7 +426,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      
  */
 
-    func addPage(string: String){
+    func addPage(text: String){
         dismiss(animated: true, completion: nil)
         if bookNode == nil {
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
@@ -444,7 +444,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 createPage()
                 twoSlotTemplate()
                 template = text
-                }
+            }
                 //@ARTUR: Fix this so that render page nums dont use render node
                 //Probably can extract method since we create page numbs in 2 places
                 let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
@@ -698,7 +698,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addContent(numPages: Int, content: [String]) {
         dismiss(animated: true, completion: nil)
-        let end = numPages
+        let end = numPages - 1
         for i in 0...end {
             addPageWithContent(content: content[i])
         }
