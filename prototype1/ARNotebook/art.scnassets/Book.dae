@@ -4,8 +4,8 @@
   <contributor>
    <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
   </contributor>
-  <created>2017-10-21T18:09:33Z</created>
-  <modified>2017-10-21T18:09:33Z</modified>
+  <created>2017-11-09T16:34:02Z</created>
+  <modified>2017-11-09T16:34:02Z</modified>
   <unit meter="1.000000"/>
   <up_axis>Z_UP</up_axis>
  </asset>
@@ -22,31 +22,6 @@
    </optics>
   </camera>
  </library_cameras>
- <library_lights>
-  <light id="Sun-light" name="Sun">
-   <technique_common>
-    <directional>
-     <color>1 1 1</color>
-    </directional>
-   </technique_common>
-   <extra>
-    <technique profile="SceneKit">
-     <attenuationStart>0</attenuationStart>
-     <attenuationEnd>0</attenuationEnd>
-     <attenuationFalloffExponent>2</attenuationFalloffExponent>
-     <intensity>1000</intensity>
-     <shadow>
-      <enable>0</enable>
-      <color>0 0 0 1</color>
-      <shadowRadius>3</shadowRadius>
-      <zNear>1</zNear>
-      <zFar>100</zFar>
-      <orthographicScale>1</orthographicScale>
-     </shadow>
-    </technique>
-   </extra>
-  </light>
- </library_lights>
  <library_materials>
   <material id="Book_Cover-material" name="Book_Cover">
    <instance_effect url="#effect_Book_Cover-material"/>
@@ -256,7 +231,7 @@
  <library_visual_scenes>
   <visual_scene id="scene9">
    <node id="Book_" name="Book_">
-    <matrix>-0.1 8.742278e-09 -5.923998e-29 0.0005987063 -8.742278e-09 -0.1 6.776264e-22 0.0004018098 0 6.776264e-22 0.1 -0.001031723 0 0 0 1 </matrix>
+    <matrix>-0.1 8.742278e-09 -5.923998e-29 -0.0002577528 -8.742278e-09 -0.1 6.776264e-22 0.0004018098 0 6.776264e-22 0.1 -0.001031723 0 0 0 1 </matrix>
     <instance_geometry url="#geometry1">
      <bind_material>
       <technique_common>
@@ -269,12 +244,8 @@
     </instance_geometry>
    </node>
    <node id="Camera" name="Camera">
-    <matrix>0.9933623 -0.05425391 0.1014289 0.3210638 0.1146603 0.5374345 -0.8354743 -2.769918 -0.009183655 0.8415585 0.5400879 1.714725 0 0 0 1 </matrix>
+    <matrix>-0.9846826 -0.01895101 0.1733197 -3.923428 0.1741106 -0.05451882 0.9832152 5.488717 -0.009183723 0.9983327 0.05698363 -2.25228 0 0 0 1 </matrix>
     <instance_camera url="#Camera-camera"/>
-   </node>
-   <node id="Sun" name="Sun">
-    <matrix>0.9999629 -0.007331849 -0.00451017 -0.07194558 0.008565812 0.8993521 0.4371412 2.395437 0.000851178 -0.4371636 0.8993816 4.895957 0 0 0 1 </matrix>
-    <instance_light url="#Sun-light"/>
    </node>
   </visual_scene>
  </library_visual_scenes>

@@ -35,6 +35,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
+    var hitResult : ARHitTestResult? = nil
+    var offset = Float(0.025);
+    var notebookName = "Untitled"
     var bookNode: SCNNode?
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
@@ -260,9 +263,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //@FIXME issues with y position here, the page isnt placed right ontop of the book
             
-            let offset = Float(pages.count) * Float(0.01);
-            //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
-            pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+           
+            if(pages.count != 0){
+               offset = offset + Float(0.02);
+            }
+
+      
+            //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
+            let transform = hitResult?.localTransform
+            guard let thirdColumn = transform?.columns.3 else{return}
+           
+            //let thirdColumn = transform?.columns.3
+            pageNode.position = SCNVector3(thirdColumn.x, thirdColumn.y + offset, thirdColumn.z)
+            
+           // pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count) //minus one so 0 index array  why??
@@ -271,6 +285,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPage = Int((currentPageNode?.name)!)!
             topTempNodeContent = "empty"
             bottomTempNodeContent = "empty"
+            addPageNum()
         }
         else{//book error
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -357,6 +372,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
         
+        //for adding pages ontop
+        hitResult = hitTestResult
         //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
         let transform = hitTestResult.worldTransform
         let thirdColumn = transform.columns.3
@@ -365,12 +382,29 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         
         //check if another book object exists
         if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
-            //this means theres already a book placed in the scene.. what do we want to do here??
-            //user should only have one book open at a time.
+            let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
+            }
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
         }
         else{
-            //add book to database
-            saveBook(node: node)
+            //give the user an option to name the notebook
+            let alertController = UIAlertController(title: "Notebook Name", message: "Enter a name to create your new notebook.", preferredStyle: .alert)
+            let confirmAction = UIAlertAction(title: "Save", style: .default) { (_) in
+                guard let name = alertController.textFields?[0].text else{return}
+                self.notebookName = name
+                //add book to database
+                self.saveBook(node: node, name: self.notebookName)
+            }
+            
+            alertController.addTextField { (textField) in
+                textField.placeholder = "New Notebook"
+            }
+            alertController.addAction(confirmAction)
+            self.present(alertController, animated: true, completion: nil)
+
+           
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
         }
@@ -417,6 +451,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func passText(text: String) {
         dismiss(animated: true, completion: nil)
         if bookNode != nil && currentPageNode != nil{
+
             if template == "single"{
                 let textNode = SCNText(string: text, extrusionDepth: 0.1)
                 textNode.font = UIFont(name: "Arial", size:1)
@@ -529,7 +564,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      of page
      
      */
-    
+
     func addPage(text: String){
         dismiss(animated: true, completion: nil)
         if bookNode == nil {
@@ -549,43 +584,23 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 twoSlotTemplate()
                 template = text
             }
-            //@ARTUR: Fix this so that render page nums dont use render node
-            //Probably can extract method since we create page numbs in 2 places
-            let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
-            pageNumberNode.isWrapped = true
-            let material = SCNMaterial()
-            material.diffuse.contents = UIColor.black
-            pageNumberNode.materials = [material]
-            let node = createTextNode(text: pageNumberNode)
-            node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
-            node.position = SCNVector3(0.55, -0.888, 0.001)
-            //@ ARTUR: Fix this so that render page nums dont use render node
-            //Probably can extract method since we create page numbs in 2 places
-            //renderNode(node: node)
+           }
         }
-    }
-    func saveBook(node: SCNNode) {
+    
+    func saveBook(node: SCNNode, name: String) {
         //generate a unique id for the notebook
         guard let profile = currentProfile else {print("error"); return}
         let id = self.generateUniqueNotebookID(node: node)
         self.notebookID = id
-        let childUpdates = ["users/\((profile))/notebooks/\(id)": id]
-        
-        self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
-            if  err != nil{
-                print(err as Any)
-                return
-            }
-            return
-        })
+        self.ref.child("users/\(profile)/notebooks/\(id)").setValue(["name": self.notebookName])
+        self.ref.child("notebooks/\(id)").setValue(["name": self.notebookName])
     }
     
     func generateUniqueNotebookID(node: SCNNode) ->Int {
         return ObjectIdentifier(node).hashValue
     }
     func deleteBook(node: SCNNode) {
-        //generate a unique id for the notebook
-        guard let profile = currentProfile else {print("error"); return}
+        
         let bookID : Int = notebookID
         let bookString = String(bookID)
         print(bookString)
@@ -770,33 +785,26 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     func addPageWithContent(content: String){
-        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
-            createPage()
-            //@ARTUR: Fix this so that render page nums dont use render node
-            //This is the second place we generate page numbers- put it in a method.
-            let pageNumberNode = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
-            pageNumberNode.isWrapped = true
-            let material = SCNMaterial()
-            material.diffuse.contents = UIColor.black
-            pageNumberNode.materials = [material]
-            let node = createTextNode(text: pageNumberNode)
-            node.scale = SCNVector3(x: 0.006, y:0.006, z:0.006)
-            node.position = SCNVector3(0.55, -0.888, 0.001)
-            renderNode(node: node)
-            
-            //check to see if the content is a sotrage url - which means its an image.
-            if content.range(of:"firebasestorage.googleapis.com") != nil {
-                if let page = currentPageNode {
-                    let url = URL(string: content)
-                    URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                        guard let image = UIImage(data: data!) else {return}
-                        let node = SCNNode()
-                        node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
-                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                        node.position = SCNVector3(0,0, 0.001)
-                        self.lastNode.append(node)
-                        page.addChildNode(node)
-                    }).resume()
+            if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+                
+                createPage()
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor.black
+
+                //check to see if the content is a sotrage url - which means its an image.
+                if content.range(of:"firebasestorage.googleapis.com") != nil {
+                    if let page = currentPageNode {
+                        let url = URL(string: content)
+                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                            guard let image = UIImage(data: data!) else {return}
+                            let node = SCNNode()
+                            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                            node.position = SCNVector3(0,0, 0.001)
+                            self.lastNode.append(node)
+                            page.addChildNode(node)
+                        }).resume()
+                    }
                 }
             }
                 //if its not a url then its just regular text.
@@ -814,7 +822,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addContent(numPages: Int, content: [String]) {
         dismiss(animated: true, completion: nil)
-        let end = numPages
+        let end = numPages - 1
         for i in 0...end {
             addPageWithContent(content: content[i])
         }

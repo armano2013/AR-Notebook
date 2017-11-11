@@ -14,3 +14,5 @@ SQLite.xcodeproj
 Pods/
 FBSDKCoreKit.framework
 FBSDKLoginKit.framework
+
+build/
