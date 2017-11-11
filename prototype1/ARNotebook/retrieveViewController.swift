@@ -5,8 +5,12 @@ import FirebaseAuth
 import FacebookCore
 import FirebaseDatabase
 
+struct Page {
+    var content=[String]()
+}
+
 protocol retrieveDelegate {
-    func addContent(numPages: Int, content: [String])
+    func addContent(id: String, pageObjs: [Page])
 }
 
 class retrieveViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -18,21 +22,19 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
      -----
      */
     var ref: DatabaseReference!
-    var pageContent = [String]()
+    //var pageContent = [String]()
     var delegate : retrieveDelegate?
     var delegate2: deleteDelegate?
     var pageNum : Int = 1
     var notebookIDArray = [String]()
+    var pageObjArray = [Page]()
     var notebookArray = [String]()
     var retrievedNotebookID: Int!
-    
-    /*keeping this here to use for templates later
-     
+    /*
      struct Page {
-     //template id
-     //color
-     }
-     */
+        var content=[String]()
+     }*/
+
     
     
     /*
@@ -47,8 +49,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear( animated )
-        tableView.reloadData()
+        super.viewDidAppear(animated)
+        self.tableView.reloadData()
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -92,15 +94,19 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 self.pageNum = Int(snapshot.childrenCount)
                 while let pages = enumPages.nextObject() as? DataSnapshot {
                     let enumContent = pages.children
-                    print(pages.value)
-                    while let content = enumContent.nextObject() as? DataSnapshot {
-                        print(content.value)
-                        let contentVal = content.value as! String
-                        self.pageContent.append(contentVal)
+                    print(pages.key)
+                    if(pages.key != "name") {
+                        var pageContent = [String]()
+                        while let content = enumContent.nextObject() as? DataSnapshot {
+                            let contentVal = content.value as! String
+                            pageContent.append(contentVal)
+                        }
+                        let newPage = Page(content: pageContent)
+                        self.pageObjArray.append(newPage)
                     }
                 }
-                if(!self.pageContent.isEmpty){
-                    self.delegate?.addContent(numPages: self.pageNum, content: self.pageContent)
+                if(!self.pageObjArray.isEmpty){
+                    self.delegate?.addContent(id: id, pageObjs: self.pageObjArray)
                 }
                 else{
                     let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view has no content.", preferredStyle: UIAlertControllerStyle.alert)

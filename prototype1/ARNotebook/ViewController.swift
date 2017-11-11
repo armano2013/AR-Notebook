@@ -18,10 +18,11 @@ protocol profileNameDelegate {
     var profileName : String! {get set}
 }
 
+
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate, retrieveDelegate {
-    
-    
-    
+
+
+
     
     /*
      -----
@@ -61,7 +62,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var bottomTempNodeContent :String = ""
     var planetimeout : Timer?
     var notebookExists : Bool = false
-    
     /*
      -----
      Generic Session Setup
@@ -408,6 +408,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else{
             //give the user an option to name the notebook
             let alertController = UIAlertController(title: "Notebook Name", message: "Enter a name to create your new notebook.", preferredStyle: .alert)
+
             let confirmAction = UIAlertAction(title: "Save", style: .default) { (_) in
                 guard let name = alertController.textFields?[0].text else{return}
                 self.notebookName = name
@@ -810,9 +811,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             page.addChildNode(node2)
             topTempNode = node
             bottomTempNode = node2
-            
         }
-        
     }
     /*
      -----
@@ -853,13 +852,26 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             //error no book
         }
     }
+ /*   func addContent(id: String, pageObjs: [Page]) {
+        <#code#>
+    }*/
     
-    func addContent(numPages: Int, content: [String]) {
+    func addContent(id: String, pageObjs: [Page]) {
+        notebookID = Int(id)!
         dismiss(animated: true, completion: nil)
-        let end = numPages - 1
-        for i in 0...end {
-            addPageWithContent(content: content[i])
+        for page in pageObjs {
+            if (page.content.count > 1){
+                print("page has more than one child")
+            }
+            else{
+                print("page has one child")
+                /// pass a sting that choose the template sting"single"???
+            }
         }
+        //let end = Page
+       /* for i in 0...end {
+            addPageWithContent(content: content[i])
+        }*/
     }
     /*
      -----
