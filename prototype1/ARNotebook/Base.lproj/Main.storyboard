@@ -548,7 +548,6 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="dd5-Xc-WWn" firstAttribute="top" secondItem="KYR-Pc-t8u" secondAttribute="top" constant="132" id="8l1-9A-NJ9"/>
-                                    <constraint firstAttribute="width" constant="100" id="LzO-VI-Bj3"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="bkI-Ba-QmV"/>
                                     <constraint firstAttribute="trailing" secondItem="dd5-Xc-WWn" secondAttribute="trailing" constant="4" id="h4p-c0-eCv"/>
                                     <constraint firstAttribute="bottom" secondItem="dd5-Xc-WWn" secondAttribute="bottom" constant="8" id="rwc-31-3Fe"/>
