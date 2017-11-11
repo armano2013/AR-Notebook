@@ -31,6 +31,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
+    var hitResult : ARHitTestResult? = nil
+    var offset = Float(0.025);
+    var notebookName = "Untitled"
     var bookNode: SCNNode?
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
@@ -192,9 +195,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //@FIXME issues with y position here, the page isnt placed right ontop of the book
             
-            let offset = Float(pages.count) * Float(0.01);
-            //@DISCUSS should we add pages from the top or bottom?? if bottom needs to fix paging.
-            pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+           
+            if(pages.count != 0){
+               offset = offset + Float(0.02);
+            }
+
+      
+            //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
+            let transform = hitResult?.localTransform
+            guard let thirdColumn = transform?.columns.3 else{return}
+           
+            //let thirdColumn = transform?.columns.3
+            pageNode.position = SCNVector3(thirdColumn.x, thirdColumn.y + offset, thirdColumn.z)
+            
+           // pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count) //minus one so 0 index array  why??
@@ -261,12 +275,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let scene = SCNScene(named: "art.scnassets/Book.dae")
         let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
         node.name = "Book"
-
+        
         let coverMaterial = SCNMaterial()
         coverMaterial.diffuse.contents = UIImage(named: "purpleRain")
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
         
+        //for adding pages ontop
+        hitResult = hitTestResult
         //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
         let transform = hitTestResult.worldTransform
         let thirdColumn = transform.columns.3
@@ -275,12 +291,29 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         
         //check if another book object exists
         if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
-            //this means theres already a book placed in the scene.. what do we want to do here??
-            //user should only have one book open at a time.
+            let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
+            }
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
         }
         else{
-            //add book to database
-            saveBook(node: node)
+            //give the user an option to name the notebook
+            let alertController = UIAlertController(title: "Notebook Name", message: "Enter a name to create your new notebook.", preferredStyle: .alert)
+            let confirmAction = UIAlertAction(title: "Save", style: .default) { (_) in
+                guard let name = alertController.textFields?[0].text else{return}
+                self.notebookName = name
+                //add book to database
+                self.saveBook(node: node, name: self.notebookName)
+            }
+            
+            alertController.addTextField { (textField) in
+                textField.placeholder = "New Notebook"
+            }
+            alertController.addAction(confirmAction)
+            self.present(alertController, animated: true, completion: nil)
+
+           
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
         }
@@ -338,34 +371,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             textNode.materials = [material]
             let node = createTextNode(text: textNode)
             renderNode(node: node)
-//            let page = currentPageNode
-//            let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
-//
-//            //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
-//            text.isWrapped = true
-//            let material = SCNMaterial()
-//            if(pages.count % 2 == 0){
-//                material.diffuse.contents = UIColor.black
-//            }
-//            else {
-//                material.diffuse.contents = UIColor.blue
-//            }
-//            text.materials = [material]
-//            let node = SCNNode()
-//            node.geometry = text
-//            node.scale = SCNVector3Make(0.01, 0.01, 0.01)
-//
-//            /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
-//             let (min, max) = node.boundingBox
-//
-//             let dx = min.x + 0.5 * (max.x - min.x)
-//             let dy = min.y + 0.5 * (max.y - min.y)
-//             let dz = min.z + 0.5 * (max.z - min.z)
-//             node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
-//             */
-//            node.position = SCNVector3(-0.7, 0.0, 0.05)
-//            //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
-//            page?.addChildNode(node)
         }
         else{ //error for if there is no book
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -463,29 +468,25 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             pageNumberNode.addChildNode(pageNode)
         }
     }
+    func nameBook(){
+        
+        
+    }
     
-    func saveBook(node: SCNNode) {
+    func saveBook(node: SCNNode, name: String) {
         //generate a unique id for the notebook
         guard let profile = currentProfile else {print("error"); return}
         let id = self.generateUniqueNotebookID(node: node)
         self.notebookID = id
-        let childUpdates = ["users/\((profile))/notebooks/\(id)": id]
-        
-        self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
-            if  err != nil{
-                print(err as Any)
-                return
-            }
-            return
-        })
+        self.ref.child("users/\(profile)/notebooks/\(id)").setValue(["name": self.notebookName])
+        self.ref.child("notebooks/\(id)").setValue(["name": self.notebookName])
     }
     
     func generateUniqueNotebookID(node: SCNNode) ->Int {
         return ObjectIdentifier(node).hashValue
     }
     func deleteBook(node: SCNNode) {
-        //generate a unique id for the notebook
-        guard let profile = currentProfile else {print("error"); return}
+        
         let bookID : Int = notebookID
         let bookString = String(bookID)
         print(bookString)
