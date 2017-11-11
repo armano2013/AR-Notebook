@@ -60,6 +60,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var topTempNodeContent :String = ""
     var bottomTempNodeContent :String = ""
     var planetimeout : Timer?
+    var notebookExists : Bool = false
     
     /*
      -----
@@ -102,7 +103,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
-            if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
+            if notebookExists == true {
                 self.planetimeout?.invalidate()
             }
         })
@@ -412,6 +413,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 self.notebookName = name
                 //add book to database
                 self.saveBook(node: node, name: self.notebookName)
+                notebookExists = true
             }
             alertController.addTextField { (textField) in
                 textField.placeholder = "New Notebook"
@@ -421,8 +423,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
         }
-        
     }
+    
+    /*func addRetrievedBook(){
+        
+    }*/
+    
     /*
      -----
      Focus Square
@@ -481,6 +487,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
+                    addTopContent(content1: text)
                     let textNode = SCNText(string: text, extrusionDepth: 0.1)
                     textNode.font = UIFont(name: "Arial", size:1)
                     textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
@@ -494,6 +501,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     renderNode(node: node)
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
+                    addBottomContent(content2: text)
                     let textNode = SCNText(string: text, extrusionDepth: 0.1)
                     textNode.font = UIFont(name: "Arial", size:1)
                     textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
@@ -516,6 +524,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    
+    func addTopContent(content1: String){
+        ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["content1" : content1])
+    }
+    
+    func addBottomContent(content2: String){
+        ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["content2" : content2])
+    }
+    
     // functions to pass the image through to the VIEW CONTROLLER
     func passImage(image: UIImage) {
         dismiss(animated: true, completion: nil)
