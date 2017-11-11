@@ -100,7 +100,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.autoenablesDefaultLighting = true
         
         addTimer()
-
+        
     }
     
     func addTimer(){
@@ -519,13 +519,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Insert View Controller Callback Functions
      -----
      */
-    func passText(text: String) {
-        dismiss(animated: true, completion: nil)
+    func passText(text: String, f: Int = 0) {
+        if(f = 0) {
+            dismiss(animated: true, completion: nil)
+        }
         if bookNode != nil && currentPageNode != nil{
             
             if template == "single"{
                 //check to see if the content is a sotrage url - which means its an image.
-                if text.range(of:"firebasestorage.googleapis.com") != nil {
+                /*if text.range(of:"firebasestorage.googleapis.com") != nil {
                     if let page = currentPageNode {
                         let url = URL(string: text)
                         URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
@@ -539,21 +541,21 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         }).resume()
                     }
                 }
-                else{
-                addTopContent(content1: text)
-                let textNode = SCNText(string: text, extrusionDepth: 0.1)
-                textNode.font = UIFont(name: "Arial", size:1)
-                textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-8.0), size: CGSize(width: 10, height: 16))
-                textNode.truncationMode = kCATruncationEnd
-                textNode.alignmentMode = kCAAlignmentLeft
-                textNode.isWrapped = true
-                let material = SCNMaterial()
-                material.diffuse.contents = UIColor.black
-                textNode.materials = [material]
-                let node = createTextNode(text: textNode)
-                renderNode(node: node)
+                else{*/
+                    addTopContent(content1: text)
+                    let textNode = SCNText(string: text, extrusionDepth: 0.1)
+                    textNode.font = UIFont(name: "Arial", size:1)
+                    textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-8.0), size: CGSize(width: 10, height: 16))
+                    textNode.truncationMode = kCATruncationEnd
+                    textNode.alignmentMode = kCAAlignmentLeft
+                    textNode.isWrapped = true
+                    let material = SCNMaterial()
+                    material.diffuse.contents = UIColor.black
+                    textNode.materials = [material]
+                    let node = createTextNode(text: textNode)
+                    renderNode(node: node)
+             //   }
             }
-                
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
                     addTopContent(content1: text)
@@ -573,7 +575,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
                     //check to see if the content is a sotrage url - which means its an image.
-                    if text.range(of:"firebasestorage.googleapis.com") != nil {
+                   /*if text.range(of:"firebasestorage.googleapis.com") != nil {
                         if let page = currentPageNode {
                             let url = URL(string: text)
                             URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
@@ -587,7 +589,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             }).resume()
                         }
                     }
-                    else{
+                    else{*/
                         //check to see if the content is a sotrage url - which means its an image.
                         if text.range(of:"firebasestorage.googleapis.com") != nil {
                             if let page = currentPageNode {
@@ -617,7 +619,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             let node = createTextNode(text: textNode)
                             renderNode(node: node)
                         }
-                    }
+                    //}
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
                     addBottomContent(content2: text)
@@ -950,7 +952,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 twoSlotTemplate()
                 template = temp
             }
-            passText(text: content)
+            passText(text: content, f: 1)
             
         }
         else{
