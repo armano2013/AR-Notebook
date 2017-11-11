@@ -58,6 +58,14 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             print(error)
         }
     }
+    
+    @IBAction func back(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    /*override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.isHidden = true
+    }*/
     func getList() {
         ref.child("users").child((Auth.auth().currentUser?.uid)!).observeSingleEvent(of: .value) { (snapshot) in
             let notebooksChildren = snapshot.children
@@ -65,7 +73,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 let notebookcontent = ids.children
                 while let content = notebookcontent.nextObject() as? DataSnapshot{
                     let ID = content.value as! Int
-                    if !self.notebookArray.contains(String(ID)) { // only appends if a new and unique notebook is added
+                    if !self.notebookArray.contains(String(ID)) && self.isNotebookEmpty(id: String(ID)) == false  { // only appends if a new and unique notebook is added
                         self.notebookArray.append(String(ID))
                     }
                 }
@@ -73,9 +81,15 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    @IBAction func selectNotebookID() {
-        retrievePreviousNotebookWithID(id: "7585394688")
+    func isNotebookEmpty(id: String) -> Bool{
+        var empty: Bool = false
+        
+        ref.child("notebooks/\(id)").observeSingleEvent(of: .value) { (snapshot) in
+            empty = snapshot.hasChildren()
+        }
+        return empty
     }
+    
     func retrievePreviousNotebookWithID(id: String){
         //id = Int(id)
         ref.child("notebooks").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
@@ -121,17 +135,20 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "notebookIDCell", for: indexPath)
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: "notebookIDCell", for: indexPath)
         cell.textLabel?.text = self.notebookArray[indexPath.row]
-        cell.accessoryType = .detailDisclosureButton
         
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         retrievePreviousNotebookWithID(id: self.notebookArray[indexPath.row])
     }
+    
+   /* func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        retrievePreviousNotebookWithID(id: self.notebookArray[indexPath.row])
+    }*/
+    
     /*func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
     }*/
