@@ -95,22 +95,16 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     //for keyboard
     @IBAction func updateText(_ sender: Any) {
         if let keyText = UserInputText.text {
-            if ((self.delegate?.currentProfile) != nil){
-                let profile = self.delegate?.currentProfile!
-                addTextToDatabase(profile: profile!, text: keyText)
-            }
             delegate?.passText(text: keyText)
         }
     }
+    
     //for clipboard
     @IBAction func addClipboardText(_ sender: Any) {
         let text = getClipboard()
-        if ((self.delegate?.currentProfile) != nil){
-            let profile = self.delegate?.currentProfile!
-            addTextToDatabase(profile: profile!, text: text)
-        }
         delegate?.passText(text: text)
     }
+    
     @IBAction func chooseGalleryImage(_ sender: Any) {
         let image = UIImagePickerController()
         image.delegate = self
@@ -163,8 +157,6 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     
     //called after check if the user profile is null. if not null add text to the database at the correct page num
     func addTextToDatabase(profile: String, text: String){
-        //adding clipboard to database
-
         self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["content" : text])
     }
     
