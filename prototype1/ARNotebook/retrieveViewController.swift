@@ -68,10 +68,11 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     func getList() {
         ref.child("users").child((Auth.auth().currentUser?.uid)!+"/notebooks").observeSingleEvent(of: .value) { (snapshot) in
             let notebooksChildren = snapshot.children
-            let notebookMap = snapshot.value as? [String : AnyObject] ?? [:]
-            self.notebookIDArray = Array(notebookMap.keys) // or .first
             while let ids = notebooksChildren.nextObject() as? DataSnapshot{
                 let notebookcontent = ids.children
+                let nbID = ids.key as! String
+                print(nbID)
+                self.notebookIDArray.append(nbID)
                 while let content = notebookcontent.nextObject() as? DataSnapshot{
                     let name = content.value as! String
                     if !self.notebookArray.contains(name) { // only appends if a new and unique notebook is added
@@ -90,7 +91,9 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 self.pageNum = Int(snapshot.childrenCount)
                 while let pages = enumPages.nextObject() as? DataSnapshot {
                     let enumContent = pages.children
+                    print(pages.value)
                     while let content = enumContent.nextObject() as? DataSnapshot {
+                        print(content.value)
                         let contentVal = content.value as! String
                         self.pageContent.append(contentVal)
                     }
