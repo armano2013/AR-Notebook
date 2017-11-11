@@ -22,7 +22,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     
     
-  
+    
     /*
      -----
      Global Variables
@@ -45,7 +45,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
-
+    
     var currentPageColor: String = ""
     var template : String = ""
     var topTempNode : SCNNode?
@@ -81,9 +81,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         /// Create a session configuration
-         self.registerGestureRecognizers()
-         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-         // Run the view's session
+        self.registerGestureRecognizers()
+        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        // Run the view's session
         self.configuration.planeDetection = .horizontal
         sceneView.session.run(configuration)
         self.sceneView.delegate = self
@@ -94,7 +94,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
     }
-
+    
     /*
      -----
      Main Story - View Controller Buttons
@@ -115,15 +115,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     // limit the text characters to be less than 140
-   /* func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let startingLength = UserInputText.text?.characters.count ?? 0
-        let lengthToAdd = string.characters.count
-        let lengthToReplace = range.length
-        
-        let newLength = startingLength + lengthToAdd - lengthToReplace
-        
-        return newLength <= 140
-    }*/
+    /* func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+     let startingLength = UserInputText.text?.characters.count ?? 0
+     let lengthToAdd = string.characters.count
+     let lengthToReplace = range.length
+     
+     let newLength = startingLength + lengthToAdd - lengthToReplace
+     
+     return newLength <= 140
+     }*/
     /*
      -----
      Render SCNNodes for Text and Image
@@ -159,7 +159,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     lastNode.append(node)
                     bottomTempNode?.addChildNode(node)
                     bottomTempNodeContent = "full"
-                     print("bottom full")
+                    print("bottom full")
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
                     print("both are full")
@@ -171,18 +171,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
             }
         }
-
-            else {
-                dismiss(animated: true, completion: nil)
-                let alertController = UIAlertController(title: "Error", message: "Please add a page before adding any text", preferredStyle: UIAlertControllerStyle.alert)
-                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-                let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                    //self.addPage(self)
-                }
-                alertController.addAction(cancelAction)
-                alertController.addAction(addPageAction)
-                self.present(alertController, animated: true, completion: nil)
+            
+        else {
+            dismiss(animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Error", message: "Please add a page before adding any text", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                //self.addPage(self)
             }
+            alertController.addAction(cancelAction)
+            alertController.addAction(addPageAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     
     func createPage(){
@@ -195,20 +195,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //@FIXME issues with y position here, the page isnt placed right ontop of the book
             
-           
+            
             if(pages.count != 0){
-               offset = offset + Float(0.02);
+                offset = offset + Float(0.02);
             }
-
-      
+            
+            
             //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
             let transform = hitResult?.localTransform
             guard let thirdColumn = transform?.columns.3 else{return}
-           
+            
             //let thirdColumn = transform?.columns.3
             pageNode.position = SCNVector3(thirdColumn.x, thirdColumn.y + offset, thirdColumn.z)
             
-           // pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+            // pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count) //minus one so 0 index array  why??
@@ -243,7 +243,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     @IBAction func leftSwipe(_ sender: Any) {
-           //if there is more than one page and the current page node is the last one in the array turn the page forward
+        //if there is more than one page and the current page node is the last one in the array turn the page forward
         if (pages.count > 1 && (currentPage <= Int(pages.count - 1))) {
             let i = Int((currentPageNode?.name)!)
             let previous = i!;
@@ -258,8 +258,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     //@FIXME with Facebook Enabled we need to catch this touch so that it doesnt dismiss all the way back to auth view controller
     //should be possible with an if statement??
     /*override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-       dismiss(animated: true, completion: nil)
-    }*/
+     dismiss(animated: true, completion: nil)
+     }*/
     
     @objc func tapped(sender: UITapGestureRecognizer) {
         let sceneView = sender.view as! ARSCNView
@@ -269,7 +269,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.addBook(hitTestResult: hitTest.first!)
         }
     }
-
+    
     func addBook(hitTestResult: ARHitTestResult) {
         
         let scene = SCNScene(named: "art.scnassets/Book.dae")
@@ -312,12 +312,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             alertController.addAction(confirmAction)
             self.present(alertController, animated: true, completion: nil)
-
-           
+            
+            
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
         }
-
+        
     }
     /*
      -----
@@ -385,40 +385,40 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if let page = currentPageNode {
             if template == "single"{
                 templateNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                }
+            }
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
                     topTempNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                     topTempNodeContent = "full"
-                    }
+                }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-//                    bottomTempNode = currentTemplateNode
+                    //                    bottomTempNode = currentTemplateNode
                     bottomTempNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                     bottomTempNodeContent = "full"
-                    }
+                }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
-                     print("both are full")
+                    print("both are full")
                     let alertController = UIAlertController(title: "Error", message: "both templates are full", preferredStyle: UIAlertControllerStyle.alert)
                     let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
-                }
+                    }
                     alertController.addAction(cancelAction)
                     self.present(alertController, animated: true, completion: nil)
                 }
                 
             }
-        else { //error for no page
-            dismiss(animated: true, completion: nil)
-            let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                //@FIXME Add page needs to call other view controller.
-                //self.addPage(self)
+            else { //error for no page
+                dismiss(animated: true, completion: nil)
+                let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                    //@FIXME Add page needs to call other view controller.
+                    //self.addPage(self)
+                }
+                alertController.addAction(cancelAction)
+                alertController.addAction(addPageAction)
+                self.present(alertController, animated: true, completion: nil)
             }
-            alertController.addAction(cancelAction)
-            alertController.addAction(addPageAction)
-            self.present(alertController, animated: true, completion: nil)
         }
-    }
     }
     /*
      -----
@@ -430,8 +430,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      else temp == two slot (create two slots) geometry ( height and width of noth nodes equal) positioned half
      of page 
      
- */
-
+     */
+    
     func addPage(text: String){
         dismiss(animated: true, completion: nil)
         if bookNode == nil {
@@ -451,9 +451,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 twoSlotTemplate()
                 template = text
             }
-
-           }
+            
         }
+    }
     
     func addPageNum () {
         if let pageNumberNode = currentPageNode{
@@ -502,7 +502,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         print(bookString)
         self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
     }
-
+    
     /*
      -----
      Delete Deletegate Funcitons
@@ -524,7 +524,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
         else {
-
+            
             let deletePageNode = SCNNode()
             let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
@@ -553,7 +553,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-
+                
                 if self.bookNode != nil && self.pages == nil{
                     self.bookNode?.removeFromParentNode()
                 }
@@ -622,22 +622,22 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     func oneSlotTemplate(){
-            if let page = currentPageNode{
-                let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
-                node.geometry?.firstMaterial?.diffuse.contents = UIColor.lightGray
-                node.position = SCNVector3(0,0, 0.001)
-                page.addChildNode(node)
-                templateNode = node
-                currentTemplateNode = node
+        if let page = currentPageNode{
+            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+            node.geometry?.firstMaterial?.diffuse.contents = UIColor.lightGray
+            node.position = SCNVector3(0,0, 0.001)
+            page.addChildNode(node)
+            templateNode = node
+            currentTemplateNode = node
         }
     }
-
+    
     func twoSlotTemplate(){
         if let page = currentPageNode{
             let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
             let node2 = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
             //creating the first slot of the two slot template
-    
+            
             node.geometry?.firstMaterial?.diffuse.contents = UIColor.lightGray
             node.position = SCNVector3(0,0.4, 0.001)
             //creating the second slot of the two slot template
@@ -650,8 +650,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             topTempNode = node
             bottomTempNode = node2
             
-    }
-
+        }
+        
     }
     /*
      -----
@@ -659,37 +659,37 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     func addPageWithContent(content: String){
-            if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
-                
-                createPage()
-                let material = SCNMaterial()
-                material.diffuse.contents = UIColor.black
-
-                //check to see if the content is a sotrage url - which means its an image.
-                if content.range(of:"firebasestorage.googleapis.com") != nil {
-                    if let page = currentPageNode {
-                        let url = URL(string: content)
-                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                            guard let image = UIImage(data: data!) else {return}
-                            let node = SCNNode()
-                            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
-                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                            node.position = SCNVector3(0,0, 0.001)
-                            self.lastNode.append(node)
-                            page.addChildNode(node)
-                        }).resume()
-                    }
+        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+            
+            createPage()
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor.black
+            
+            //check to see if the content is a sotrage url - which means its an image.
+            if content.range(of:"firebasestorage.googleapis.com") != nil {
+                if let page = currentPageNode {
+                    let url = URL(string: content)
+                    URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                        guard let image = UIImage(data: data!) else {return}
+                        let node = SCNNode()
+                        node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                        node.position = SCNVector3(0,0, 0.001)
+                        self.lastNode.append(node)
+                        page.addChildNode(node)
+                    }).resume()
                 }
+            }
                 //if its not a url then its just regular text.
-                else{
-                    let textNode = SCNText(string: content, extrusionDepth: 0.1)
-                    textNode.materials = [material]
-                    let text = createTextNode(text: textNode)
-                    renderNode(node: text)
-                }
+            else{
+                let textNode = SCNText(string: content, extrusionDepth: 0.1)
+                textNode.materials = [material]
+                let text = createTextNode(text: textNode)
+                renderNode(node: text)
+            }
         }
         else{
-         //error no book
+            //error no book
         }
     }
     
@@ -710,7 +710,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             destination.delegate = self
         }
         else if let destination = segue.destination as? addPageViewController {
-           destination.delegate = self
+            destination.delegate = self
         }
         else if let destination = segue.destination as? deleteViewController {
             destination.delegate = self
@@ -725,7 +725,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
     }
-
+    
 }
 
 
