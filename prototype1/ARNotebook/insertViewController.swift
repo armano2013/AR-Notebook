@@ -22,7 +22,7 @@ protocol insertDelegate {
     func passText(text: String)
 }
 
-class insertViewController: UIViewController ,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+class insertViewController: UIViewController ,UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate  {
     /*
      -----
      Global Variables
@@ -32,6 +32,9 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     @IBOutlet weak var UserInputText: UITextField!
+    
+    @IBOutlet var textFieldBottomConstraint: NSLayoutConstraint!
+
     
     /*
      -----
@@ -43,6 +46,12 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         ref = Database.database().reference()
         storageRef = Storage.storage().reference()
         // Do any additional setup after loading the view.
+        
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(dissmiss)))
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        self.UserInputText.delegate = self
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -54,6 +63,31 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
      Insert View Controller - Buttons
      -----
      */
+    
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            
+            textFieldBottomConstraint.constant = keyboardSize.height + 20
+            
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        textFieldBottomConstraint.constant = 20
+    }
+    
+    @objc func dissmiss() {
+        self.UserInputText.resignFirstResponder()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        dismiss(animated: true, completion: nil)
+        
+        updateText(self)
+        return true
+    }
     
     //for keyboard
     @IBAction func updateText(_ sender: Any) {
@@ -97,12 +131,12 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         self.view.endEditing(true)
     }
     // hitting enter on the keyboard
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        dismiss(animated: true, completion: nil)
-        
-        updateText(self)
-        return true
-    }
+//    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+//        dismiss(animated: true, completion: nil)
+//
+//        updateText(self)
+//        return true
+//    }
     
     /*
      -----
