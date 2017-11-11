@@ -556,13 +556,25 @@
                                             <outlet property="delegate" destination="YWK-Lm-eqQ" id="7k8-eP-2eB"/>
                                         </connections>
                                     </tableView>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Whs-Or-eIm">
+                                        <rect key="frame" x="125" y="5" width="31" height="35"/>
+                                        <state key="normal" title="Button" image="back"/>
+                                        <connections>
+                                            <action selector="back:" destination="YWK-Lm-eqQ" eventType="touchUpInside" id="cug-G7-cvn"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Whs-Or-eIm" secondAttribute="bottom" constant="335" id="72e-ZG-k21"/>
                                     <constraint firstItem="dd5-Xc-WWn" firstAttribute="top" secondItem="KYR-Pc-t8u" secondAttribute="top" constant="132" id="8l1-9A-NJ9"/>
+                                    <constraint firstAttribute="width" constant="100" id="LzO-VI-Bj3"/>
+                                    <constraint firstItem="Whs-Or-eIm" firstAttribute="leading" secondItem="KYR-Pc-t8u" secondAttribute="leading" constant="130" id="bea-W0-f2a"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="bkI-Ba-QmV"/>
                                     <constraint firstAttribute="trailing" secondItem="dd5-Xc-WWn" secondAttribute="trailing" constant="4" id="h4p-c0-eCv"/>
                                     <constraint firstAttribute="bottom" secondItem="dd5-Xc-WWn" secondAttribute="bottom" constant="8" id="rwc-31-3Fe"/>
+                                    <constraint firstItem="Whs-Or-eIm" firstAttribute="top" secondItem="KYR-Pc-t8u" secondAttribute="top" id="ryj-nL-iTq"/>
+                                    <constraint firstAttribute="trailing" secondItem="Whs-Or-eIm" secondAttribute="trailing" constant="-1" id="sWi-IK-2Pt"/>
                                     <constraint firstItem="dd5-Xc-WWn" firstAttribute="leading" secondItem="KYR-Pc-t8u" secondAttribute="leading" constant="4" id="vu6-0e-Spc"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
