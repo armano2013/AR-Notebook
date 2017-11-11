@@ -49,8 +49,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
-    var pageContentInfo : String = ""
-    
+    var pageContentInfo : String = ""    
     var currentPageColor: String = ""
     var template : String = ""
     var topTempNode : SCNNode?
@@ -105,6 +104,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
     }
     
+
     //@objc becuse selector is an object c
     @objc func pinch(sender: UIPinchGestureRecognizer) {
         
@@ -139,12 +139,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPageNode?.runAction(pinchAction)
             sender.scale = 1.0
         }
-        
-        
-        
-    }
-    
-    
+    }  
     /*
      -----
      Main Story - View Controller Buttons
@@ -524,8 +519,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                 node.position = SCNVector3(0,0, 0.001)
                 lastNode.append(node)
-                templateNode?.addChildNode(node)
-            }
+                templateNode?.addChildNode(node)            }
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
@@ -536,6 +530,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     topTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
+
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                     node.position = SCNVector3(0,0,0.001)
@@ -597,6 +592,21 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 twoSlotTemplate()
                 template = text
             }
+            
+        }
+    }
+    
+    func addPageNum () {
+        if let pageNumberNode = currentPageNode{
+            let node = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
+            node.isWrapped = true
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor.black
+            node.materials = [material]
+            let pageNode = createTextNode(text: node)
+            pageNode.scale = SCNVector3(x: 0.006, y: 0.006, z: 0.006)
+            pageNode.position = SCNVector3(0.55, -0.888, 0.001)
+            pageNumberNode.addChildNode(pageNode)
         }
     }
     
@@ -629,6 +639,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         print(bookString)
         self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
     }
+
     func pageContent(node: SCNNode){
         guard let profile = currentProfile else {print("error"); return}
         let bookID : Int = notebookID
@@ -693,6 +704,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
                 
+
                 if self.bookNode != nil && self.pages.isEmpty == true{
                     self.bookNode?.removeFromParentNode()
                 }
@@ -777,6 +789,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let node2 = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
             //creating the first slot of the two slot template
             
+
             node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             node.position = SCNVector3(0,0.4, 0.001)
             //creating the second slot of the two slot template

@@ -27,10 +27,10 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     
     /*keeping this here to use for templates later
      
-    struct Page {
-        //template id
-        //color
-    }
+     struct Page {
+     //template id
+     //color
+     }
      */
     
     
@@ -49,7 +49,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidAppear( animated )
         tableView.reloadData()
     }
-
+    
     @IBOutlet weak var tableView: UITableView!
     @IBAction func logOutFacebook(_ sender: Any) {
         let manager = LoginManager()
@@ -65,19 +65,19 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     /*override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.isHidden = true
-    }*/
-  
+     self.view.isHidden = true
+     }*/
+    
     func getList() {
         ref.child("users").child((Auth.auth().currentUser?.uid)!+"/notebooks").observeSingleEvent(of: .value) { (snapshot) in
             let notebooksChildren = snapshot.children
-            print(snapshot.children)
             let notebookMap = snapshot.value as? [String : AnyObject] ?? [:]
             self.notebookIDArray = Array(notebookMap.keys) // or .first
             while let ids = notebooksChildren.nextObject() as? DataSnapshot{
                 let notebookcontent = ids.children
                 while let content = notebookcontent.nextObject() as? DataSnapshot{
                     let name = content.value as! String
+
                     if !self.notebookArray.contains(name) { // only appends if a new and unique notebook is added
                         self.notebookArray.append(name)
                     }
@@ -85,16 +85,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
     }
-    
-    func isNotebookEmpty(id: String) -> Bool{
-        var empty: Bool = false
-        
-        ref.child("notebooks/\(id)").observeSingleEvent(of: .value) { (snapshot) in
-            empty = snapshot.hasChildren()
-        }
-        return empty
-    }
-        func retrievePreviousNotebookWithID(id: String){
+
+    func retrievePreviousNotebookWithID(id: String){
         ref.child("notebooks").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
             print(snapshot)
             if snapshot.exists(){
@@ -148,11 +140,11 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         retrievePreviousNotebookWithID(id: self.notebookIDArray[indexPath.row])
     }
     
-   /* func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        retrievePreviousNotebookWithID(id: self.notebookArray[indexPath.row])
-    }*/
+    /* func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+     retrievePreviousNotebookWithID(id: self.notebookArray[indexPath.row])
+     }*/
     
     /*func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
-    }*/
+     this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
+     }*/
 }
