@@ -61,20 +61,21 @@ class pageColorViewController: UIViewController {
     }
     
     @IBAction func blueButton(_ sender: Any) {
+
         print("blue")
-        let blueOne = #imageLiteral(resourceName: "spiral")
+        let blueOne = #imageLiteral(resourceName: "poppingBook")
         delegate?.bookColor(imageOne: blueOne, cover: "blue")
     }
     
     @IBAction func purpleRain(_ sender: Any) {
         print("purple")
-        let purpleOne = #imageLiteral(resourceName: "purpleRain")
+        let purpleOne = #imageLiteral(resourceName: "spiralNotebook")
         delegate?.bookColor(imageOne: purpleOne, cover: "purple")
     }
     
     @IBAction func blackButton(_ sender: Any) {
         print("black")
-        let blackOne = #imageLiteral(resourceName: "black")
+        let blackOne = #imageLiteral(resourceName: "graphicBook1 copy2")
         delegate?.bookColor(imageOne: blackOne, cover: "black")
     }
     /*
@@ -83,7 +84,6 @@ class pageColorViewController: UIViewController {
      -----
      */
     @IBAction func redButton(_ sender: Any) {
-        print("page color red")
         let red = #imageLiteral(resourceName: "RedPage")
         pageColorString = "red"
         delegate?.pageColor(image : red)
@@ -95,7 +95,6 @@ class pageColorViewController: UIViewController {
         }
     }
     @IBAction func blueColor(_ sender: Any) {
-        print("page color blue")
         let blue = #imageLiteral(resourceName: "BluePage")
         pageColorString = "blue"
         delegate?.pageColor(image : blue)
@@ -107,7 +106,6 @@ class pageColorViewController: UIViewController {
         }
     }
     @IBAction func greenColor(_ sender: Any) {
-        print("page color green")
         let green = #imageLiteral(resourceName: "GreenPage")
         pageColorString = "green"
         if let keyText = pageColorString{
@@ -119,7 +117,6 @@ class pageColorViewController: UIViewController {
         delegate?.pageColor(image : green)
     }
     @IBAction func purpleColor(_ sender: Any) {
-        print("page color purple")
         let purple = #imageLiteral(resourceName: "PurplePage")
         pageColorString = "purple"
         if let keyText = pageColorString{
@@ -131,7 +128,6 @@ class pageColorViewController: UIViewController {
         delegate?.pageColor(image : purple)
     }
     @IBAction func yellowPage(_ sender: Any) {
-        print("page color yellow")
         let yellow = #imageLiteral(resourceName: "YellowPage")
         pageColorString = "yellow"
         if let keyText = pageColorString{
@@ -143,7 +139,6 @@ class pageColorViewController: UIViewController {
         delegate?.pageColor(image : yellow)
     }
     @IBAction func DefaultPage(_ sender: Any) {
-        print("page color default")
         let plain = #imageLiteral(resourceName: "page")
         pageColorString = "default"
         delegate?.pageColor(image : plain)

@@ -232,17 +232,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
                     lastNode.append(node)
                     topTempNode?.addChildNode(node)
-                    print("Top full")
+    
                     topTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
                     lastNode.append(node)
                     bottomTempNode?.addChildNode(node)
                     bottomTempNodeContent = "full"
-                    print("bottom full")
+
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
-                    print("both are full")
+                    
                     let alertController = UIAlertController(title: "Error", message: "both templates are full", preferredStyle: UIAlertControllerStyle.alert)
                     let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
                     }
@@ -615,7 +615,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     bottomTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
-                    print("both are full")
+                    
                     let alertController = UIAlertController(title: "Error", message: "both templates are full", preferredStyle: UIAlertControllerStyle.alert)
                     let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
                     }
@@ -688,7 +688,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         
         let bookID : Int = notebookID
         let bookString = String(bookID)
-        print(bookString)
         self.ref?.child("notebooks").child(bookString).removeValue()
         self.ref?.child("users").child(currentProfile).child("notebooks").child(bookString).removeValue()
     }
@@ -698,7 +697,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let bookString = String(bookID)
         let pageID : Int = currentPage
         let pageString = String(pageID)
-        print(bookString)
         self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
     }
     
@@ -711,7 +709,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let pageContent : String = pageContentInfo//global var
         let pageSting = String(pageContent)
         
-        print(bookString)
         self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
     }
     
