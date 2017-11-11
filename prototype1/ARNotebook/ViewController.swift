@@ -553,6 +553,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 let node = createTextNode(text: textNode)
                 renderNode(node: node)
             }
+            }
                 
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
