@@ -78,7 +78,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 let notebookcontent = ids.children
                 while let content = notebookcontent.nextObject() as? DataSnapshot{
                     let name = content.value as! String
-                    if !self.notebookArray.contains(name) && self.isNotebookEmpty(id: String(ID)) { // only appends if a new and unique notebook is added
+                    if !self.notebookArray.contains(name) { // only appends if a new and unique notebook is added
                         self.notebookArray.append(name)
                     }
                 }

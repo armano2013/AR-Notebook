@@ -95,7 +95,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.delegate = self
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
-
+        
         
     }
     func registerGestureRecognizers() {
@@ -107,7 +107,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     //@objc becuse selector is an object c
     @objc func pinch(sender: UIPinchGestureRecognizer) {
-
+        
         if sender.state == .began{
             
         }else if sender.state == .ended{
@@ -143,7 +143,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         
         
     }
-
+    
     
     /*
      -----
@@ -171,8 +171,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     last.removeFromParentNode()
                     lastNode.removeLast()
                     bottomTempNodeContent = "empty"
+                }
             }
-        }
         }
         else {
             let alertController = UIAlertController(title: "Nothing to Undo", message: "There is nothing you are able to undo", preferredStyle: UIAlertControllerStyle.alert)
@@ -263,20 +263,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             pageNode.geometry?.firstMaterial?.isDoubleSided = true
             //@FIXME issues with y position here, the page isnt placed right ontop of the book
             
-           
+            
             if(pages.count != 0){
-               offset = offset + Float(0.02);
+                offset = offset + Float(0.02);
             }
-
-      
+            
+            
             //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
             let transform = hitResult?.localTransform
             guard let thirdColumn = transform?.columns.3 else{return}
-           
+            
             //let thirdColumn = transform?.columns.3
             pageNode.position = SCNVector3(thirdColumn.x, thirdColumn.y + offset, thirdColumn.z)
             
-           // pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+            // pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
             pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count) //minus one so 0 index array  why??
@@ -292,6 +292,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    func addPageNum () {
+        if let pageNumberNode = currentPageNode{
+            let node = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
+            node.isWrapped = true
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor.black
+            node.materials = [material]
+            let pageNode = createTextNode(text: node)
+            pageNode.scale = SCNVector3(x: 0.006, y: 0.006, z: 0.006)
+            pageNode.position = SCNVector3(0.55, -0.888, 0.001)
+            pageNumberNode.addChildNode(pageNode)
         }
     }
     /*
@@ -328,16 +341,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let previous = i!;
             let turnPage = pages[previous]
             
-//            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
-//
-//            let spin = CABasicAnimation(keyPath: "rotation")
-//            //// Use from-to to explicitly make a full rotation around z
-//            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
-//            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(-1 * M_PI)))
-//            spin.duration = 3
-//            spin.repeatCount = 0
-//            turnPage.addAnimation(spin, forKey: "spin around")
-
+            //            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
+            //
+            //            let spin = CABasicAnimation(keyPath: "rotation")
+            //            //// Use from-to to explicitly make a full rotation around z
+            //            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
+            //            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(-1 * M_PI)))
+            //            spin.duration = 3
+            //            spin.repeatCount = 0
+            //            turnPage.addAnimation(spin, forKey: "spin around")
+            
             
             turnPage.isHidden = false
             currentPageNode = turnPage
@@ -403,8 +416,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             alertController.addAction(confirmAction)
             self.present(alertController, animated: true, completion: nil)
-
-           
+            
+            
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
         }
@@ -451,7 +464,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func passText(text: String) {
         dismiss(animated: true, completion: nil)
         if bookNode != nil && currentPageNode != nil{
-
+            
             if template == "single"{
                 let textNode = SCNText(string: text, extrusionDepth: 0.1)
                 textNode.font = UIFont(name: "Arial", size:1)
@@ -492,7 +505,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     let node = createTextNode(text: textNode)
                     renderNode(node: node)
                 }
-           
+                
             }
         }
         else{ //error for if there is no book
@@ -564,7 +577,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      of page
      
      */
-
+    
     func addPage(text: String){
         dismiss(animated: true, completion: nil)
         if bookNode == nil {
@@ -584,8 +597,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 twoSlotTemplate()
                 template = text
             }
-           }
         }
+    }
     
     func saveBook(node: SCNNode, name: String) {
         //generate a unique id for the notebook
@@ -785,26 +798,25 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     func addPageWithContent(content: String){
-            if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
-                
-                createPage()
-                let material = SCNMaterial()
-                material.diffuse.contents = UIColor.black
-
-                //check to see if the content is a sotrage url - which means its an image.
-                if content.range(of:"firebasestorage.googleapis.com") != nil {
-                    if let page = currentPageNode {
-                        let url = URL(string: content)
-                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                            guard let image = UIImage(data: data!) else {return}
-                            let node = SCNNode()
-                            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
-                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                            node.position = SCNVector3(0,0, 0.001)
-                            self.lastNode.append(node)
-                            page.addChildNode(node)
-                        }).resume()
-                    }
+        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
+            
+            createPage()
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor.black
+            
+            //check to see if the content is a sotrage url - which means its an image.
+            if content.range(of:"firebasestorage.googleapis.com") != nil {
+                if let page = currentPageNode {
+                    let url = URL(string: content)
+                    URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                        guard let image = UIImage(data: data!) else {return}
+                        let node = SCNNode()
+                        node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                        node.position = SCNVector3(0,0, 0.001)
+                        self.lastNode.append(node)
+                        page.addChildNode(node)
+                    }).resume()
                 }
             }
                 //if its not a url then its just regular text.
