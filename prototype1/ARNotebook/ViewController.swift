@@ -353,12 +353,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    // tap outside any popup to dismiss
-    //@FIXME with Facebook Enabled we need to catch this touch so that it doesnt dismiss all the way back to auth view controller
-    //should be possible with an if statement??
-    /*override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-     dismiss(animated: true, completion: nil)
-     }*/
     
     @objc func tapped(sender: UITapGestureRecognizer) {
         let sceneView = sender.view as! ARSCNView
@@ -594,12 +588,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             
         }
-<<<<<<< HEAD
     }
-    
-=======
-    }    
->>>>>>> 88385fdb7a8cf4f3e2d164504b7dc9102c8f691a
+
     func saveBook(node: SCNNode, name: String) {
         //generate a unique id for the notebook
         guard let profile = currentProfile else {print("error"); return}
