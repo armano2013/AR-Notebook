@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var passedParams = [String]()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        //the timer for the welcome splash screen
+        Thread.sleep(forTimeInterval: 3.0)
         // Override point for customization after application launch.
         //FirebaseOptions.defaultOptions()?.deepLinkURLScheme = self.customURLScheme
         FirebaseApp.configure()

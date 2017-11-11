@@ -151,8 +151,6 @@ class pageColorViewController: UIViewController {
             delegate?.pageColor(image : plain)
         }
     }
-    
-    
     /*
      -----
 
@@ -161,19 +159,9 @@ class pageColorViewController: UIViewController {
      -----
      */
     func addPageColorDatabse(profile: String, text: String){
-        ref.child("Users").child(profile).observeSingleEvent(of: .value, with: { (snapshot) in
-            let pageColorString = ["content": text]
-            let childUpdates = ["notebooks/\((self.delegate?.currentPage)!)": pageColorString]
-
-            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
-                if  err != nil{
-                    print(err as Any)
-                    return
-                }
-                return
-            })
-        }) { (error) in
-            print(error.localizedDescription)
-        }
+        ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["color" : text])
     }
+    func addBookStlyeDatabse(profile: String, text: String){
+       ref.child("notebooks/\((self.delegate?.notebookID)!)").updateChildValues(["Cover Style" : text])
+}
 }

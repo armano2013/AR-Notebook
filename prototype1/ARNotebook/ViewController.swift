@@ -29,6 +29,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
+    var maxScale: CGFloat = 0
+    var minScale: CGFloat = 5
+    
+    
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     var hitResult : ARHitTestResult? = nil
@@ -45,7 +49,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
-    
+    var pageContentInfo : String = ""    
     var currentPageColor: String = ""
     var template : String = ""
     var topTempNode : SCNNode?
@@ -80,6 +84,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.registerGestureRecognizers()
         /// Create a session configuration
         self.registerGestureRecognizers()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -88,13 +93,53 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         sceneView.session.run(configuration)
         self.sceneView.delegate = self
         currentProfile = nameDelegate?.profileName
+        self.sceneView.autoenablesDefaultLighting = true
+        
         
     }
     func registerGestureRecognizers() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
+        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinch))
+        self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
     }
     
+
+    //@objc becuse selector is an object c
+    @objc func pinch(sender: UIPinchGestureRecognizer) {
+        
+        if sender.state == .began{
+            
+        }else if sender.state == .ended{
+            //stops all actions once user removes finger
+            
+        }
+        let scale: CGFloat = sender.scale
+        if scale > 1 {
+            maxScale += scale
+            //scale = 1
+        }
+        else if scale < 1 {
+            minScale -= scale
+        }
+        
+        let sceneView = sender.view as! ARSCNView
+        let pinchLocation = sender.location(in: sceneView)
+        let hitTest = sceneView.hitTest(pinchLocation)
+        
+        if !hitTest.isEmpty {
+            
+            let results = hitTest.first!
+            _ = results.boneNode
+            let pinchAction = SCNAction.scale(by: sender.scale, duration: 1)
+            print(sender.scale)
+            
+            topTempNode?.runAction(pinchAction)
+            bottomTempNode?.runAction(pinchAction)
+            currentPageNode?.runAction(pinchAction)
+            sender.scale = 1.0
+        }
+    }  
     /*
      -----
      Main Story - View Controller Buttons
@@ -102,9 +147,27 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func undo(_ sender: Any) {
-        if let last = (lastNode.last){
-            last.removeFromParentNode()
-            lastNode.removeLast()
+        if template == "single" {
+            if let last = (lastNode.last){
+                last.removeFromParentNode()
+                lastNode.removeLast()
+            }
+        }
+        else if template == "double"{
+            if topTempNodeContent == "full"{
+                if let last = (lastNode.last){
+                    last.removeFromParentNode()
+                    lastNode.removeLast()
+                    topTempNodeContent = "empty"
+                }
+            }
+            else if bottomTempNodeContent == "full"{
+                if let last = (lastNode.last){
+                    last.removeFromParentNode()
+                    lastNode.removeLast()
+                    bottomTempNodeContent = "empty"
+                }
+            }
         }
         else {
             let alertController = UIAlertController(title: "Nothing to Undo", message: "There is nothing you are able to undo", preferredStyle: UIAlertControllerStyle.alert)
@@ -136,7 +199,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         text.materials = [material]
         let node = SCNNode();
         node.geometry = text
-        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
+        node.scale = SCNVector3(x: 0.1, y:0.1, z:0.1)
         node.position = SCNVector3(-0.5, 0.0, 0.001)
         return node;
     }
@@ -226,6 +289,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    func addPageNum () {
+        if let pageNumberNode = currentPageNode{
+            let node = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
+            node.isWrapped = true
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor.black
+            node.materials = [material]
+            let pageNode = createTextNode(text: node)
+            pageNode.scale = SCNVector3(x: 0.006, y: 0.006, z: 0.006)
+            pageNode.position = SCNVector3(0.55, -0.888, 0.001)
+            pageNumberNode.addChildNode(pageNode)
+        }
+    }
     /*
      -----
      Tap Interactions
@@ -237,6 +313,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let i = Int((currentPageNode?.name)!)
             let previous = i! - 2;
             let turnPage = pages[previous]
+            
+            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
+            
+            let spin = CABasicAnimation(keyPath: "rotation")
+            //// Use from-to to explicitly make a full rotation around z
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(2 * M_PI)))
+            spin.duration = 0.3
+            spin.repeatCount = 1
+            turnPage.addAnimation(spin, forKey: "spin around")
+            
             currentPageNode?.isHidden = true;
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -248,6 +335,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let i = Int((currentPageNode?.name)!)
             let previous = i!;
             let turnPage = pages[previous]
+            
+            //            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
+            //
+            //            let spin = CABasicAnimation(keyPath: "rotation")
+            //            //// Use from-to to explicitly make a full rotation around z
+            //            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
+            //            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(-1 * M_PI)))
+            //            spin.duration = 3
+            //            spin.repeatCount = 0
+            //            turnPage.addAnimation(spin, forKey: "spin around")
+            
+            
             turnPage.isHidden = false
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -360,17 +459,49 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func passText(text: String) {
         dismiss(animated: true, completion: nil)
         if bookNode != nil && currentPageNode != nil{
-            let textNode = SCNText(string: text, extrusionDepth: 0.1)
-            textNode.font = UIFont(name: "Arial", size:1)
-            textNode.containerFrame = CGRect(origin: .zero, size: CGSize(width: 10, height: 10))
-            textNode.truncationMode = kCATruncationEnd
-            textNode.alignmentMode = kCAAlignmentLeft
-            textNode.isWrapped = true
-            let material = SCNMaterial()
-            material.diffuse.contents = UIColor.black
-            textNode.materials = [material]
-            let node = createTextNode(text: textNode)
-            renderNode(node: node)
+            
+            if template == "single"{
+                let textNode = SCNText(string: text, extrusionDepth: 0.1)
+                textNode.font = UIFont(name: "Arial", size:1)
+                textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-8.0), size: CGSize(width: 10, height: 16))
+                textNode.truncationMode = kCATruncationEnd
+                textNode.alignmentMode = kCAAlignmentLeft
+                textNode.isWrapped = true
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor.black
+                textNode.materials = [material]
+                let node = createTextNode(text: textNode)
+                renderNode(node: node)
+            }
+            else if template == "double"{
+                if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
+                    let textNode = SCNText(string: text, extrusionDepth: 0.1)
+                    textNode.font = UIFont(name: "Arial", size:1)
+                    textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
+                    textNode.truncationMode = kCATruncationEnd
+                    textNode.alignmentMode = kCAAlignmentLeft
+                    textNode.isWrapped = true
+                    let material = SCNMaterial()
+                    material.diffuse.contents = UIColor.black
+                    textNode.materials = [material]
+                    let node = createTextNode(text: textNode)
+                    renderNode(node: node)
+                }
+                else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
+                    let textNode = SCNText(string: text, extrusionDepth: 0.1)
+                    textNode.font = UIFont(name: "Arial", size:1)
+                    textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
+                    textNode.truncationMode = kCATruncationEnd
+                    textNode.alignmentMode = kCAAlignmentLeft
+                    textNode.isWrapped = true
+                    let material = SCNMaterial()
+                    material.diffuse.contents = UIColor.black
+                    textNode.materials = [material]
+                    let node = createTextNode(text: textNode)
+                    renderNode(node: node)
+                }
+                
+            }
         }
         else{ //error for if there is no book
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -384,16 +515,27 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         if let page = currentPageNode {
             if template == "single"{
-                templateNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-            }
+                let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                node.position = SCNVector3(0,0, 0.001)
+                lastNode.append(node)
+                templateNode?.addChildNode(node)            }
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
-                    topTempNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    node.position = SCNVector3(0,0.0, 0.001)
+                    lastNode.append(node)
+                    topTempNode?.addChildNode(node)
                     topTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-                    //                    bottomTempNode = currentTemplateNode
-                    bottomTempNode?.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+
+                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    node.position = SCNVector3(0,0,0.001)
+                    lastNode.append(node)
+                    bottomTempNode?.addChildNode(node)
                     bottomTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
@@ -404,7 +546,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     alertController.addAction(cancelAction)
                     self.present(alertController, animated: true, completion: nil)
                 }
-                
             }
             else { //error for no page
                 dismiss(animated: true, completion: nil)
@@ -428,7 +569,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     /* added page, templates will be based on if else conditions,
      if temp == single ( create single temp) geometry slight smaller than page node positioned center of page
      else temp == two slot (create two slots) geometry ( height and width of noth nodes equal) positioned half
-     of page 
+     of page
      
      */
     
@@ -468,10 +609,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             pageNumberNode.addChildNode(pageNode)
         }
     }
-    func nameBook(){
-        
-        
-    }
     
     func saveBook(node: SCNNode, name: String) {
         //generate a unique id for the notebook
@@ -502,6 +639,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         print(bookString)
         self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
     }
+
+    func pageContent(node: SCNNode){
+        guard let profile = currentProfile else {print("error"); return}
+        let bookID : Int = notebookID
+        let bookString = String(bookID)
+        let pageID : Int = currentPage
+        let pageString = String(pageID)
+        let pageContent : String = pageContentInfo//global var
+        let pageSting = String(pageContent)
+        
+        print(bookString)
+        self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
+    }
     
     /*
      -----
@@ -511,7 +661,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func deletePage(){
         dismiss(animated: true, completion: nil)
-        if currentPageNode == nil && pages == nil {
+        if currentPageNode == nil && pages.isEmpty == true{
             let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a page.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
@@ -554,10 +704,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
                 
-                if self.bookNode != nil && self.pages == nil{
+
+                if self.bookNode != nil && self.pages.isEmpty == true{
                     self.bookNode?.removeFromParentNode()
                 }
-                else if self.bookNode != nil && self.pages != nil{
+                else if self.bookNode != nil && self.pages.isEmpty == false{
                     self.bookNode?.removeFromParentNode()
                     self.deleteBook(node: self.bookNode!)
                     self.pages.removeAll()
@@ -624,7 +775,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func oneSlotTemplate(){
         if let page = currentPageNode{
             let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
-            node.geometry?.firstMaterial?.diffuse.contents = UIColor.lightGray
+            node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             node.position = SCNVector3(0,0, 0.001)
             page.addChildNode(node)
             templateNode = node
@@ -638,11 +789,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let node2 = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
             //creating the first slot of the two slot template
             
-            node.geometry?.firstMaterial?.diffuse.contents = UIColor.lightGray
+
+            node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             node.position = SCNVector3(0,0.4, 0.001)
             //creating the second slot of the two slot template
             
-            node2.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+            node2.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             node2.position = SCNVector3(0,-0.4, 0.001)
             //adding both to the page
             page.addChildNode(node)
