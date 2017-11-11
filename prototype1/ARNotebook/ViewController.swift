@@ -392,7 +392,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
         else{
             //give the user an option to name the notebook
-            let alertController = UIAlertController(title: "Notebook Name", message: "Enter a name to create your new notebook.", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Notebook Name", message: "Enter a name to create your new notebook or open a previous notebook.", preferredStyle: .alert)
+            let openBookaction = UIAlertAction(title: "Open Previous Book", style: .default){ (_) in
+                
+            }
             let confirmAction = UIAlertAction(title: "Save", style: .default) { (_) in
                 guard let name = alertController.textFields?[0].text else{return}
                 self.notebookName = name

@@ -20,6 +20,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var ref: DatabaseReference!
     var pageContent = [String]()
     var delegate : retrieveDelegate?
+    var delegate2: deleteDelegate?
     var pageNum : Int = 1
     var notebookIDArray = [String]()
     var notebookArray = [String]()
@@ -137,6 +138,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == UITableViewCellEditingStyle.delete{
+            delegate2?.deleteNotebook()
             print("function added")
         }
      //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
