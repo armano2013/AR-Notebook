@@ -11,6 +11,7 @@ struct Page {
 
 protocol retrieveDelegate {
     func addContent(id: String, pageObjs: [Page])
+    var retrievedFlag : Bool {get set}
 }
 
 class retrieveViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -141,6 +142,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.delegate?.retrievedFlag = true
         retrievePreviousNotebookWithID(id: self.notebookIDArray[indexPath.row])
     }
     
