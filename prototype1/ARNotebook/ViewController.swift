@@ -271,6 +271,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let i = Int((currentPageNode?.name)!)
             let previous = i! - 2;
             let turnPage = pages[previous]
+            
+            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
+            
+            let spin = CABasicAnimation(keyPath: "rotation")
+            //// Use from-to to explicitly make a full rotation around z
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(2 * M_PI)))
+            spin.duration = 0.3
+            spin.repeatCount = 1
+            turnPage.addAnimation(spin, forKey: "spin around")
+            
             currentPageNode?.isHidden = true;
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -282,6 +293,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let i = Int((currentPageNode?.name)!)
             let previous = i!;
             let turnPage = pages[previous]
+            
+//            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
+//
+//            let spin = CABasicAnimation(keyPath: "rotation")
+//            //// Use from-to to explicitly make a full rotation around z
+//            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
+//            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(-1 * M_PI)))
+//            spin.duration = 3
+//            spin.repeatCount = 0
+//            turnPage.addAnimation(spin, forKey: "spin around")
+
+            
             turnPage.isHidden = false
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
