@@ -130,21 +130,8 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     //called after check if the user profile is null. if not null add text to the database at the correct page num
     func addTextToDatabase(profile: String, text: String){
         //adding clipboard to database
-        ref.child("users").child(profile).observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            let clipboardString = ["content":text]
-            let childUpdates = ["notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)": clipboardString]
-            
-            self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
-                if  err != nil{
-                    print(err as Any)
-                    return
-                }
-                return
-            })
-        }) { (error) in
-            print(error.localizedDescription)
-        }
+
+        self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["content" : text])
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -178,22 +165,8 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
             print(metadata?.downloadURLs as Any)
             guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
-            
-            self.ref.child("users").child(profile).observeSingleEvent(of: .value, with: { (snapshot) in
-                let urlString = ["image url":imageURL]
-                let childUpdates = ["notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)": urlString]
-                self.ref.updateChildValues(childUpdates as Any as! [AnyHashable : Any], withCompletionBlock: { (err, ref) in
-                    if  err != nil{
-                        print(err as Any)
-                        return
-                    }
-                    return
-                })
-                
-            }){ (error) in
-                print(error.localizedDescription)
-            }
-        }
-        }
+               self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["image url":imageURL])
 
+            }
+}
 }

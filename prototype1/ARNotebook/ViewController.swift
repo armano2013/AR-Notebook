@@ -99,9 +99,27 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func undo(_ sender: Any) {
-        if let last = (lastNode.last){
-            last.removeFromParentNode()
-            lastNode.removeLast()
+        if template == "single" {
+            if let last = (lastNode.last){
+                last.removeFromParentNode()
+                lastNode.removeLast()
+            }
+        }
+        else if template == "double"{
+            if topTempNodeContent == "full"{
+                if let last = (lastNode.last){
+                    last.removeFromParentNode()
+                    lastNode.removeLast()
+                    topTempNodeContent = "empty"
+                }
+            }
+            else if bottomTempNodeContent == "full"{
+                if let last = (lastNode.last){
+                    last.removeFromParentNode()
+                    lastNode.removeLast()
+                    bottomTempNodeContent = "empty"
+            }
+        }
         }
         else {
             let alertController = UIAlertController(title: "Nothing to Undo", message: "There is nothing you are able to undo", preferredStyle: UIAlertControllerStyle.alert)
@@ -133,7 +151,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         text.materials = [material]
         let node = SCNNode();
         node.geometry = text
-        node.scale = SCNVector3(x: 0.01, y:0.01, z:0.01)
+        node.scale = SCNVector3(x: 0.1, y:0.1, z:0.1)
         node.position = SCNVector3(-0.5, 0.0, 0.001)
         return node;
     }
@@ -328,7 +346,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if bookNode != nil && currentPageNode != nil{
             let textNode = SCNText(string: text, extrusionDepth: 0.1)
             textNode.font = UIFont(name: "Arial", size:1)
-            textNode.containerFrame = CGRect(origin: .zero, size: CGSize(width: 10, height: 10))
+            textNode.containerFrame = CGRect(origin: .zero, size: CGSize(width: 10, height: 8))
             textNode.truncationMode = kCATruncationEnd
             textNode.alignmentMode = kCAAlignmentLeft
             textNode.isWrapped = true
@@ -379,7 +397,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if let page = currentPageNode {
             if template == "single"{
                 let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
-                node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
+                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                 node.position = SCNVector3(0,0, 0.001)
                 lastNode.append(node)
                 templateNode?.addChildNode(node)
@@ -392,6 +410,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     lastNode.append(node)
                     topTempNode?.addChildNode(node)
                     topTempNodeContent = "full"
+                   
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
                     //                    bottomTempNode = currentTemplateNode
@@ -401,6 +420,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     lastNode.append(node)
                     bottomTempNode?.addChildNode(node)
                     bottomTempNodeContent = "full"
+                   
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
                     print("both are full")
@@ -517,7 +537,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func deletePage(){
         dismiss(animated: true, completion: nil)
-        if currentPageNode == nil && pages == nil {
+        if currentPageNode == nil && pages.isEmpty == true{
             let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a page.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
@@ -560,7 +580,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
                 
-                if self.bookNode != nil && self.pages.isEmpty{
+                if self.bookNode != nil && self.pages.isEmpty == true{
                     self.bookNode?.removeFromParentNode()
                 }
                 else if self.bookNode != nil && self.pages.isEmpty == false{
