@@ -594,8 +594,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             
         }
+<<<<<<< HEAD
     }
     
+=======
+    }    
+>>>>>>> 88385fdb7a8cf4f3e2d164504b7dc9102c8f691a
     func saveBook(node: SCNNode, name: String) {
         //generate a unique id for the notebook
         guard let profile = currentProfile else {print("error"); return}
