@@ -103,7 +103,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
-            if notebookExists == true {
+            if self.notebookExists == true {
                 self.planetimeout?.invalidate()
             }
         })
@@ -414,7 +414,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 self.notebookName = name
                 //add book to database
                 self.saveBook(node: node, name: self.notebookName)
-                notebookExists = true
+                self.notebookExists = true
             }
             alertController.addTextField { (textField) in
                 textField.placeholder = "New Notebook"
@@ -426,15 +426,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    /*func addRetrievedBook(){
+    func addRetrievedBook(){
         
-    }*/
+    }
     
     /*
      -----
      Focus Square
      -----
      */
+    
     func createPlaneFocusSquare(planeAnchor: ARPlaneAnchor)->SCNNode{
         //.extent means the width and height of horizontal surface detected
         let planeNode = SCNNode(geometry: SCNPlane(width: CGFloat(planeAnchor.extent.x), height:CGFloat(planeAnchor.extent.z)))
@@ -527,11 +528,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func addTopContent(content1: String){
-        ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["content1" : content1])
+        ref.child("notebooks/\((self.notebookID))/\(self.currentPage)").updateChildValues(["content1" : content1])
     }
     
     func addBottomContent(content2: String){
-        ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["content2" : content2])
+        ref.child("notebooks/\((self.notebookID))/\(self.currentPage)").updateChildValues(["content2" : content2])
     }
     
     // functions to pass the image through to the VIEW CONTROLLER
@@ -775,6 +776,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func bookColor(imageOne: UIImage) {
         bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
+        ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : "string"])
+
+        
     }
     /*
      -----
