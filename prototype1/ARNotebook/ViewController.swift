@@ -62,6 +62,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var bottomTempNodeContent :String = ""
     var planetimeout : Timer?
     var notebookExists : Bool = false
+    var retrievedFlag : Bool = false
     /*
      -----
      Generic Session Setup
@@ -98,14 +99,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
         
-        planetimeout = Timer.scheduledTimer(withTimeInterval: 40.0, repeats: true, block: { (_) in
+        addTimer()
+
+    }
+    
+    func addTimer(){
+        planetimeout = Timer.scheduledTimer(withTimeInterval: 40.0, repeats: false, block: { (_) in
             let alertController = UIAlertController(title: "Invalid Horizontal Plane", message: "Please find a flat surface to place your notebook onto.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
-            if self.notebookExists == true {
-                self.planetimeout?.invalidate()
-            }
         })
     }
     
@@ -373,7 +376,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let sceneView = sender.view as! ARSCNView
         let tapLocation = sender.location(in: sceneView)
         let hitTest = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
-        if !hitTest.isEmpty {
+        print(retrievedFlag)
+        if retrievedFlag == true {
+            self.addRetrievedBook(hitTestResult: hitTest.first!)
+        }
+        else if !hitTest.isEmpty {
             self.addBook(hitTestResult: hitTest.first!)
         }
     }
@@ -388,6 +395,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         coverMaterial.diffuse.contents = UIImage(named: "purpleRain")
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
+        ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : "purple"])
         
         //for adding pages ontop
         hitResult = hitTestResult
@@ -414,7 +422,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 self.notebookName = name
                 //add book to database
                 self.saveBook(node: node, name: self.notebookName)
-                self.notebookExists = true
             }
             alertController.addTextField { (textField) in
                 textField.placeholder = "New Notebook"
@@ -426,8 +433,50 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    func addRetrievedBook(){
+    func addRetrievedBook(hitTestResult: ARHitTestResult){
+        let scene = SCNScene(named: "art.scnassets/Book.dae")
+        let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
+        node.name = "Book"
         
+        let coverMaterial = SCNMaterial()
+        coverMaterial.diffuse.contents = UIImage(named: "purpleRain")
+        coverMaterial.locksAmbientWithDiffuse = true
+        node.geometry?.firstMaterial = coverMaterial
+        ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : "purple"])
+        
+        hitResult = hitTestResult
+        //coordinates from the hit test give us the plane anchor to put the book ontop of, coordinates are stored in the 3rd column.
+        let transform = hitTestResult.worldTransform
+        let thirdColumn = transform.columns.3
+        node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
+        bookNode = node //assign the book node to the global variable for book node
+        //check if another book object exists
+        if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
+            let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
+            }
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else{
+            //give the user an option to name the notebook
+            let alertController = UIAlertController(title: "Notebook Namesdgdfsgs", message: "Enter a name to create your new notebook.", preferredStyle: .alert)
+            
+            let confirmAction = UIAlertAction(title: "Save", style: .default) { (_) in
+                guard let name = alertController.textFields?[0].text else{return}
+                self.notebookName = name
+                //add book to database
+                self.saveBook(node: node, name: self.notebookName)
+                self.notebookExists = true
+            }
+            alertController.addTextField { (textField) in
+                textField.placeholder = "New Notebook"
+            }
+            alertController.addAction(confirmAction)
+            self.present(alertController, animated: true, completion: nil)
+            //render book on root
+            self.sceneView.scene.rootNode.addChildNode(node)
+        }
     }
     
     /*
@@ -491,6 +540,23 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
                 else{
+                addTopContent(content1: text)
+                let textNode = SCNText(string: text, extrusionDepth: 0.1)
+                textNode.font = UIFont(name: "Arial", size:1)
+                textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-8.0), size: CGSize(width: 10, height: 16))
+                textNode.truncationMode = kCATruncationEnd
+                textNode.alignmentMode = kCAAlignmentLeft
+                textNode.isWrapped = true
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor.black
+                textNode.materials = [material]
+                let node = createTextNode(text: textNode)
+                renderNode(node: node)
+            }
+                
+            else if template == "double"{
+                if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
+                    addTopContent(content1: text)
                     let textNode = SCNText(string: text, extrusionDepth: 0.1)
                     textNode.font = UIFont(name: "Arial", size:1)
                     textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-8.0), size: CGSize(width: 10, height: 16))
@@ -824,11 +890,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    func bookColor(imageOne: UIImage) {
+    func bookColor(imageOne: UIImage, cover: String) {
         bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
-        ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : "string"])
-        
-        
+        ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : cover])
     }
     /*
      -----

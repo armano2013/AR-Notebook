@@ -14,7 +14,7 @@ import FirebaseDatabase
 
 protocol pageColorDelegate {
     func pageColor(image : UIImage)
-    func bookColor(imageOne : UIImage)
+    func bookColor(imageOne : UIImage, cover: String)
     var currentProfile: String!  {get set}
     var notebookID : Int { get set }
     var currentPage: Int {get set}
@@ -63,19 +63,19 @@ class pageColorViewController: UIViewController {
     @IBAction func blueButton(_ sender: Any) {
         print("blue")
         let blueOne = #imageLiteral(resourceName: "spiral")
-        delegate?.bookColor(imageOne: blueOne)
+        delegate?.bookColor(imageOne: blueOne, cover: "blue")
     }
     
     @IBAction func purpleRain(_ sender: Any) {
         print("purple")
         let purpleOne = #imageLiteral(resourceName: "purpleRain")
-        delegate?.bookColor(imageOne:purpleOne)
+        delegate?.bookColor(imageOne: purpleOne, cover: "purple")
     }
     
     @IBAction func blackButton(_ sender: Any) {
         print("black")
-        let blackONe = #imageLiteral(resourceName: "black")
-        delegate?.bookColor(imageOne: blackONe)
+        let blackOne = #imageLiteral(resourceName: "black")
+        delegate?.bookColor(imageOne: blackOne, cover: "black")
     }
     /*
      -----
