@@ -46,6 +46,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var ref: DatabaseReference! //calling a reference to the firebase database
     var storageRef: StorageReference! //calling a reference to the firebase storage
     var notebookID: Int = 0 //unique id of notebook
+    var pageContentInfo : String = ""
     
     var currentPageColor: String = ""
     var template : String = ""
@@ -416,45 +417,48 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func passText(text: String) {
         dismiss(animated: true, completion: nil)
         if bookNode != nil && currentPageNode != nil{
-            let textNode = SCNText(string: text, extrusionDepth: 0.1)
-            textNode.font = UIFont(name: "Arial", size:1)
-            textNode.containerFrame = CGRect(origin: .zero, size: CGSize(width: 10, height: 8))
-            textNode.truncationMode = kCATruncationEnd
-            textNode.alignmentMode = kCAAlignmentLeft
-            textNode.isWrapped = true
-            let material = SCNMaterial()
-            material.diffuse.contents = UIColor.black
-            textNode.materials = [material]
-            let node = createTextNode(text: textNode)
-            renderNode(node: node)
-            //            let page = currentPageNode
-            //            let text = SCNText(string: getClipboard(), extrusionDepth: 0.1)
-            //
-            //            //  text.containerFrame = CGRect(origin: .zero, size: CGSize(width: 1.4, height: 1.8))
-            //            text.isWrapped = true
-            //            let material = SCNMaterial()
-            //            if(gi % 2 == 0){
-            //                material.diffuse.contents = UIColor.black
-            //            }
-            //            else {
-            //                material.diffuse.contents = UIColor.blue
-            //            }
-            //            text.materials = [material]
-            //            let node = SCNNode()
-            //            node.geometry = text
-            //            node.scale = SCNVector3Make(0.01, 0.01, 0.01)
-            //
-            //            /* credit: https://stackoverflow.com/questions/44828764/arkit-placing-an-scntext-at-a-particular-point-in-front-of-the-camera
-            //             let (min, max) = node.boundingBox
-            //
-            //             let dx = min.x + 0.5 * (max.x - min.x)
-            //             let dy = min.y + 0.5 * (max.y - min.y)
-            //             let dz = min.z + 0.5 * (max.z - min.z)
-            //             node.pivot = SCNMatrix4MakeTranslation(dx, dy, dz)
-            //             */
-            //            node.position = SCNVector3(-0.7, 0.0, 0.05)
-            //            //node.eulerAngles = SCNVector3(0, 180.degreesToRadians, 0) //for some reason text is added backward
-            //            page?.addChildNode(node)
+            if template == "single"{
+                let textNode = SCNText(string: text, extrusionDepth: 0.1)
+                textNode.font = UIFont(name: "Arial", size:1)
+                textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-8.0), size: CGSize(width: 10, height: 16))
+                textNode.truncationMode = kCATruncationEnd
+                textNode.alignmentMode = kCAAlignmentLeft
+                textNode.isWrapped = true
+                let material = SCNMaterial()
+                material.diffuse.contents = UIColor.black
+                textNode.materials = [material]
+                let node = createTextNode(text: textNode)
+                renderNode(node: node)
+            }
+            else if template == "double"{
+                if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
+                    let textNode = SCNText(string: text, extrusionDepth: 0.1)
+                    textNode.font = UIFont(name: "Arial", size:1)
+                    textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
+                    textNode.truncationMode = kCATruncationEnd
+                    textNode.alignmentMode = kCAAlignmentLeft
+                    textNode.isWrapped = true
+                    let material = SCNMaterial()
+                    material.diffuse.contents = UIColor.black
+                    textNode.materials = [material]
+                    let node = createTextNode(text: textNode)
+                    renderNode(node: node)
+                }
+                else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
+                    let textNode = SCNText(string: text, extrusionDepth: 0.1)
+                    textNode.font = UIFont(name: "Arial", size:1)
+                    textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
+                    textNode.truncationMode = kCATruncationEnd
+                    textNode.alignmentMode = kCAAlignmentLeft
+                    textNode.isWrapped = true
+                    let material = SCNMaterial()
+                    material.diffuse.contents = UIColor.black
+                    textNode.materials = [material]
+                    let node = createTextNode(text: textNode)
+                    renderNode(node: node)
+                }
+           
+            }
         }
         else{ //error for if there is no book
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -482,17 +486,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     lastNode.append(node)
                     topTempNode?.addChildNode(node)
                     topTempNodeContent = "full"
-                   
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-                    //                    bottomTempNode = currentTemplateNode
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                     node.position = SCNVector3(0,0,0.001)
                     lastNode.append(node)
                     bottomTempNode?.addChildNode(node)
                     bottomTempNodeContent = "full"
-                   
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
                     print("both are full")
@@ -597,6 +598,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let bookString = String(bookID)
         let pageID : Int = currentPage
         let pageString = String(pageID)
+        print(bookString)
+        self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
+    }
+    func pageContent(node: SCNNode){
+        guard let profile = currentProfile else {print("error"); return}
+        let bookID : Int = notebookID
+        let bookString = String(bookID)
+        let pageID : Int = currentPage
+        let pageString = String(pageID)
+        let pageContent : String = pageContentInfo//global var
+        let pageSting = String(pageContent)
+        
         print(bookString)
         self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
     }
