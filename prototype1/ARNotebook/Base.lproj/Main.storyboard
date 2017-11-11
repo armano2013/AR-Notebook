@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -434,6 +434,7 @@
                     </view>
                     <connections>
                         <outlet property="UserInputText" destination="Dap-Gh-LMb" id="8o0-U0-eOZ"/>
+                        <outlet property="textFieldBottomConstraint" destination="aNv-Jl-ArJ" id="jh7-rI-lq6"/>
                         <segue destination="fsJ-kF-Ing" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="7Ak-qc-lx4"/>
                     </connections>
                 </viewController>
@@ -476,7 +477,7 @@
                                 <rect key="frame" x="8" y="596" width="160" height="100"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyE-Fh-IKV">
-                                        <rect key="frame" x="18.666666666666664" y="8" width="123" height="30"/>
+                                        <rect key="frame" x="18.666666666666671" y="8" width="123.00000000000001" height="30"/>
                                         <state key="normal" title="Two Slot Tempate"/>
                                         <connections>
                                             <action selector="addTwoSlotPage:" destination="5N4-j2-ApC" eventType="touchUpInside" id="1ol-RH-zs2"/>

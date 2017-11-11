@@ -29,6 +29,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
+    var maxScale: CGFloat = 0
+    var minScale: CGFloat = 5
+    
+    
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     var bookNode: SCNNode?
@@ -77,6 +81,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.registerGestureRecognizers()
         /// Create a session configuration
         self.registerGestureRecognizers()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -85,12 +90,56 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         sceneView.session.run(configuration)
         self.sceneView.delegate = self
         currentProfile = nameDelegate?.profileName
+        self.sceneView.autoenablesDefaultLighting = true
+
         
     }
     func registerGestureRecognizers() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
+        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinch))
+        self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
     }
+    
+    //@objc becuse selector is an object c
+    @objc func pinch(sender: UIPinchGestureRecognizer) {
+
+        if sender.state == .began{
+            
+        }else if sender.state == .ended{
+            //stops all actions once user removes finger
+            
+        }
+        let scale: CGFloat = sender.scale
+        if scale > 1 {
+            maxScale += scale
+            //scale = 1
+        }
+        else if scale < 1 {
+            minScale -= scale
+        }
+        
+        let sceneView = sender.view as! ARSCNView
+        let pinchLocation = sender.location(in: sceneView)
+        let hitTest = sceneView.hitTest(pinchLocation)
+        
+        if !hitTest.isEmpty {
+            
+            let results = hitTest.first!
+            _ = results.boneNode
+            let pinchAction = SCNAction.scale(by: sender.scale, duration: 1)
+            print(sender.scale)
+            
+            topTempNode?.runAction(pinchAction)
+            bottomTempNode?.runAction(pinchAction)
+            currentPageNode?.runAction(pinchAction)
+            sender.scale = 1.0
+        }
+        
+        
+        
+    }
+
     
     /*
      -----
@@ -240,6 +289,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let i = Int((currentPageNode?.name)!)
             let previous = i! - 2;
             let turnPage = pages[previous]
+            
+            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
+            
+            let spin = CABasicAnimation(keyPath: "rotation")
+            //// Use from-to to explicitly make a full rotation around z
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(2 * M_PI)))
+            spin.duration = 0.3
+            spin.repeatCount = 1
+            turnPage.addAnimation(spin, forKey: "spin around")
+            
             currentPageNode?.isHidden = true;
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -251,6 +311,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let i = Int((currentPageNode?.name)!)
             let previous = i!;
             let turnPage = pages[previous]
+            
+//            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
+//
+//            let spin = CABasicAnimation(keyPath: "rotation")
+//            //// Use from-to to explicitly make a full rotation around z
+//            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
+//            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(-1 * M_PI)))
+//            spin.duration = 3
+//            spin.repeatCount = 0
+//            turnPage.addAnimation(spin, forKey: "spin around")
+
+            
             turnPage.isHidden = false
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
