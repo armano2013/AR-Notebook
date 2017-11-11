@@ -37,4 +37,8 @@ class shareViewController: UIViewController {
         notebookID =  arr[0]
         accessType = arr[1]
     }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
 }

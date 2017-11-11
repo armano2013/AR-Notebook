@@ -64,6 +64,9 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
      -----
      */
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -126,10 +129,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
      Gesture Recognizers
      -----
      */
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // this ends the key boards
-        self.view.endEditing(true)
-    }
+
     // hitting enter on the keyboard
 //    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 //        dismiss(animated: true, completion: nil)

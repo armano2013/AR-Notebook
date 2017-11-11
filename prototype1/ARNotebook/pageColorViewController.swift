@@ -56,6 +56,10 @@ class pageColorViewController: UIViewController {
      -----
      */
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     @IBAction func blueButton(_ sender: Any) {
         print("blue")
         let blueOne = #imageLiteral(resourceName: "spiral")
