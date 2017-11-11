@@ -24,6 +24,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var ref: DatabaseReference!
     //var pageContent = [String]()
     var delegate : retrieveDelegate?
+    var delegate2: deleteDelegate?
     var pageNum : Int = 1
     var notebookIDArray = [String]()
     var pageObjArray = [Page]()
@@ -53,6 +54,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBOutlet weak var tableView: UITableView!
+    
     @IBAction func logOutFacebook(_ sender: Any) {
         let manager = LoginManager()
         manager.logOut()
@@ -62,13 +64,9 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    @IBAction func back(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    /*override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-     self.view.isHidden = true
-     }*/
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+     self.dismiss(animated: true, completion: nil)
+     }
     
     func getList() {
         ref.child("users").child((Auth.auth().currentUser?.uid)!+"/notebooks").observeSingleEvent(of: .value) { (snapshot) in
@@ -80,7 +78,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 self.notebookIDArray.append(nbID)
                 while let content = notebookcontent.nextObject() as? DataSnapshot{
                     let name = content.value as! String
-
                     if !self.notebookArray.contains(name) { // only appends if a new and unique notebook is added
                         self.notebookArray.append(name)
                     }
@@ -139,21 +136,21 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "notebookIDCell", for: indexPath)
         cell.textLabel?.text = self.notebookArray[indexPath.row]
-        
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         retrievePreviousNotebookWithID(id: self.notebookIDArray[indexPath.row])
     }
     
-    /* func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-     retrievePreviousNotebookWithID(id: self.notebookArray[indexPath.row])
-     }*/
     
-    /*func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
-     }*/
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == UITableViewCellEditingStyle.delete{
+            delegate2?.deleteNotebook()
+            print("function added")
+        }
+     //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
+     }
 }

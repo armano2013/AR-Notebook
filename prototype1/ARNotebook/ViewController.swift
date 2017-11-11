@@ -60,8 +60,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var currentTemplate : Int = 1
     var topTempNodeContent :String = ""
     var bottomTempNodeContent :String = ""
-    
-
+    var planetimeout : Timer?
+    var notebookExists : Bool = false
     /*
      -----
      Generic Session Setup
@@ -98,8 +98,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
         
-        
+        planetimeout = Timer.scheduledTimer(withTimeInterval: 40.0, repeats: true, block: { (_) in
+            let alertController = UIAlertController(title: "Invalid Horizontal Plane", message: "Please find a flat surface to place your notebook onto.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+            if notebookExists == true {
+                self.planetimeout?.invalidate()
+            }
+        })
     }
+    
+    
     func registerGestureRecognizers() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
@@ -107,7 +117,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
     }
     
-
+    
     //@objc becuse selector is an object c
     @objc func pinch(sender: UIPinchGestureRecognizer) {
         
@@ -142,7 +152,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPageNode?.runAction(pinchAction)
             sender.scale = 1.0
         }
-    }  
+    }
+
     /*
      -----
      Main Story - View Controller Buttons
@@ -316,15 +327,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let i = Int((currentPageNode?.name)!)
             let previous = i! - 2;
             let turnPage = pages[previous]
-            
-            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
+            // Point in the -z direction
+            //the first varible has to be 360 or 180 to play place
+            turnPage.pivot = SCNMatrix4MakeRotation(Float(360.degreesToRadians), 0, 1, 0)
             
             let spin = CABasicAnimation(keyPath: "rotation")
             //// Use from-to to explicitly make a full rotation around z
-            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
-            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(2 * M_PI)))
-            spin.duration = 0.3
-            spin.repeatCount = 1
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 1, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: -1, z: -0.001, w: .pi))
+            spin.duration = 0.5
+            spin.repeatCount = 0
             turnPage.addAnimation(spin, forKey: "spin around")
             
             currentPageNode?.isHidden = true;
@@ -339,29 +351,23 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let previous = i!;
             let turnPage = pages[previous]
             
-            //            turnPage.pivot = SCNMatrix4MakeRotation(Float(M_PI_2), 1, 0, 0)
-            //
-            //            let spin = CABasicAnimation(keyPath: "rotation")
-            //            //// Use from-to to explicitly make a full rotation around z
-            //            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: 0))
-            //            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 0, z: 1, w: Float(-1 * M_PI)))
-            //            spin.duration = 3
-            //            spin.repeatCount = 0
-            //            turnPage.addAnimation(spin, forKey: "spin around")
+            // Point in the -z direction
+            turnPage.pivot = SCNMatrix4MakeRotation( 0, Float(360.degreesToRadians), 0, 0)
             
-            
+            let spin = CABasicAnimation(keyPath: "rotation")
+            //// Use from-to to explicitly make a full rotation around z
+            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: -1, z: -0.001, w: 0))
+            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 1, w: .pi))
+            spin.duration = 0.5
+            spin.repeatCount = 1
+            turnPage.addAnimation(spin, forKey: "spin around")
+
             turnPage.isHidden = false
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
         }
     }
     
-    // tap outside any popup to dismiss
-    //@FIXME with Facebook Enabled we need to catch this touch so that it doesnt dismiss all the way back to auth view controller
-    //should be possible with an if statement??
-    /*override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-     dismiss(animated: true, completion: nil)
-     }*/
     
     @objc func tapped(sender: UITapGestureRecognizer) {
         let sceneView = sender.view as! ARSCNView
@@ -408,20 +414,22 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 self.notebookName = name
                 //add book to database
                 self.saveBook(node: node, name: self.notebookName)
+                notebookExists = true
             }
-            
-            
             alertController.addTextField { (textField) in
                 textField.placeholder = "New Notebook"
             }
             alertController.addAction(confirmAction)
             self.present(alertController, animated: true, completion: nil)
-            
-            
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
         }
     }
+    
+    /*func addRetrievedBook(){
+        
+    }*/
+    
     /*
      -----
      Focus Square
@@ -444,6 +452,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             childNode.removeFromParentNode()
         }
         let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
+
         node.addChildNode(planeNode)
     }
     
@@ -479,6 +488,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
+                    addTopContent(content1: text)
                     let textNode = SCNText(string: text, extrusionDepth: 0.1)
                     textNode.font = UIFont(name: "Arial", size:1)
                     textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
@@ -492,6 +502,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     renderNode(node: node)
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
+                    addBottomContent(content2: text)
                     let textNode = SCNText(string: text, extrusionDepth: 0.1)
                     textNode.font = UIFont(name: "Arial", size:1)
                     textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
@@ -514,6 +525,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    
+    func addTopContent(content1: String){
+        ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["content1" : content1])
+    }
+    
+    func addBottomContent(content2: String){
+        ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["content2" : content2])
+    }
+    
     // functions to pass the image through to the VIEW CONTROLLER
     func passImage(image: UIImage) {
         dismiss(animated: true, completion: nil)
@@ -534,7 +554,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     topTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-
+                    
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                     node.position = SCNVector3(0,0,0.001)
@@ -598,7 +618,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             
         }
-    }    
+    }
+    
     func saveBook(node: SCNNode, name: String) {
         //generate a unique id for the notebook
         guard let profile = currentProfile else {print("error"); return}
@@ -628,7 +649,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         print(bookString)
         self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
     }
-
+    
     func pageContent(node: SCNNode){
         guard let profile = currentProfile else {print("error"); return}
         let bookID : Int = notebookID
@@ -693,7 +714,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
                 
-
+                
                 if self.bookNode != nil && self.pages.isEmpty == true{
                     self.bookNode?.removeFromParentNode()
                 }
@@ -778,7 +799,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let node2 = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
             //creating the first slot of the two slot template
             
-
+            
             node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             node.position = SCNVector3(0,0.4, 0.001)
             //creating the second slot of the two slot template
