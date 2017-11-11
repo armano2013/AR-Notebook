@@ -59,6 +59,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var currentTemplate : Int = 1
     var topTempNodeContent :String = ""
     var bottomTempNodeContent :String = ""
+    var planetimeout : Timer?
+    
     /*
      -----
      Generic Session Setup
@@ -95,8 +97,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
         
-        
+        planetimeout = Timer.scheduledTimer(withTimeInterval: 40.0, repeats: true, block: { (_) in
+            let alertController = UIAlertController(title: "Invalid Horizontal Plane", message: "Please find a flat surface to place your notebook onto.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+            if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
+                self.planetimeout?.invalidate()
+            }
+        })
     }
+    
+    
     func registerGestureRecognizers() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
@@ -104,7 +116,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
     }
     
-
+    
     //@objc becuse selector is an object c
     @objc func pinch(sender: UIPinchGestureRecognizer) {
         
@@ -392,24 +404,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
         else{
             //give the user an option to name the notebook
-            let alertController = UIAlertController(title: "Notebook Name", message: "Enter a name to create your new notebook or open a previous notebook.", preferredStyle: .alert)
-            let openBookaction = UIAlertAction(title: "Open Previous Book", style: .default){ (_) in
-                
-            }
+            let alertController = UIAlertController(title: "Notebook Name", message: "Enter a name to create your new notebook.", preferredStyle: .alert)
             let confirmAction = UIAlertAction(title: "Save", style: .default) { (_) in
                 guard let name = alertController.textFields?[0].text else{return}
                 self.notebookName = name
                 //add book to database
                 self.saveBook(node: node, name: self.notebookName)
             }
-            
             alertController.addTextField { (textField) in
                 textField.placeholder = "New Notebook"
             }
             alertController.addAction(confirmAction)
             self.present(alertController, animated: true, completion: nil)
-            
-            
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
         }
@@ -437,6 +443,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             childNode.removeFromParentNode()
         }
         let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
+
         node.addChildNode(planeNode)
     }
     
@@ -527,7 +534,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     topTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-
+                    
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                     node.position = SCNVector3(0,0,0.001)
@@ -592,7 +599,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             
         }
     }
-
+    
     func saveBook(node: SCNNode, name: String) {
         //generate a unique id for the notebook
         guard let profile = currentProfile else {print("error"); return}
@@ -622,7 +629,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         print(bookString)
         self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
     }
-
+    
     func pageContent(node: SCNNode){
         guard let profile = currentProfile else {print("error"); return}
         let bookID : Int = notebookID
@@ -687,7 +694,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
                 
-
+                
                 if self.bookNode != nil && self.pages.isEmpty == true{
                     self.bookNode?.removeFromParentNode()
                 }
@@ -772,7 +779,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let node2 = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
             //creating the first slot of the two slot template
             
-
+            
             node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             node.position = SCNVector3(0,0.4, 0.001)
             //creating the second slot of the two slot template

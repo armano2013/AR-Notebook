@@ -52,6 +52,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBOutlet weak var tableView: UITableView!
+    
     @IBAction func logOutFacebook(_ sender: Any) {
         let manager = LoginManager()
         manager.logOut()
