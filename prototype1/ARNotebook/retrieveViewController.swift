@@ -69,6 +69,31 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
      self.dismiss(animated: true, completion: nil)
      }
     
+    func setTime(id: String){
+        let now = Date()
+        let format = DateFormatter()
+        format.timeZone = TimeZone.current
+        format.dateFormat = "MM-dd-yyyy"
+        let dateString = format.string(from: now)
+        self.ref.child("notebooks/\(id)").updateChildValues(["LastAccessed":dateString])
+    }
+    
+    func getTime (id: String) -> String{
+        var date: String? = "test214"
+        self.ref.child("notebooks/\(id)").observeSingleEvent(of: .value) { (snapshot) in
+            let notebooksChildren = snapshot.children
+            while let ids = notebooksChildren.nextObject() as? DataSnapshot{
+                if ids.key == "LastAccessed"{
+                    date = ids.value as! String
+                    print(date!)
+                }
+            }
+        }
+        print(date)
+        return date!
+    }
+    
+    
     func getList() {
         ref.child("users").child((Auth.auth().currentUser?.uid)!+"/notebooks").observeSingleEvent(of: .value) { (snapshot) in
             let notebooksChildren = snapshot.children
@@ -89,21 +114,21 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
 
     func retrievePreviousNotebookWithID(id: String){
         ref.child("notebooks").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
-            print(snapshot)
             if snapshot.exists(){
                 let enumPages = snapshot.children
                 self.pageNum = Int(snapshot.childrenCount)
                 while let pages = enumPages.nextObject() as? DataSnapshot {
                     let enumContent = pages.children
-                    print(pages.key)
-                    if(pages.key != "name" && pages.key != "CoverStyle" && pages.key != "LastAccessed" ) {
-                        var pageContent = [String]()
+
+                    if(pages.key != "name") {
+                    var pageContent = [String]()
                         while let content = enumContent.nextObject() as? DataSnapshot {
                             let contentVal = content.value as! String
                             pageContent.append(contentVal)
                         }
                         let newPage = Page(content: pageContent)
                         self.pageObjArray.append(newPage)
+
                     }
                 }
                 if(!self.pageObjArray.isEmpty){
@@ -150,8 +175,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == UITableViewCellEditingStyle.delete{
-            delegate2?.deleteNotebook()
-            print("function added")
+            setTime(id: self.notebookIDArray[indexPath.row])
+            print(getTime(id: self.notebookIDArray[indexPath.row]))
         }
      //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
      }
