@@ -392,7 +392,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.name = "Book"
         
         let coverMaterial = SCNMaterial()
-        coverMaterial.diffuse.contents = UIImage(named: "purpleRain")
+        coverMaterial.diffuse.contents = UIImage(named: "graphicBook1 copy2")
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
         ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : "purple"])
@@ -439,7 +439,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.name = "Book"
         
         let coverMaterial = SCNMaterial()
-        coverMaterial.diffuse.contents = UIImage(named: "purpleRain")
+        coverMaterial.diffuse.contents = UIImage(named: "graphicBook1 copy2")
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
         ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : "purple"])

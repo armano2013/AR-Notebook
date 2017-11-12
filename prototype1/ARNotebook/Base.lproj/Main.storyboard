@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -191,7 +191,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N3c-93-NoN">
                                         <rect key="frame" x="124" y="24" width="70" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" image="purpleRain"/>
+                                        <state key="normal" image="graphicBook1 copy2"/>
                                         <connections>
                                             <action selector="purpleRain:" destination="Na5-He-KwX" eventType="touchUpInside" id="8ov-HL-EKs"/>
                                         </connections>
@@ -199,7 +199,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3mv-FJ-jPj">
                                         <rect key="frame" x="231" y="24" width="70" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="black"/>
+                                        <state key="normal" backgroundImage="brownBook"/>
                                         <connections>
                                             <action selector="blackButton:" destination="Na5-He-KwX" eventType="touchUpInside" id="8Ix-p9-BF2"/>
                                         </connections>
@@ -207,7 +207,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VaZ-5m-URJ">
                                         <rect key="frame" x="21" y="24" width="69" height="79"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="spiral"/>
+                                        <state key="normal" backgroundImage="spiralNotebook"/>
                                         <connections>
                                             <action selector="blueButton:" destination="Na5-He-KwX" eventType="touchUpInside" id="0Ey-Cn-oIh"/>
                                         </connections>
@@ -464,7 +464,7 @@
                                 <rect key="frame" x="8" y="596" width="160" height="100"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyE-Fh-IKV">
-                                        <rect key="frame" x="18.666666666666664" y="8" width="123" height="30"/>
+                                        <rect key="frame" x="18.666666666666671" y="8" width="123.00000000000001" height="30"/>
                                         <state key="normal" title="Two Slot Tempate"/>
                                         <connections>
                                             <action selector="addTwoSlotPage:" destination="5N4-j2-ApC" eventType="touchUpInside" id="1ol-RH-zs2"/>
@@ -510,12 +510,12 @@
         <scene sceneID="nyr-q7-VVf">
             <objects>
                 <viewController id="YWK-Lm-eqQ" customClass="retrieveViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="kLm-Wr-pHb">
+                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="kLm-Wr-pHb">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KYR-Pc-t8u" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="234" y="346" width="160" height="370"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KYR-Pc-t8u" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
+                                <rect key="frame" x="234" y="346" width="100" height="370"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kGN-WG-19R">
                                         <rect key="frame" x="53" y="94" width="55" height="30"/>
@@ -526,15 +526,15 @@
                                             <segue destination="vQs-GR-sQ3" kind="presentation" identifier="logOutSegue" id="SMK-rv-Ow6"/>
                                         </connections>
                                     </button>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dd5-Xc-WWn">
-                                        <rect key="frame" x="4" y="132" width="152" height="230"/>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dd5-Xc-WWn">
+                                        <rect key="frame" x="4" y="132" width="92" height="230"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="notebookIDCell" id="p6S-ha-b8p">
-                                                <rect key="frame" x="0.0" y="28" width="152" height="44"/>
+                                                <rect key="frame" x="0.0" y="28" width="92" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="p6S-ha-b8p" id="p0l-UH-HJ4">
-                                                    <rect key="frame" x="0.0" y="0.0" width="152" height="43.666666666666664"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="92" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableViewCellContentView>
                                             </tableViewCell>
@@ -582,7 +582,7 @@
     </scenes>
     <resources>
         <image name="add" width="50" height="50"/>
-        <image name="black" width="700" height="700"/>
+        <image name="brownBook" width="664" height="800"/>
         <image name="button:0kK-Zk-BJV:image" width="50" height="50">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
@@ -822,9 +822,9 @@ AAAAAAAAAAAANc8
         </image>
         <image name="delete" width="50" height="50"/>
         <image name="edit" width="50" height="50"/>
+        <image name="graphicBook1 copy2" width="585" height="613"/>
         <image name="newpage" width="50" height="50"/>
-        <image name="purpleRain" width="322" height="347"/>
-        <image name="spiral" width="238" height="300"/>
+        <image name="spiralNotebook" width="958" height="1321"/>
         <image name="undo" width="50" height="50"/>
     </resources>
 </document>

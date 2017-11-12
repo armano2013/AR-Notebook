@@ -61,21 +61,17 @@ class pageColorViewController: UIViewController {
     }
     
     @IBAction func blueButton(_ sender: Any) {
-
-        print("blue")
-        let blueOne = #imageLiteral(resourceName: "poppingBook")
+        let blueOne = #imageLiteral(resourceName: "spiralNotebook")
         delegate?.bookColor(imageOne: blueOne, cover: "blue")
     }
     
     @IBAction func purpleRain(_ sender: Any) {
-        print("purple")
-        let purpleOne = #imageLiteral(resourceName: "spiralNotebook")
+        let purpleOne = #imageLiteral(resourceName: "graphicBook1 copy2")
         delegate?.bookColor(imageOne: purpleOne, cover: "purple")
     }
     
     @IBAction func blackButton(_ sender: Any) {
-        print("black")
-        let blackOne = #imageLiteral(resourceName: "graphicBook1 copy2")
+        let blackOne = #imageLiteral(resourceName: "brownBook")
         delegate?.bookColor(imageOne: blackOne, cover: "black")
     }
     /*
