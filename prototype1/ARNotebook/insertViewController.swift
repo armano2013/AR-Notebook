@@ -179,7 +179,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     
     func saveImage(profile: String, pickedImage: UIImage){
         let imageRef = storageRef?.child("images").child(profile)
-        let fileRef = imageRef?.child(profile)
+        let fileRef = imageRef?.child(String(pickedImage.hashValue))
         var data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
         //normally would have your error handling; in this case we just do a return
         let dataInfo = fileRef?.putData(data as Data, metadata: nil){

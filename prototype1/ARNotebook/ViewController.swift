@@ -528,20 +528,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         renderNode(node: node)
     }
     
-    func addImageFromFirebase(Url: String){
-        if let page = currentPageNode {
-            let url = URL(string: Url)
-            URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                guard let image = UIImage(data: data!) else {return}
-                let node = SCNNode()
-                node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
-                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                node.position = SCNVector3(0,0, 0.001)
-                self.lastNode.append(node)
-                page.addChildNode(node)
-            }).resume()
-        }
-    }
+
     /*
      -----
      Insert View Controller Callback Functions
@@ -555,29 +542,77 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             if template == "single"{
                 //check to see if the content is a sotrage url - which means its an image.
                 if text.range(of:"firebasestorage.googleapis.com") != nil {
-                    addImageFromFirebase(Url: text)
+                    if let page = currentPageNode {
+                        let url = URL(string: text)
+                        print(url)
+                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                            guard let image = UIImage(data: data!) else {return}
+                            let node = SCNNode()
+                            node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                            node.position = SCNVector3(0,0, 0.01)
+                            self.lastNode.append(node)
+                            page.addChildNode(node)
+                        }).resume()
+                    }
                 }
                 else{
-                    addTopContent(content1: text)
+                    if(f == 0){
+                        addTopContent(content1: text)
+                    }
                     createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
                 }
             }
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
                     if text.range(of:"firebasestorage.googleapis.com") != nil {
-                        addImageFromFirebase(Url: text)
+                        if let page = currentPageNode {
+                            let url = URL(string: text)
+                            print(url)
+                            print("non optional:", url!)
+                            URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                                guard let image = UIImage(data: data!) else {return}
+                                let node = SCNNode()
+                                node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                                node.position = SCNVector3(0,0, 0.01)
+                                self.lastNode.append(node)
+                                page.addChildNode(node)
+                            }).resume()
+                        }
                     }
                     else{
-                        addTopContent(content1: text)
+                        if(f == 0){
+                            addTopContent(content1: text)
+                        }
+                        else{
+                            topTempNodeContent = "full"
+                        }
                         createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                     }
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
                     if text.range(of:"firebasestorage.googleapis.com") != nil {
-                        addImageFromFirebase(Url: text)
+                        if let page = currentPageNode {
+                            let url = URL(string: text)
+                            URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                                guard let image = UIImage(data: data!) else {return}
+                                let node = SCNNode()
+                                node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                                node.position = SCNVector3(0,0, 0.001)
+                                self.lastNode.append(node)
+                                page.addChildNode(node)
+                            }).resume()
+                        }
                     }
                     else{
-                        addBottomContent(content2: text)
+                        if(f == 0){
+                            addBottomContent(content2: text)
+                        }
+                        else{
+                            bottomTempNodeContent = "full"
+                        }
                         createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                     }
                 }
@@ -900,8 +935,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 template = temp
                 passText(text: content, f: 1)
             }
-            
-            
         }
         else{
             //error no book
@@ -914,29 +947,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         for page in pageObjs {
             let end = page.content.count - 1
-            if(end > 0){
+            if(end == 1){
                 t = "double"
             }
             for i in 0...end {
                 print(page.content[i])
                 addPageWithContent(content: page.content[i], temp: t)
             }
-            /*
-             int end = page.count - 1
-             for i in 0...end {
-             if (page.content[i].count > 1){
-             print("page has more than one child")
-             }
-             else{
-             print("page has one child")
-             /// pass a sting that choose the template sting"single"???
-             }
-             }*/
         }
-        //let end = Page
-        /* for i in 0...end {
-         addPageWithContent(content: content[i])
-         }*/
     }
     /*
      -----
