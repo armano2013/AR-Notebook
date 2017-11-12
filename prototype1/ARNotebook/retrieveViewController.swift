@@ -78,19 +78,19 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         self.ref.child("notebooks/\(id)").updateChildValues(["LastAccessed":dateString])
     }
     
-    func getTime (id: String){
+    func getTime (id: String) -> String{
+        var date: String? = "test214"
         self.ref.child("notebooks/\(id)").observeSingleEvent(of: .value) { (snapshot) in
             let notebooksChildren = snapshot.children
             while let ids = notebooksChildren.nextObject() as? DataSnapshot{
                 if ids.key == "LastAccessed"{
-                    let date = ids.value as! String
-                    self.getTime2(time: date)
+                    date = ids.value as! String
+                    print(date!)
                 }
             }
         }
-    }
-    func getTime2(time: String) -> String{
-        return time
+        print(date)
+        return date!
     }
     
     
