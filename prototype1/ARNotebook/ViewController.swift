@@ -568,8 +568,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     if text.range(of:"firebasestorage.googleapis.com") != nil {
                         if let page = currentPageNode {
                             let url = URL(string: text)
-                            print(url)
-                            print("non optional:", url!)
                             URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
                                 guard let image = UIImage(data: data!) else {return}
                                 let node = SCNNode()
@@ -584,9 +582,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     else{
                         if(f == 0){
                             addTopContent(content1: text)
-                        }
-                        else{
-                            topTempNodeContent = "full"
                         }
                         createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                     }
@@ -609,9 +604,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     else{
                         if(f == 0){
                             addBottomContent(content2: text)
-                        }
-                        else{
-                            bottomTempNodeContent = "full"
                         }
                         createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                     }
@@ -935,6 +927,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 template = temp
                 passText(text: content, f: 1)
             }
+            else if temp == "doubleSecond" {
+                template = "double"
+                passText(text: content, f:1)
+            }
         }
         else{
             //error no book
@@ -951,7 +947,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 t = "double"
             }
             for i in 0...end {
-                print(page.content[i])
+                if (i == 1 && t == "double"){
+                    t = "doubleSecond"
+                }
                 addPageWithContent(content: page.content[i], temp: t)
             }
         }
