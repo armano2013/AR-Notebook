@@ -573,11 +573,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
                                 guard let image = UIImage(data: data!) else {return}
                                 let node = SCNNode()
-                                node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                                node.geometry = SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0)
                                 node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                 node.position = SCNVector3(0,0, 0.01)
                                 self.lastNode.append(node)
-                                page.addChildNode(node)
+                                self.topTempNode?.addChildNode(node)
                             }).resume()
                         }
                     }
@@ -595,11 +595,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
                                 guard let image = UIImage(data: data!) else {return}
                                 let node = SCNNode()
-                                node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                                node.geometry = SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0)
                                 node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                 node.position = SCNVector3(0,0, 0.001)
                                 self.lastNode.append(node)
-                                page.addChildNode(node)
+                                self.bottomTempNode?.addChildNode(node)
                             }).resume()
                         }
                     }
@@ -944,6 +944,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let end = page.content.count - 1
             if(end == 1){
                 t = "double"
+            }
+            else{
+                t = "single"
             }
             for i in 0...end {
                 if (i == 1 && t == "double"){
