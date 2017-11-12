@@ -119,8 +119,9 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 self.pageNum = Int(snapshot.childrenCount)
                 while let pages = enumPages.nextObject() as? DataSnapshot {
                     let enumContent = pages.children
+
                     if(pages.key != "name") {
-                        var pageContent = [String]()
+                    var pageContent = [String]()
                         while let content = enumContent.nextObject() as? DataSnapshot {
                             let contentVal = content.value as! String
                             pageContent.append(contentVal)

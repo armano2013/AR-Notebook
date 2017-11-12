@@ -19,8 +19,9 @@ protocol insertDelegate {
     var currentPage: Int {get set}
     var notebookID : Int { get set }
     func passImage (image: UIImage)
-    func passText(text: String)
+    func passText(text: String, f: Int)
 }
+
 
 class insertViewController: UIViewController ,UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate  {
     /*
@@ -93,14 +94,14 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     //for keyboard
     @IBAction func updateText(_ sender: Any) {
         if let keyText = UserInputText.text {
-            delegate?.passText(text: keyText)
+            delegate?.passText(text: keyText, f: 0)
         }
     }
     
     //for clipboard
     @IBAction func addClipboardText(_ sender: Any) {
         let text = getClipboard()
-        delegate?.passText(text: text)
+        delegate?.passText(text: text, f: 0)
     }
     
     @IBAction func chooseGalleryImage(_ sender: Any) {

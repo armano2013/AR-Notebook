@@ -100,7 +100,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.autoenablesDefaultLighting = true
         
         addTimer()
-
+        
     }
     
     func addTimer(){
@@ -513,27 +513,44 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             childNode.removeFromParentNode()
         }
     }
+    /*text helpers*/
+    func createSlots(xf: Double, yf: Double, hght: Int, text: String){
+        let textNode = SCNText(string: text, extrusionDepth: 0.1)
+        textNode.font = UIFont(name: "Arial", size:1)
+        textNode.containerFrame = CGRect(origin:CGPoint(x: xf, y:yf), size: CGSize(width: 10, height: hght))
+        textNode.truncationMode = kCATruncationEnd
+        textNode.alignmentMode = kCAAlignmentLeft
+        textNode.isWrapped = true
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.black
+        textNode.materials = [material]
+        let node = createTextNode(text: textNode)
+        renderNode(node: node)
+    }
     
+
     /*
      -----
      Insert View Controller Callback Functions
      -----
      */
-    func passText(text: String) {
-        dismiss(animated: true, completion: nil)
+    func passText(text: String, f: Int = 0) {
+        if(f == 0) {
+            dismiss(animated: true, completion: nil)
+        }
         if bookNode != nil && currentPageNode != nil{
-            
             if template == "single"{
                 //check to see if the content is a sotrage url - which means its an image.
                 if text.range(of:"firebasestorage.googleapis.com") != nil {
                     if let page = currentPageNode {
                         let url = URL(string: text)
+                        print(url)
                         URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
                             guard let image = UIImage(data: data!) else {return}
                             let node = SCNNode()
                             node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
                             node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                            node.position = SCNVector3(0,0, 0.001)
+                            node.position = SCNVector3(0,0, 0.01)
                             self.lastNode.append(node)
                             page.addChildNode(node)
                         }).resume()
@@ -541,40 +558,37 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
                     
                 else{
-                addTopContent(content1: text)
-                let textNode = SCNText(string: text, extrusionDepth: 0.1)
-                textNode.font = UIFont(name: "Arial", size:1)
-                textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-8.0), size: CGSize(width: 10, height: 16))
-                textNode.truncationMode = kCATruncationEnd
-                textNode.alignmentMode = kCAAlignmentLeft
-                textNode.isWrapped = true
-                let material = SCNMaterial()
-                material.diffuse.contents = UIColor.black
-                textNode.materials = [material]
-                let node = createTextNode(text: textNode)
-                renderNode(node: node)
-            }
-            }
-                
-            else if template == "double"{
-                if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
-                    addTopContent(content1: text)
-                    let textNode = SCNText(string: text, extrusionDepth: 0.1)
-                    textNode.font = UIFont(name: "Arial", size:1)
-                    textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-8.0), size: CGSize(width: 10, height: 16))
-                    textNode.truncationMode = kCATruncationEnd
-                    textNode.alignmentMode = kCAAlignmentLeft
-                    textNode.isWrapped = true
-                    let material = SCNMaterial()
-                    material.diffuse.contents = UIColor.black
-                    textNode.materials = [material]
-                    let node = createTextNode(text: textNode)
-                    renderNode(node: node)
+                    if(f == 0){
+                        addTopContent(content1: text)
+                    }
+                    createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+
                 }
             }
             else if template == "double"{
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
-                    //check to see if the content is a sotrage url - which means its an image.
+                    if text.range(of:"firebasestorage.googleapis.com") != nil {
+                        if let page = currentPageNode {
+                            let url = URL(string: text)
+                            URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                                guard let image = UIImage(data: data!) else {return}
+                                let node = SCNNode()
+                                node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
+                                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                                node.position = SCNVector3(0,0, 0.01)
+                                self.lastNode.append(node)
+                                page.addChildNode(node)
+                            }).resume()
+                        }
+                    }
+                    else{
+                        if(f == 0){
+                            addTopContent(content1: text)
+                        }
+                        createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                    }
+                }
+                else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
                     if text.range(of:"firebasestorage.googleapis.com") != nil {
                         if let page = currentPageNode {
                             let url = URL(string: text)
@@ -590,50 +604,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         }
                     }
                     else{
-                        //check to see if the content is a sotrage url - which means its an image.
-                        if text.range(of:"firebasestorage.googleapis.com") != nil {
-                            if let page = currentPageNode {
-                                let url = URL(string: text)
-                                URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                                    guard let image = UIImage(data: data!) else {return}
-                                    let node = SCNNode()
-                                    node.geometry = SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0)
-                                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                                    node.position = SCNVector3(0,0, 0.001)
-                                    self.lastNode.append(node)
-                                    page.addChildNode(node)
-                                }).resume()
-                            }
+                        if(f == 0){
+                            addBottomContent(content2: text)
                         }
-                        else{
-                            addTopContent(content1: text)
-                            let textNode = SCNText(string: text, extrusionDepth: 0.1)
-                            textNode.font = UIFont(name: "Arial", size:1)
-                            textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
-                            textNode.truncationMode = kCATruncationEnd
-                            textNode.alignmentMode = kCAAlignmentLeft
-                            textNode.isWrapped = true
-                            let material = SCNMaterial()
-                            material.diffuse.contents = UIColor.black
-                            textNode.materials = [material]
-                            let node = createTextNode(text: textNode)
-                            renderNode(node: node)
-                        }
+                        createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                     }
-                }
-                else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-                    addBottomContent(content2: text)
-                    let textNode = SCNText(string: text, extrusionDepth: 0.1)
-                    textNode.font = UIFont(name: "Arial", size:1)
-                    textNode.containerFrame = CGRect(origin:CGPoint(x: -0.5,y :-3.5), size: CGSize(width: 10, height: 7))
-                    textNode.truncationMode = kCATruncationEnd
-                    textNode.alignmentMode = kCAAlignmentLeft
-                    textNode.isWrapped = true
-                    let material = SCNMaterial()
-                    material.diffuse.contents = UIColor.black
-                    textNode.materials = [material]
-                    let node = createTextNode(text: textNode)
-                    renderNode(node: node)
                 }
             }
         }
@@ -942,15 +917,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 createPage()
                 oneSlotTemplate()
                 template = temp
+                passText(text: content, f: 1)
                 
             }
             else if temp == "double"{
                 createPage()
                 twoSlotTemplate()
                 template = temp
+                passText(text: content, f: 1)
             }
-            passText(text: content)
-            
+            else if temp == "doubleSecond" {
+                template = "double"
+                passText(text: content, f:1)
+            }
         }
         else{
             //error no book
@@ -963,29 +942,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         for page in pageObjs {
             let end = page.content.count - 1
-            if(end > 0){
+            if(end == 1){
                 t = "double"
             }
             for i in 0...end {
-                print(page.content[i])
+                if (i == 1 && t == "double"){
+                    t = "doubleSecond"
+                }
                 addPageWithContent(content: page.content[i], temp: t)
             }
-            /*
-             int end = page.count - 1
-             for i in 0...end {
-             if (page.content[i].count > 1){
-             print("page has more than one child")
-             }
-             else{
-             print("page has one child")
-             /// pass a sting that choose the template sting"single"???
-             }
-             }*/
         }
-        //let end = Page
-        /* for i in 0...end {
-         addPageWithContent(content: content[i])
-         }*/
     }
     /*
      -----
