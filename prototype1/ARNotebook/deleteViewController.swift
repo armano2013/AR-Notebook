@@ -50,11 +50,9 @@ class deleteViewController : UIViewController {
      -----
      */
     @IBAction func deletePg(_ sender: Any) {
-        print("delete Page")
         delegate?.deletePage()
     }
     @IBAction func deleteNotebook(_ sender: Any) {
-        print("Delete Notebook")
         delegate?.deleteNotebook()
     }
     /*

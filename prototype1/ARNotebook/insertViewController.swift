@@ -188,7 +188,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             }
             //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
             // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
-            print(metadata?.downloadURLs as Any)
+//            print(metadata?.downloadURLs as Any)
             guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
             self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["image url":imageURL])
         }

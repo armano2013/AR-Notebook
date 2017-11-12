@@ -114,13 +114,11 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
 
     func retrievePreviousNotebookWithID(id: String){
         ref.child("notebooks").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
-            print(snapshot)
             if snapshot.exists(){
                 let enumPages = snapshot.children
                 self.pageNum = Int(snapshot.childrenCount)
                 while let pages = enumPages.nextObject() as? DataSnapshot {
                     let enumContent = pages.children
-                    print(pages.key)
                     if(pages.key != "name") {
                         var pageContent = [String]()
                         while let content = enumContent.nextObject() as? DataSnapshot {
@@ -129,6 +127,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                         }
                         let newPage = Page(content: pageContent)
                         self.pageObjArray.append(newPage)
+
                     }
                 }
                 if(!self.pageObjArray.isEmpty){
@@ -177,7 +176,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         if editingStyle == UITableViewCellEditingStyle.delete{
             setTime(id: self.notebookIDArray[indexPath.row])
             print(getTime(id: self.notebookIDArray[indexPath.row]))
-           
         }
      //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
      }
