@@ -69,6 +69,31 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
      self.dismiss(animated: true, completion: nil)
      }
     
+    func setTime(id: String){
+        let now = Date()
+        let format = DateFormatter()
+        format.timeZone = TimeZone.current
+        format.dateFormat = "MM-dd-yyyy"
+        let dateString = format.string(from: now)
+        self.ref.child("notebooks/\(id)").updateChildValues(["LastAccessed":dateString])
+    }
+    
+    func getTime (id: String){
+        self.ref.child("notebooks/\(id)").observeSingleEvent(of: .value) { (snapshot) in
+            let notebooksChildren = snapshot.children
+            while let ids = notebooksChildren.nextObject() as? DataSnapshot{
+                if ids.key == "LastAccessed"{
+                    let date = ids.value as! String
+                    self.getTime2(time: date)
+                }
+            }
+        }
+    }
+    func getTime2(time: String) -> String{
+        return time
+    }
+    
+    
     func getList() {
         ref.child("users").child((Auth.auth().currentUser?.uid)!+"/notebooks").observeSingleEvent(of: .value) { (snapshot) in
             let notebooksChildren = snapshot.children
@@ -149,7 +174,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == UITableViewCellEditingStyle.delete{
-            delegate2?.deleteNotebook()
+            setTime(id: self.notebookIDArray[indexPath.row])
+            print(getTime(id: self.notebookIDArray[indexPath.row]))
         }
      //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
      }

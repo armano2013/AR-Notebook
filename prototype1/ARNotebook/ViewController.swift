@@ -539,6 +539,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         }).resume()
                     }
                 }
+                    
                 else{
                 addTopContent(content1: text)
                 let textNode = SCNText(string: text, extrusionDepth: 0.1)

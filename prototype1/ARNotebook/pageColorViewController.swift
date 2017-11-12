@@ -86,7 +86,7 @@ class pageColorViewController: UIViewController {
         if let keyText = pageColorString{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
-                addPageColorDatabse(profile: profile!, text: pageColorString!)
+                addPageColorDatabase(profile: profile!, text: pageColorString!)
             }
         }
     }
@@ -97,7 +97,7 @@ class pageColorViewController: UIViewController {
         if let keyText = pageColorString{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
-                addPageColorDatabse(profile: profile!, text: pageColorString!)
+                addPageColorDatabase(profile: profile!, text: pageColorString!)
             }
         }
     }
@@ -107,7 +107,7 @@ class pageColorViewController: UIViewController {
         if let keyText = pageColorString{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
-                addPageColorDatabse(profile: profile!, text: pageColorString!)
+                addPageColorDatabase(profile: profile!, text: pageColorString!)
             }
         }
         delegate?.pageColor(image : green)
@@ -118,7 +118,7 @@ class pageColorViewController: UIViewController {
         if let keyText = pageColorString{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
-                addPageColorDatabse(profile: profile!, text: pageColorString!)
+                addPageColorDatabase(profile: profile!, text: pageColorString!)
             }
         }
         delegate?.pageColor(image : purple)
@@ -129,7 +129,7 @@ class pageColorViewController: UIViewController {
         if let keyText = pageColorString{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
-                addPageColorDatabse(profile: profile!, text: pageColorString!)
+                addPageColorDatabase(profile: profile!, text: pageColorString!)
             }
         }
         delegate?.pageColor(image : yellow)
@@ -141,7 +141,7 @@ class pageColorViewController: UIViewController {
         if let keyText = pageColorString {
             if((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
-                addPageColorDatabse(profile: profile!, text: pageColorString!)
+                addPageColorDatabase(profile: profile!, text: pageColorString!)
             }
             delegate?.pageColor(image : plain)
         }
@@ -153,10 +153,10 @@ class pageColorViewController: UIViewController {
 
      -----
      */
-    func addPageColorDatabse(profile: String, text: String){
+    func addPageColorDatabase(profile: String, text: String){
         ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["color" : text])
     }
-    func addBookStlyeDatabse(profile: String, text: String){
+    func addBookStlyeDatabase(profile: String, text: String){
        ref.child("notebooks/\((self.delegate?.notebookID)!)").updateChildValues(["Cover Style" : text])
 }
 }

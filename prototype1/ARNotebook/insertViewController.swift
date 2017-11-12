@@ -34,7 +34,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     @IBOutlet weak var UserInputText: UITextField!
     
     @IBOutlet var textFieldBottomConstraint: NSLayoutConstraint!
-
+    
     
     /*
      -----
@@ -123,14 +123,14 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
      Gesture Recognizers
      -----
      */
-
+    
     // hitting enter on the keyboard
-//    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//        dismiss(animated: true, completion: nil)
-//
-//        updateText(self)
-//        return true
-//    }
+    //    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    //        dismiss(animated: true, completion: nil)
+    //
+    //        updateText(self)
+    //        return true
+    //    }
     
     /*
      -----
@@ -162,7 +162,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         dismiss(animated: true, completion: nil)
-    
+        
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
@@ -171,14 +171,13 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             delegate?.passImage(image: pickedImage)
         }
         else{
-            
             // error message
         }
     }
     
     func saveImage(profile: String, pickedImage: UIImage){
         let imageRef = storageRef?.child("images").child(profile)
-        let fileRef = imageRef?.child(profile)
+        let fileRef = imageRef?.child(String(pickedImage.hashValue))
         var data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
         //normally would have your error handling; in this case we just do a return
         let dataInfo = fileRef?.putData(data as Data, metadata: nil){
@@ -191,8 +190,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
 //            print(metadata?.downloadURLs as Any)
             guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
-               self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["image url":imageURL])
-
-            }
-}
+            self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["image url":imageURL])
+        }
+    }
 }
