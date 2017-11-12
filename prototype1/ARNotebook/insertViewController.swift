@@ -86,8 +86,6 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        dismiss(animated: true, completion: nil)
-        
         updateText(self)
         return true
     }
