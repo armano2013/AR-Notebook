@@ -103,7 +103,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             if self.notebookExists == true{
                 planetimeout?.invalidate()
             } else {
-                let alertController = UIAlertController(title: "No Notebook Detected", message: "Please place a notebook or find valid surface conditionsa.", preferredStyle: UIAlertControllerStyle.alert)
+                let alertController = UIAlertController(title: "No Surface Detected", message: "Please place a notebook, or try a clear flat surface.", preferredStyle: UIAlertControllerStyle.alert)
                 let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true, completion: nil)
@@ -387,11 +387,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func addBook(hitTestResult: ARHitTestResult) {
         let node = createBook(hitTestResult: hitTestResult)
         if self.notebookExists == true {
+            /*
             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
             }
             alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)*/
         }
         else{
             //give the user an option to name the notebook
@@ -422,10 +423,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let node = createBook(hitTestResult: hitTestResult)
         //check if another book object exists
         if self.notebookExists == true {
+            /* broken right now
             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in }
             alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)*/
         }
         else{
             //render book on root
