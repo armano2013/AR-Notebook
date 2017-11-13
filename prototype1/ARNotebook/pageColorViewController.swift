@@ -83,7 +83,7 @@ class pageColorViewController: UIViewController {
         let red = #imageLiteral(resourceName: "RedPage")
         pageColorString = "red"
         delegate?.pageColor(image : red)
-        if let keyText = pageColorString{
+        if pageColorString != nil{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
                 addPageColorDatabase(profile: profile!, text: pageColorString!)
@@ -94,7 +94,7 @@ class pageColorViewController: UIViewController {
         let blue = #imageLiteral(resourceName: "BluePage")
         pageColorString = "blue"
         delegate?.pageColor(image : blue)
-        if let keyText = pageColorString{
+        if pageColorString != nil{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
                 addPageColorDatabase(profile: profile!, text: pageColorString!)

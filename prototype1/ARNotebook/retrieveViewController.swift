@@ -92,7 +92,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             let notebooksChildren = snapshot.children
             while let ids = notebooksChildren.nextObject() as? DataSnapshot{
                 let notebookcontent = ids.children
-                let nbID = ids.key as! String
+                let nbID = ids.key 
                 self.notebookIDArray.append(nbID)
                 while let content = notebookcontent.nextObject() as? DataSnapshot{
                     let name = content.value as! String
@@ -133,13 +133,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         ref.child("notebooks").child(id).observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists(){
                 self.retrievePageContent(id: id)
-                /*else{
-                 let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view has no content.", preferredStyle: UIAlertControllerStyle.alert)
-                 let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
-                 }
-                 alertController.addAction(cancelAction)
-                 self.present(alertController, animated: true, completion: nil)
-                 }*/
             }
             else {
                 let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view could not be retrieved.", preferredStyle: UIAlertControllerStyle.alert)
@@ -176,9 +169,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == UITableViewCellEditingStyle.delete{
-            /* getTime(id: self.notebookIDArray[indexPath.row]) { date in  //just some testing for retrieving the time stamp: don't delete
-             guard let date = date else { return }
-             }*/
+            getTime(id: self.notebookIDArray[indexPath.row]) { date in
+                guard let date = date else { return } }
         }
         //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
     }
