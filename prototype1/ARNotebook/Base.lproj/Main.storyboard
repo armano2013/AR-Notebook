@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
-    <device id="retina5_5" orientation="portrait">
+    <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -14,7 +14,7 @@
             <objects>
                 <viewController id="vQs-GR-sQ3" customClass="AuthenticationViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="i1r-Bb-fYG" customClass="Auth">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="gJZ-Hz-jXO"/>
@@ -32,7 +32,7 @@
             <objects>
                 <viewController modalPresentationStyle="overCurrentContext" id="Wxg-DW-Iu4" customClass="deleteViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bPC-6p-cAn">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nd7-ti-qq5" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
@@ -88,14 +88,14 @@
             <objects>
                 <viewController id="Na5-He-KwX" customClass="pageColorViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Sg1-o6-dHU">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pP0-Ja-iAv" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
                                 <rect key="frame" x="8" y="115" width="315" height="130"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N3c-93-NoN">
-                                        <rect key="frame" x="122.66666666666666" y="44" width="70" height="80"/>
+                                        <rect key="frame" x="122.5" y="44" width="70" height="80"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="80" id="FOy-37-q6V"/>
                                             <constraint firstAttribute="width" constant="70" id="s3a-QT-4XG"/>
@@ -106,7 +106,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VaZ-5m-URJ">
-                                        <rect key="frame" x="25" y="44" width="72.666666666666671" height="79"/>
+                                        <rect key="frame" x="25" y="44" width="72.5" height="79"/>
                                         <state key="normal" backgroundImage="spiralNotebook"/>
                                         <connections>
                                             <action selector="blueButton:" destination="Na5-He-KwX" eventType="touchUpInside" id="0Ey-Cn-oIh"/>
@@ -119,7 +119,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3mv-FJ-jPj">
-                                        <rect key="frame" x="217.66666666666663" y="44" width="72.333333333333371" height="80"/>
+                                        <rect key="frame" x="217.5" y="44" width="72.5" height="80"/>
                                         <state key="normal" backgroundImage="brownBook"/>
                                         <connections>
                                             <action selector="blackButton:" destination="Na5-He-KwX" eventType="touchUpInside" id="8Ix-p9-BF2"/>
@@ -274,11 +274,11 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7rB-xZ-A2i">
-                                <rect key="frame" x="0.0" y="20" width="414" height="716"/>
+                                <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="YTD-NP-XBO" appends="YES" id="tyP-f4-XPl"/>
@@ -286,31 +286,21 @@
                                 </connections>
                             </arscnView>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ncg-as-6m8">
-                                <rect key="frame" x="0.0" y="20" width="414" height="80"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FT4-L0-4uA">
-                                        <rect key="frame" x="269" y="25" width="36" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Clear"/>
-                                        <connections>
-                                            <action selector="ClearNotebook:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FiZ-Bt-GjY"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
+                                <rect key="frame" x="0.0" y="20" width="768" height="80"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="61J-fJ-L6Z"/>
                                 </constraints>
                             </view>
                             <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1wb-iz-sJt">
-                                <rect key="frame" x="0.0" y="656" width="414" height="80"/>
+                                <rect key="frame" x="0.0" y="944" width="768" height="80"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="i7t-4w-hiB"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXA-sQ-EEB">
-                                <rect key="frame" x="20" y="678" width="87" height="50"/>
+                                <rect key="frame" x="20" y="966" width="87" height="50"/>
                                 <state key="normal" title="New" image="newpage">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -319,14 +309,16 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tYF-ND-GVF">
-                                <rect key="frame" x="344" y="30" width="50" height="50"/>
-                                <state key="normal" image="undo"/>
+                                <rect key="frame" x="654" y="30" width="94" height="50"/>
+                                <state key="normal" title="Undo" image="undo">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dGQ-F1-UVK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qn-Z5-Zgq">
-                                <rect key="frame" x="166" y="30" width="82" height="50"/>
+                                <rect key="frame" x="212" y="30" width="82" height="50"/>
                                 <state key="normal" title="Edit" image="edit">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -335,7 +327,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFE-mw-2FI" userLabel="insert button">
-                                <rect key="frame" x="182" y="678" width="50" height="50"/>
+                                <rect key="frame" x="359" y="966" width="50" height="50"/>
                                 <state key="normal" image="add">
                                     <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -345,7 +337,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0kK-Zk-BJV">
-                                <rect key="frame" x="300" y="678" width="94" height="50"/>
+                                <rect key="frame" x="654" y="966" width="94" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="94" id="b3d-OF-HbI"/>
                                 </constraints>
@@ -366,6 +358,15 @@
                                     <segue destination="Wxg-DW-Iu4" kind="presentation" id="MAi-h0-B79"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FT4-L0-4uA">
+                                <rect key="frame" x="473" y="28" width="96" height="50"/>
+                                <state key="normal" title="Reset" image="refresh">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="ClearNotebook:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FiZ-Bt-GjY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -374,6 +375,7 @@
                             <constraint firstItem="cFE-mw-2FI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="1A6-V6-AcV"/>
                             <constraint firstItem="ncg-as-6m8" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="3pt-pW-XwZ"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="52S-uA-7os"/>
+                            <constraint firstItem="tYF-ND-GVF" firstAttribute="leading" secondItem="FT4-L0-4uA" secondAttribute="trailing" constant="85" id="8Py-iA-sU2"/>
                             <constraint firstItem="ncg-as-6m8" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Aph-7A-YGe"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tYF-ND-GVF" secondAttribute="trailing" constant="20" id="BOD-7F-WEw"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="20" id="FTP-3e-8mq" userLabel="Scene View.top = top + 10"/>
@@ -382,15 +384,16 @@
                             <constraint firstItem="gvf-9z-Pqb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="RGh-gB-TDI"/>
                             <constraint firstItem="1qn-Z5-Zgq" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="30" id="YMI-e7-Qgd" userLabel="Edit.top = top + 16"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Z4S-TT-Sg8"/>
+                            <constraint firstItem="1qn-Z5-Zgq" firstAttribute="leading" secondItem="gvf-9z-Pqb" secondAttribute="trailing" constant="85" id="au6-2j-SKl"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="0kK-Zk-BJV" secondAttribute="trailing" constant="20" id="cyG-zm-6vw"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eXA-sQ-EEB" secondAttribute="bottom" constant="8" id="eJt-gu-bye"/>
                             <constraint firstItem="tYF-ND-GVF" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="30" id="id0-zB-96b"/>
                             <constraint firstItem="eXA-sQ-EEB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="mNQ-4b-lUp"/>
-                            <constraint firstItem="1qn-Z5-Zgq" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="r5P-jh-kEh"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="0kK-Zk-BJV" secondAttribute="bottom" constant="8" id="s1Y-fi-cgT"/>
                             <constraint firstItem="1wb-iz-sJt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="u9d-uk-Zd1"/>
                             <constraint firstItem="1wb-iz-sJt" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="uql-4p-YSG"/>
                             <constraint firstItem="gvf-9z-Pqb" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="30" id="vXa-QC-a2w" userLabel="Delete.top = top + 30"/>
+                            <constraint firstItem="FT4-L0-4uA" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="vhl-j8-JZD"/>
                             <constraint firstItem="ncg-as-6m8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="wiT-eN-daX"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -411,18 +414,18 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="640.57971014492762" y="-420.6521739130435"/>
+            <point key="canvasLocation" x="639.84375" y="-420.703125"/>
         </scene>
         <!--Insert View Controller-->
         <scene sceneID="9CG-wg-Kx1">
             <objects>
                 <viewController modalPresentationStyle="overCurrentContext" id="ylS-d8-bpH" customClass="insertViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="K8l-Bq-ec6">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Krg-RW-Dq0" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="476" width="414" height="175"/>
+                                <rect key="frame" x="0.0" y="764" width="414" height="175"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iFk-Ws-onZ">
                                         <rect key="frame" x="40" y="8" width="47" height="33"/>
@@ -455,7 +458,7 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="37A-Lv-PuS">
-                                        <rect key="frame" x="160.66666666666666" y="134" width="93" height="33"/>
+                                        <rect key="frame" x="160.5" y="134" width="93" height="33"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Update Text">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -512,7 +515,7 @@
             <objects>
                 <viewController id="VTS-dt-pDS" customClass="shareViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FPr-8p-9lr" customClass="ShareButton" customModule="FacebookShare">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M90-Uo-mCv">
@@ -534,14 +537,14 @@
             <objects>
                 <viewController modalPresentationStyle="overCurrentContext" id="5N4-j2-ApC" customClass="addPageViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Twy-GA-sJq">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SRq-9R-PAc" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="8" y="551" width="165" height="100"/>
+                                <rect key="frame" x="8" y="839" width="165" height="100"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyE-Fh-IKV">
-                                        <rect key="frame" x="14.333333333333329" y="8" width="137" height="33"/>
+                                        <rect key="frame" x="14.5" y="8" width="137" height="33"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Two Slot Tempate">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -551,7 +554,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rcj-DV-hSn">
-                                        <rect key="frame" x="4.6666666666666714" y="59" width="156" height="33"/>
+                                        <rect key="frame" x="4.5" y="59" width="156" height="33"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Single Slot Template">
                                             <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -593,11 +596,11 @@
             <objects>
                 <viewController id="YWK-Lm-eqQ" customClass="retrieveViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kLm-Wr-pHb">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KYR-Pc-t8u" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="224" y="251" width="170" height="400"/>
+                                <rect key="frame" x="578" y="539" width="170" height="400"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kGN-WG-19R">
                                         <rect key="frame" x="45" y="15" width="80" height="33"/>
@@ -619,7 +622,7 @@
                                                 <rect key="frame" x="0.0" y="28" width="162" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="p6S-ha-b8p" id="p0l-UH-HJ4">
-                                                    <rect key="frame" x="0.0" y="0.0" width="162" height="43.666666666666664"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="162" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableViewCellContentView>
                                             </tableViewCell>
@@ -686,6 +689,7 @@
         <image name="graphicBook1 copy2" width="585" height="613"/>
         <image name="newpage" width="50" height="50"/>
         <image name="open" width="50" height="50"/>
+        <image name="refresh" width="50" height="50"/>
         <image name="spiralNotebook" width="958" height="1321"/>
         <image name="undo" width="50" height="50"/>
     </resources>
