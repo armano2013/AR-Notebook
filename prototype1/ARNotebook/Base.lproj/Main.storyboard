@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -103,6 +103,7 @@
                                         <state key="normal" image="graphicBook1 copy2"/>
                                         <connections>
                                             <action selector="purpleRain:" destination="Na5-He-KwX" eventType="touchUpInside" id="8ov-HL-EKs"/>
+                                            <segue destination="1HY-xK-Lqw" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="XDr-20-hBq"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VaZ-5m-URJ">
@@ -110,6 +111,7 @@
                                         <state key="normal" backgroundImage="spiralNotebook"/>
                                         <connections>
                                             <action selector="blueButton:" destination="Na5-He-KwX" eventType="touchUpInside" id="0Ey-Cn-oIh"/>
+                                            <segue destination="1HY-xK-Lqw" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="UuU-fO-heY"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Change Cover Style" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sqp-CD-uzW">
@@ -123,6 +125,7 @@
                                         <state key="normal" backgroundImage="brownBook"/>
                                         <connections>
                                             <action selector="blackButton:" destination="Na5-He-KwX" eventType="touchUpInside" id="8Ix-p9-BF2"/>
+                                            <segue destination="1HY-xK-Lqw" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="oyW-Wu-xdf"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -205,7 +208,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="greenColor:" destination="Na5-He-KwX" eventType="touchUpInside" id="g0B-lc-fLf"/>
                                             <action selector="yellowPage:" destination="Na5-He-KwX" eventType="touchUpInside" id="zW8-BN-6C0"/>
                                             <segue destination="1HY-xK-Lqw" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="KYj-iB-1oO"/>
                                         </connections>
@@ -221,7 +223,6 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="DefaultPage:" destination="Na5-He-KwX" eventType="touchUpInside" id="bka-ov-BYh"/>
-                                            <action selector="greenColor:" destination="Na5-He-KwX" eventType="touchUpInside" id="cIA-zf-YNk"/>
                                             <segue destination="1HY-xK-Lqw" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="ey3-TI-gkq"/>
                                         </connections>
                                     </button>
@@ -235,7 +236,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="greenColor:" destination="Na5-He-KwX" eventType="touchUpInside" id="4tX-Q2-cg5"/>
                                             <action selector="purpleColor:" destination="Na5-He-KwX" eventType="touchUpInside" id="jwV-0N-Q0R"/>
                                             <segue destination="1HY-xK-Lqw" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="suF-2A-uJC"/>
                                         </connections>
