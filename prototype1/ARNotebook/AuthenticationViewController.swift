@@ -31,7 +31,7 @@ class AuthenticationViewController: UIViewController, LoginButtonDelegate, profi
     }
     override func viewDidAppear(_ animated: Bool) {
         if Auth.auth().currentUser != nil {
-            profileName = (Auth.auth().currentUser?.uid)!
+            self.profileName = (Auth.auth().currentUser?.uid)!
             performSegue(withIdentifier: "loginSegue", sender: self)
         }
     }
