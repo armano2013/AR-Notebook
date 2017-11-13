@@ -19,10 +19,7 @@ protocol profileNameDelegate {
 }
 
 
-class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate, retrieveDelegate {
-    
-    
-    
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate, retrieveDelegate {    
     
     /*
      -----
@@ -32,6 +29,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     var maxScale: CGFloat = 0
     var minScale: CGFloat = 5
+    
     
     
     @IBOutlet weak var sceneView: ARSCNView!
@@ -60,9 +58,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var currentTemplate : Int = 1
     var topTempNodeContent :String = ""
     var bottomTempNodeContent :String = ""
-    var planetimeout : Timer?
     var notebookExists : Bool = false
     var retrievedFlag : Bool = false
+    var hitTestResultsss : ARHitTestResult? // test stuff
+    var pageObjectArray = [Page]()
+    
     /*
      -----
      Generic Session Setup
@@ -73,7 +73,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         super.viewDidLoad()
         ref = Database.database().reference()
         storageRef = Storage.storage().reference()
-        
+        print(self.retrievedFlag)
     }
     
     override func didReceiveMemoryWarning() {
@@ -82,15 +82,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         // Pause the view's session
         sceneView.session.pause()
+        //tapGestureRecognizer.isEnabled = false
+        //pinchGestureRecognizer.isEnabled = false
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.registerGestureRecognizers()
         /// Create a session configuration
-        self.registerGestureRecognizers()
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         // Run the view's session
         self.configuration.planeDetection = .horizontal
@@ -98,20 +99,24 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.delegate = self
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
-        
         addTimer()
         
     }
     
     func addTimer(){
-        planetimeout = Timer.scheduledTimer(withTimeInterval: 40.0, repeats: false, block: { (_) in
-            let alertController = UIAlertController(title: "Invalid Horizontal Plane", message: "Please find a flat surface to place your notebook onto.", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
+        var planetimeout: Timer?
+        planetimeout = Timer.scheduledTimer(withTimeInterval: 40.0, repeats: true, block: { (_) in
+            if self.notebookExists == true{
+                planetimeout?.invalidate()
+            } else {
+                let alertController = UIAlertController(title: "Invalid Horizontal Plane", message: "Please find a flat surface to place your notebook onto.", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+            
         })
     }
-    
     
     func registerGestureRecognizers() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
@@ -119,7 +124,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinch))
         self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
     }
-    
     
     //@objc becuse selector is an object c
     @objc func pinch(sender: UIPinchGestureRecognizer) {
@@ -232,14 +236,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 if topTempNodeContent == "empty" && bottomTempNodeContent == "empty"{
                     lastNode.append(node)
                     topTempNode?.addChildNode(node)
-    
+                    
                     topTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
                     lastNode.append(node)
                     bottomTempNode?.addChildNode(node)
                     bottomTempNodeContent = "full"
-
+                    
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
                     
@@ -266,7 +270,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func createPage(){
-        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true)  {
+        print(self.notebookExists)
+        if self.notebookExists == true || self.retrievedFlag == true  {
             let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
             
@@ -279,8 +284,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             if(pages.count != 0){
                 offset = offset + Float(0.02);
             }
-            
-            
             //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
             let transform = hitResult?.localTransform
             guard let thirdColumn = transform?.columns.3 else{return}
@@ -293,7 +296,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             pages.append(pageNode)
             pageNode.name = String(pages.count) //minus one so 0 index array  why??
             currentPageNode = pageNode
-            bookNode.addChildNode(pageNode)
+            self.bookNode?.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
             topTempNodeContent = "empty"
             bottomTempNodeContent = "empty"
@@ -371,16 +374,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    
     @objc func tapped(sender: UITapGestureRecognizer) {
+        self.notebookExists = true
         let sceneView = sender.view as! ARSCNView
         let tapLocation = sender.location(in: sceneView)
         let hitTest = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
-        print(retrievedFlag)
         if retrievedFlag == true {
-            self.addRetrievedBook(hitTestResult: hitTest.first!)
+            if !hitTest.isEmpty {
+                self.addRetrievedBook(hitTestResult: hitTest.first!)
+            }
         }
         else if !hitTest.isEmpty {
+            self.notebookExists = true
             self.addBook(hitTestResult: hitTest.first!)
         }
     }
@@ -406,7 +411,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         bookNode = node //assign the book node to the global variable for book node
         
         //check if another book object exists
-        if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
+        if self.notebookExists == true {
             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
             }
@@ -442,7 +447,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         coverMaterial.diffuse.contents = UIImage(named: "graphicBook1 copy2")
         coverMaterial.locksAmbientWithDiffuse = true
         node.geometry?.firstMaterial = coverMaterial
-        ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : "purple"])
         
         hitResult = hitTestResult
         //coordinates from the hit test give us the plane anchor to put the book ontop of, coordinates are stored in the 3rd column.
@@ -450,8 +454,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let thirdColumn = transform.columns.3
         node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
         bookNode = node //assign the book node to the global variable for book node
+        
         //check if another book object exists
-        if self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) != nil {
+        if self.notebookExists == true {
             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
             }
@@ -459,23 +464,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
         else{
-            //give the user an option to name the notebook
-            let alertController = UIAlertController(title: "Notebook Namesdgdfsgs", message: "Enter a name to create your new notebook.", preferredStyle: .alert)
-            
-            let confirmAction = UIAlertAction(title: "Save", style: .default) { (_) in
-                guard let name = alertController.textFields?[0].text else{return}
-                self.notebookName = name
-                //add book to database
-                self.saveBook(node: node, name: self.notebookName)
-                self.notebookExists = true
-            }
-            alertController.addTextField { (textField) in
-                textField.placeholder = "New Notebook"
-            }
-            alertController.addAction(confirmAction)
-            self.present(alertController, animated: true, completion: nil)
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
+            self.addContent(id: String(notebookID), pageObjs: self.pageObjectArray)
         }
     }
     
@@ -528,7 +519,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         renderNode(node: node)
     }
     
-
+    
     /*
      -----
      Insert View Controller Callback Functions
@@ -544,7 +535,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 if text.range(of:"firebasestorage.googleapis.com") != nil {
                     if let page = currentPageNode {
                         let url = URL(string: text)
-                        print(url)
                         URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
                             guard let image = UIImage(data: data!) else {return}
                             let node = SCNNode()
@@ -562,7 +552,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         addTopContent(content1: text)
                     }
                     createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
-
+                    
                 }
             }
             else if template == "double"{
@@ -727,7 +717,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         return ObjectIdentifier(node).hashValue
     }
     func deleteBook(node: SCNNode) {
-        
+        self.notebookExists = false
         let bookID : Int = notebookID
         let bookString = String(bookID)
         self.ref?.child("notebooks").child(bookString).removeValue()
@@ -911,8 +901,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     func addPageWithContent(content: String, temp: String){
-        if let bookNode = self.sceneView.scene.rootNode.childNode(withName: "Book", recursively: true) {
-            
+        if self.notebookExists == true {
             if temp == "single" {
                 createPage()
                 oneSlotTemplate()
@@ -931,7 +920,26 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 passText(text: content, f:1)
             }
         }
-        else{
+        else if retrievedFlag{
+            if temp == "single" {
+                createPage()
+                oneSlotTemplate()
+                template = temp
+                passText(text: content, f: 1)
+                
+            }
+            else if temp == "double"{
+                createPage()
+                twoSlotTemplate()
+                template = temp
+                passText(text: content, f: 1)
+            }
+            else if temp == "doubleSecond" {
+                template = "double"
+                passText(text: content, f:1)
+            }
+        }
+        else {
             //error no book
         }
     }
