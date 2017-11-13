@@ -85,7 +85,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         super.viewWillAppear(animated)
         self.registerGestureRecognizers()
         /// Create a session configuration
-        
         self.registerGestureRecognizers()
         //self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         // Run the view's session
@@ -405,14 +404,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancel = UIAlertAction(title: "Cancel", style: .default) { (_) in }
             alertController.addTextField { (textField) in
                 textField.placeholder = "New Notebook"
-                // limit the text characters to be less than 15
+                /*// limit the text characters to be less than 15
                 func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
                     let startingLength = textField.text?.characters.count ?? 0
                     let lengthToAdd = string.characters.count
                     let lengthToReplace = range.length
                     let newLength = startingLength + lengthToAdd - lengthToReplace
                     return newLength <= 500
-                }
+                }*/
             }
             alertController.addAction(confirmAction)
             alertController.addAction(cancel)
@@ -460,7 +459,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let id = self.generateUniqueNotebookID(node: node) //generate a unique id for the notebook
         self.notebookID = id
         self.notebookName = name
-        self.ref.child("users/\(self.currentProfile)/notebooks/\(id)").setValue(["name": self.notebookName])
+        self.ref.child("users/\((self.currentProfile)!)/notebooks/\(id)").setValue(["name": self.notebookName])
         self.ref.child("notebooks/\(id)").setValue(["name": self.notebookName])
         //render book on root
         self.sceneView.scene.rootNode.addChildNode(node)
@@ -723,13 +722,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      
      */
     
-    func deleteBook(node: SCNNode) {
+    /*func deleteBook(node: SCNNode) {
         self.notebookExists = false
-        let bookID : Int = notebookID
-        let bookString = String(bookID)
-        self.ref?.child("notebooks").child(bookString).removeValue()
-        self.ref?.child("users").child(currentProfile).child("notebooks").child(bookString).removeValue()
-    }
+        self.ref?.child("notebooks").child((self.notebookID)!).removeValue()
+        self.ref?.child("users").child(self.currentProfile).child("notebooks").child((self.notebookID)!).removeValue()
+    }*/
     
     func deletePage(node: SCNNode){
         let bookID : Int = notebookID
@@ -783,23 +780,29 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
                 if self.bookNode != nil && self.pages.isEmpty == true{
-                    self.bookNode?.removeFromParentNode()
-                }
+                    let loadingAlert = UIAlertController(title: nil, message: "Deleting", preferredStyle: .alert)
+                    self.present(loadingAlert, animated: true, completion: nil)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                        self.clearBook()
+                        loadingAlert.dismiss(animated: true, completion: nil)
+                    })                }
                 else if self.bookNode != nil && self.pages.isEmpty == false{
-                    self.deleteBook(node: self.bookNode!)
-                    self.pages.removeAll()
-                    self.lastNode.removeAll()
-                    self.clearNodes()
+                    let loadingAlert = UIAlertController(title: nil, message: "Deleting", preferredStyle: .alert)
+                    self.present(loadingAlert, animated: true, completion: nil)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                        self.ref?.child("notebooks").child(String(self.notebookID)).removeValue()
+                        self.ref?.child("users").child(self.currentProfile).child("notebooks").child(String(self.notebookID)).removeValue()
+                        self.clearBook()
+                        loadingAlert.dismiss(animated: true, completion: nil)
+                    })
                 }
-                self.bookNode?.removeFromParentNode()
-                self.pages.removeAll()
-                self.lastNode.removeAll()
-                self.clearNodes()
+                self.clearBook()
             }
             alertController.addAction(cancelAction)
             alertController.addAction(deletePageAction)
             self.present(alertController, animated: true, completion: nil)
         }
+        self.notebookExists = false
     }
     
     /*
