@@ -27,13 +27,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    var maxScale: CGFloat = 0
-    var minScale: CGFloat = 5
-    
-    
-    
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
+    var maxScale: CGFloat = 0
+    var minScale: CGFloat = 5
     var hitResult : ARHitTestResult? = nil
     var offset = Float(0.025);
     var notebookName = "Untitled"
@@ -60,7 +57,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var bottomTempNodeContent :String = ""
     var notebookExists : Bool = false
     var retrievedFlag : Bool = false
-    var hitTestResultsss : ARHitTestResult? // test stuff
     var pageObjectArray = [Page]()
     
     /*
@@ -73,7 +69,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         super.viewDidLoad()
         ref = Database.database().reference()
         storageRef = Storage.storage().reference()
-        print(self.retrievedFlag)
     }
     
     override func didReceiveMemoryWarning() {
@@ -84,8 +79,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         super.viewWillDisappear(animated)
         // Pause the view's session
         sceneView.session.pause()
-        //tapGestureRecognizer.isEnabled = false
-        //pinchGestureRecognizer.isEnabled = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,7 +93,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
         addTimer()
-        
     }
     
     func addTimer(){
@@ -127,12 +119,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     //@objc becuse selector is an object c
     @objc func pinch(sender: UIPinchGestureRecognizer) {
-        
         if sender.state == .began{
-            
         }else if sender.state == .ended{
             //stops all actions once user removes finger
-            
         }
         let scale: CGFloat = sender.scale
         if scale > 1 {
@@ -142,18 +131,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else if scale < 1 {
             minScale -= scale
         }
-        
         let sceneView = sender.view as! ARSCNView
         let pinchLocation = sender.location(in: sceneView)
         let hitTest = sceneView.hitTest(pinchLocation)
-        
         if !hitTest.isEmpty {
-            
             let results = hitTest.first!
             _ = results.boneNode
             let pinchAction = SCNAction.scale(by: sender.scale, duration: 1)
-            print(sender.scale)
-            
             topTempNode?.runAction(pinchAction)
             bottomTempNode?.runAction(pinchAction)
             currentPageNode?.runAction(pinchAction)
@@ -270,7 +254,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func createPage(){
-        print(self.notebookExists)
         if self.notebookExists == true || self.retrievedFlag == true  {
             let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
@@ -367,7 +350,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             spin.duration = 0.5
             spin.repeatCount = 1
             turnPage.addAnimation(spin, forKey: "spin around")
-            
             turnPage.isHidden = false
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -375,7 +357,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     @objc func tapped(sender: UITapGestureRecognizer) {
-        self.notebookExists = true
         let sceneView = sender.view as! ARSCNView
         let tapLocation = sender.location(in: sceneView)
         let hitTest = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
@@ -385,32 +366,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         else if !hitTest.isEmpty {
-            self.notebookExists = true
             self.addBook(hitTestResult: hitTest.first!)
         }
     }
     
     func addBook(hitTestResult: ARHitTestResult) {
-        
-        let scene = SCNScene(named: "art.scnassets/Book.dae")
-        let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
-        node.name = "Book"
-        
-        let coverMaterial = SCNMaterial()
-        coverMaterial.diffuse.contents = UIImage(named: "graphicBook1 copy2")
-        coverMaterial.locksAmbientWithDiffuse = true
-        node.geometry?.firstMaterial = coverMaterial
-        ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : "purple"])
-        
-        //for adding pages ontop
-        hitResult = hitTestResult
-        //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
-        let transform = hitTestResult.worldTransform
-        let thirdColumn = transform.columns.3
-        node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
-        bookNode = node //assign the book node to the global variable for book node
-        
-        //check if another book object exists
+        let node = createBook(hitTestResult: hitTestResult)
         if self.notebookExists == true {
             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
@@ -421,7 +382,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else{
             //give the user an option to name the notebook
             let alertController = UIAlertController(title: "Notebook Name", message: "Enter a name to create your new notebook.", preferredStyle: .alert)
-            
             let confirmAction = UIAlertAction(title: "Save", style: .default) { (_) in
                 guard let name = alertController.textFields?[0].text else{return}
                 self.notebookName = name
@@ -435,39 +395,42 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
+            self.notebookExists = true
         }
     }
     
     func addRetrievedBook(hitTestResult: ARHitTestResult){
-        let scene = SCNScene(named: "art.scnassets/Book.dae")
-        let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
-        node.name = "Book"
-        
-        let coverMaterial = SCNMaterial()
-        coverMaterial.diffuse.contents = UIImage(named: "graphicBook1 copy2")
-        coverMaterial.locksAmbientWithDiffuse = true
-        node.geometry?.firstMaterial = coverMaterial
-        
-        hitResult = hitTestResult
-        //coordinates from the hit test give us the plane anchor to put the book ontop of, coordinates are stored in the 3rd column.
-        let transform = hitTestResult.worldTransform
-        let thirdColumn = transform.columns.3
-        node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
-        bookNode = node //assign the book node to the global variable for book node
-        
+        let node = createBook(hitTestResult: hitTestResult)
         //check if another book object exists
         if self.notebookExists == true {
             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
-            }
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in }
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }
         else{
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
+            self.notebookExists = true
             self.addContent(id: String(notebookID), pageObjs: self.pageObjectArray)
         }
+    }
+    
+    func createBook(hitTestResult: ARHitTestResult) -> SCNNode{
+        let scene = SCNScene(named: "art.scnassets/Book.dae")
+        let node = (scene?.rootNode.childNode(withName: "Book_", recursively: false))!
+        node.name = "Book"
+        let coverMaterial = SCNMaterial()
+        coverMaterial.diffuse.contents = UIImage(named: "graphicBook1 copy2")
+        coverMaterial.locksAmbientWithDiffuse = true
+        node.geometry?.firstMaterial = coverMaterial
+        hitResult = hitTestResult
+        //coordinates from the hit test give us the plane anchor to put the book ontop of, coordinates are stored in the 3rd column.
+        let transform = hitTestResult.worldTransform
+        let thirdColumn = transform.columns.3
+        node.position = SCNVector3(thirdColumn.x, thirdColumn.y, thirdColumn.z)
+        self.bookNode = node //assign the book node to the global variable for book node
+        return node
     }
     
     /*
@@ -504,6 +467,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             childNode.removeFromParentNode()
         }
     }
+    
     /*text helpers*/
     func createSlots(xf: Double, yf: Double, hght: Int, text: String){
         let textNode = SCNText(string: text, extrusionDepth: 0.1)
@@ -519,12 +483,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         renderNode(node: node)
     }
     
-    
     /*
      -----
      Insert View Controller Callback Functions
      -----
      */
+    
     func passText(text: String, f: Int = 0) {
         if(f == 0) {
             dismiss(animated: true, completion: nil)
@@ -546,13 +510,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         }).resume()
                     }
                 }
-                    
                 else{
                     if(f == 0){
                         addTopContent(content1: text)
                     }
                     createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
-                    
                 }
             }
             else if template == "double"{
@@ -638,7 +600,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     topTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-                    
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                     node.position = SCNVector3(0,0,0.001)
@@ -647,7 +608,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     bottomTempNodeContent = "full"
                 }
                 else if topTempNodeContent == "full" && bottomTempNodeContent == "full"{
-                    
                     let alertController = UIAlertController(title: "Error", message: "both templates are full", preferredStyle: UIAlertControllerStyle.alert)
                     let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
                     }
@@ -669,6 +629,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
     }
+    
     /*
      -----
      Add Page Deletegate Funcitons
@@ -700,7 +661,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 twoSlotTemplate()
                 template = text
             }
-            
         }
     }
     
@@ -716,6 +676,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func generateUniqueNotebookID(node: SCNNode) ->Int {
         return ObjectIdentifier(node).hashValue
     }
+    
     func deleteBook(node: SCNNode) {
         self.notebookExists = false
         let bookID : Int = notebookID
@@ -723,6 +684,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.ref?.child("notebooks").child(bookString).removeValue()
         self.ref?.child("users").child(currentProfile).child("notebooks").child(bookString).removeValue()
     }
+    
     func deletePage(node: SCNNode){
         guard let profile = currentProfile else {print("error"); return}
         let bookID : Int = notebookID
@@ -740,7 +702,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let pageString = String(pageID)
         let pageContent : String = pageContentInfo//global var
         let pageSting = String(pageContent)
-        
         self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
     }
     
@@ -765,7 +726,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
         else {
-            
             let deletePageNode = SCNNode()
             let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
@@ -774,16 +734,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 self.deletePage(node: self.currentPageNode!)
                 self.pages.removeLast()
                 self.currentPageNode = self.pages.last
-                
             }
             alertController.addAction(cancelAction)
             alertController.addAction(deletePageAction)
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    
     func deleteNotebook(){
         dismiss(animated: true, completion: nil)
-        
         if  bookNode == nil {
             let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
@@ -794,8 +753,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
             let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                
-                
                 if self.bookNode != nil && self.pages.isEmpty == true{
                     self.bookNode?.removeFromParentNode()
                 }
@@ -818,8 +775,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(deletePageAction)
             self.present(alertController, animated: true, completion: nil)
         }
-        
     }
+    
     /*
      -----
      Page Color Deletegate Funcitons
@@ -848,6 +805,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    
     /*
      -----
      book Color Deletegate Funcitons
@@ -858,6 +816,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
         ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : cover])
     }
+    
     /*
      -----
      Template Functions
@@ -945,9 +904,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func addContent(id: String, pageObjs: [Page]) {
+        self.notebookExists = true
         notebookID = Int(id)!
         var t = "single"
-        dismiss(animated: true, completion: nil)
+        //dismiss(animated: true, completion: nil)
         for page in pageObjs {
             let end = page.content.count - 1
             if(end == 1){
@@ -985,18 +945,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else if let destination = segue.destination as? retrieveViewController {
             destination.delegate = self
         }
+        
     }
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
     }
-    
 }
-
-
 //converts degrees to radians, since objects are oriented according to radians
 //credit to udemy video
 extension Int {
     var degreesToRadians: Double {return Double(self) * .pi/180}
 }
-
-

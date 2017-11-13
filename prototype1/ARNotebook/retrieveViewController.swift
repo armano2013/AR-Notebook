@@ -24,6 +24,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
      Global Variables
      -----
      */
+    
     var ref: DatabaseReference!
     var delegate : retrieveDelegate?
     var delegate2: deleteDelegate?
@@ -32,12 +33,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var pageObjArray = [Page]()
     var notebookArray = [String]()
     var retrievedNotebookID: Int!
-    /*
-     struct Page {
-     var content=[String]()
-     }*/
-    
-    
     
     /*
      -----
@@ -92,7 +87,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    
     func getList() {
         ref.child("users").child((Auth.auth().currentUser?.uid)!+"/notebooks").observeSingleEvent(of: .value) { (snapshot) in
             let notebooksChildren = snapshot.children
@@ -128,9 +122,9 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                 }
                 self.delegate?.pageObjectArray = self.pageObjArray
-                if(!self.pageObjArray.isEmpty){
-                    self.delegate?.addContent(id: id, pageObjs: self.pageObjArray)
-                }
+                /*if(!self.pageObjArray.isEmpty){
+                   self.delegate?.addContent(id: id, pageObjs: self.pageObjArray)
+                }*/
             }
         })
     }
@@ -140,12 +134,12 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             if snapshot.exists(){
                 self.retrievePageContent(id: id)
                 /*else{
-                    let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view has no content.", preferredStyle: UIAlertControllerStyle.alert)
-                    let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
-                    }
-                    alertController.addAction(cancelAction)
-                    self.present(alertController, animated: true, completion: nil)
-                }*/
+                 let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view has no content.", preferredStyle: UIAlertControllerStyle.alert)
+                 let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
+                 }
+                 alertController.addAction(cancelAction)
+                 self.present(alertController, animated: true, completion: nil)
+                 }*/
             }
             else {
                 let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view could not be retrieved.", preferredStyle: UIAlertControllerStyle.alert)
@@ -175,6 +169,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         setTime(id: self.notebookIDArray[indexPath.row])
         self.delegate?.retrievedFlag = true
         retrievePreviousNotebookWithID(id: self.notebookIDArray[indexPath.row])
+        self.dismiss(animated: true, completion: nil)
     }
     
     
