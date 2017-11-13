@@ -115,7 +115,12 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                         var pageContent = [String]()
                         while let content = enumContent.nextObject() as? DataSnapshot {
                             let contentVal = content.value as! String
-                            pageContent.append(contentVal)
+                            if(content.key != "color"){
+                                pageContent.append(contentVal)
+                            }
+                            else{
+                                //update page struct to handle
+                            }
                         }
                         let newPage = Page(content: pageContent)
                         self.pageObjArray.append(newPage)
