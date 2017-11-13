@@ -385,7 +385,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func addBook(hitTestResult: ARHitTestResult) {
-        let node = createBook(hitTestResult: hitTestResult)
         if self.notebookExists == true {
             /*
             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
@@ -393,8 +392,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)*/
+            return
         }
         else{
+            let node = createBook(hitTestResult: hitTestResult)
             //give the user an option to name the notebook
             let alertController = UIAlertController(title: "Notebook Name", message: "Enter a name to create your new notebook.", preferredStyle: .alert)
             let confirmAction = UIAlertAction(title: "Save", style: .default) { (_) in
@@ -420,7 +421,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func addRetrievedBook(hitTestResult: ARHitTestResult){
-        let node = createBook(hitTestResult: hitTestResult)
         //check if another book object exists
         if self.notebookExists == true {
             /* broken right now
@@ -428,8 +428,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in }
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)*/
+            return
         }
         else{
+            let node = createBook(hitTestResult: hitTestResult)
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
             self.notebookExists = true
