@@ -326,46 +326,43 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
         if (pages.count > 0 && currentPage > 1) {
-            let i = Int((currentPageNode?.name)!)
+            let  i = Int((currentPageNode?.name)!)
             let previous = i! - 2;
             let turnPage = pages[previous]
-            // Point in the -z direction
-            //the first varible has to be 360 or 180 to play place
-            turnPage.pivot = SCNMatrix4MakeRotation(Float(360.degreesToRadians), 0, 1, 0)
+            //need to calculate some offset.
             
-            let spin = CABasicAnimation(keyPath: "rotation")
-            //// Use from-to to explicitly make a full rotation around z
-            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 1, w: 0))
-            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: -1, z: -0.001, w: .pi))
-            spin.duration = 0.5
-            spin.repeatCount = 0
-            turnPage.addAnimation(spin, forKey: "spin around")
-            
+            if(pages.count != 0){
+                offset = offset + Float(0.02);
+            }
+            turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
+            turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
+            turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
+            turnPage.position = SCNVector3(-0.9, 0.2+offset, 0)
             currentPageNode?.isHidden = true;
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
         }
     }
+    
     @IBAction func leftSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page forward
+        
         if (pages.count > 1 && (currentPage <= Int(pages.count - 1))) {
             let i = Int((currentPageNode?.name)!)
             let previous = i!;
             let turnPage = pages[previous]
-            
+            if(pages.count != 0){
+                offset = offset + Float(0.02);
+            }
             // Point in the -z direction
-            turnPage.pivot = SCNMatrix4MakeRotation( 0, Float(360.degreesToRadians), 0, 0)
-            
-            let spin = CABasicAnimation(keyPath: "rotation")
-            //// Use from-to to explicitly make a full rotation around z
-            spin.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: -1, z: -0.001, w: 0))
-            spin.toValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 1, w: .pi))
-            spin.duration = 0.5
-            spin.repeatCount = 1
-            turnPage.addAnimation(spin, forKey: "spin around")
+            turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
+            turnPage.runAction(SCNAction.rotate(by: -.pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
+            turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
+            turnPage.position = SCNVector3(-0.9, 0.2+offset, 0)
             turnPage.isHidden = false
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
+            
         }
     }
     
