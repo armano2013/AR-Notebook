@@ -833,6 +833,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
         ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : cover])
     }
+    /*
+     -----
+     Share Button
+     -----
+     */
+    @IBAction func shareNotebook(){
+        let shareContent = "http://www.TEST.com"
+        //create dynamic link here and set to sharecontnet.
+        
+        let activityViewController = UIActivityViewController(activityItems: [shareContent as String], applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        activityViewController.popoverPresentationController?.sourceRect = CGRect(x:185.0, y:95.0, width:1.0, height:1.0);
+        present(activityViewController, animated: true, completion: nil)
+    }
     
     /*
      -----
