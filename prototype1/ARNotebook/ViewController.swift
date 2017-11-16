@@ -26,8 +26,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Global Variables
      -----
      */
-    
+
     @IBOutlet weak var sceneView: ARSCNView!
+    var pageStack = [Pages]()
     let configuration = ARWorldTrackingConfiguration()
     var maxScale: CGFloat = 0
     var minScale: CGFloat = 5
@@ -116,6 +117,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
         let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinch))
         self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
+        let tapGestureRecognizer2 = UITapGestureRecognizer(target: self, action: #selector(tapped2))
+        self.sceneView.addGestureRecognizer(tapGestureRecognizer2)
     }
     
     //@objc becuse selector is an object c
@@ -145,7 +148,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             sender.scale = 1.0
         }
     }
-    
+    @objc func tapped2(sender: UITapGestureRecognizer) {
+        let sceneView = sender.view as! ARSCNView
+        let tapLocation = sender.location(in: sceneView)
+        let hitTest = sceneView.hitTest(tapLocation)
+            if !hitTest.isEmpty {
+                print("nothing has been tapped on")
+            }
+            else if hitTest.isEmpty && tapLocation == templateNode{
+                
+            }
+    }
     /*
      -----
      Main Story - View Controller Buttons
@@ -253,22 +266,24 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
         else{
+            
+            var newPage = Pages()
             if text == "single" {
-                createPage()
+                createPage(page : &newPage)
                 oneSlotTemplate()
-                template = text
+            
             }
             else if text == "double"{
-                createPage()
+                createPage(page : &newPage)
                 twoSlotTemplate()
-                template = text
+        
             }
         }
     }
     
-    func createPage(){
+    func createPage(page : inout Pages){
         if self.notebookExists == true || self.retrievedFlag == true  {
-            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+            var pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
             
             pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
@@ -294,9 +309,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPageNode = pageNode
             self.bookNode?.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
-            topTempNodeContent = "empty"
-            bottomTempNodeContent = "empty"
+            page.currentPageNode = pageNode
+            pageStack.append(page)
+//            topTempNodeContent = "empty"
+//            bottomTempNodeContent = "empty"
             addPageNum()
+            print(pageStack.count)
         }
         else{//book error
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -874,27 +892,28 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     func addPageWithContent(content: String, temp: String){
-        if self.notebookExists == true || self.retrievedFlag == true {
-            if temp == "single" {
-                createPage()
-                oneSlotTemplate()
-                template = temp
-                passText(text: content, f: 1)
-            }
-            else if temp == "double"{
-                createPage()
-                twoSlotTemplate()
-                template = temp
-                passText(text: content, f: 1)
-            }
-            else if temp == "doubleSecond" {
-                template = "double"
-                passText(text: content, f:1)
-            }
-        }
-        else {
-            //error no book
-        }
+//        if self.notebookExists == true || self.retrievedFlag == true {
+//            if temp == "single" {
+//                createPage()
+//                oneSlotTemplate()
+//                template = temp
+//                passText(text: content, f: 1)
+//            }
+//            else if temp == "double"{
+//                createPage()
+//                twoSlotTemplate()
+//                template = temp
+//                passText(text: content, f: 1)
+//            }
+//            else if temp == "doubleSecond" {
+//                template = "double"
+//                passText(text: content, f:1)
+//            }
+//        }
+//        else {
+//            //error no book
+//        }
+//
     }
     
     func addContent(id: String, pageObjs: [Page]) {
