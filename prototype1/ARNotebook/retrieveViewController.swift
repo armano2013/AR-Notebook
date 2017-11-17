@@ -33,6 +33,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var pageObjArray = [Page]()
     var notebookArray = [String]()
     var retrievedNotebookID: Int!
+    var cameFromShare : Bool = false
     
     /*
      -----
@@ -42,7 +43,13 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         ref = Database.database().reference()
-        getList()
+        if(!cameFromShare) {
+          getList()
+        }
+        else{
+            retrievePreviousNotebookWithID(id: String(retrievedNotebookID))
+        }
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -60,8 +67,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             print(error)
         }
     }
-   func retrieveShareContent(text : String){
-        print(text)
+   func retrieveShareContent(id : String){
+        retrievePreviousNotebookWithID(id: id)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.dismiss(animated: true, completion: nil)
@@ -185,5 +192,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? shareViewController{
             destination.delegate = self
+            self.cameFromShare = true;
         }        
     }}

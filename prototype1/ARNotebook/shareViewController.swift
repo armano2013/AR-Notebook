@@ -4,7 +4,7 @@ import Firebase
 import FirebaseDatabase
 
 protocol shareBookDelegate {
-    func retrieveShareContent(text : String)
+    func retrieveShareContent(id : String)
 }
 class shareViewController: UIViewController {
     
@@ -26,13 +26,19 @@ class shareViewController: UIViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        // Initialize the sections array
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    @IBAction func dismissShare(){
+        if let retrieveVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "retrieve") as? retrieveViewController {
+            self.navigationController?.pushViewController(retrieveVC, animated: true)
+           // retrieveVC.retrievePreviousNotebookWithID(id: notebookID)
+            performSegue(withIdentifier: "retrieveBooks", sender: self)
+        }
+    }
+    
     
     /*
      -----
