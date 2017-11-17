@@ -33,7 +33,9 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var pageObjArray = [Page]()
     var notebookArray = [String]()
     var retrievedNotebookID: Int!
-    
+    var cameFromShare : Bool = false
+    var sharedNotebookID : String = ""
+    var accessToWrite : Bool = false
     /*
      -----
      Generic Set Up
@@ -42,7 +44,13 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         ref = Database.database().reference()
-        getList()
+        if(!cameFromShare) {
+          getList()
+        }
+        else{
+            retrievePreviousNotebookWithID(id: sharedNotebookID)
+        }
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -60,10 +68,10 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             print(error)
         }
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.dismiss(animated: true, completion: nil)
+   func retrieveShareContent(id : String){
+        retrievePreviousNotebookWithID(id: id)
     }
+
     
     func setTime(id: String){
         let now = Date()
@@ -127,9 +135,10 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                 }
                 self.delegate?.pageObjectArray = self.pageObjArray
-                /*if(!self.pageObjArray.isEmpty){
-                   self.delegate?.addContent(id: id, pageObjs: self.pageObjArray)
-                }*/
+                if(self.cameFromShare == true){
+                  //preform segue?
+                    self.performSegue(withIdentifier: "showSharedNotebook", sender: self)
+                }
             }
         })
     }
@@ -179,4 +188,16 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         }
         //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
     }
-}
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showSharedNotebook"
+        {
+            let mainVC = segue.destination as? ViewController
+            mainVC?.retrievedFlag = true
+            mainVC?.pageObjectArray = self.pageObjArray
+            mainVC?.accessToWrite  = self.accessToWrite
+            if(self.accessToWrite) {
+                 mainVC?.notebookID = Int(self.sharedNotebookID)! //if the user can write update the notebookID flag so the updates are managed in DB
+            }
+        }
+    }
+ }

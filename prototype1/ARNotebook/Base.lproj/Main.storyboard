@@ -272,7 +272,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mainViewController" id="BYZ-38-t0r" customClass="ViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -520,24 +520,30 @@
         <!--Share View Controller-->
         <scene sceneID="g4S-ev-LYG">
             <objects>
-                <viewController id="VTS-dt-pDS" customClass="shareViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="FPr-8p-9lr" customClass="ShareButton" customModule="FacebookShare">
+                <viewController storyboardIdentifier="share" modalPresentationStyle="overCurrentContext" id="VTS-dt-pDS" customClass="shareViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oQs-Pg-oif">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M90-Uo-mCv">
-                                <rect key="frame" x="59" y="287" width="297" height="34"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXS-KD-Nr0">
+                                <rect key="frame" x="370" y="521" width="161" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                                <state key="normal" title="Open Shared Notebook"/>
+                                <connections>
+                                    <action selector="dismissShare" destination="VTS-dt-pDS" eventType="touchUpInside" id="NoE-GE-3ii"/>
+                                </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <viewLayoutGuide key="safeArea" id="dg3-8u-xmu"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="LKC-mn-2XH"/>
                     </view>
+                    <connections>
+                        <segue destination="YWK-Lm-eqQ" kind="presentation" identifier="retrieveBooks" id="MRj-bY-e0I"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KZk-iF-gcV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3211.594202898551" y="304.89130434782612"/>
+            <point key="canvasLocation" x="3210.9375" y="304.6875"/>
         </scene>
         <!--Add Page View Controller-->
         <scene sceneID="Be6-hA-khY">
@@ -601,7 +607,7 @@
         <!--Retrieve View Controller-->
         <scene sceneID="nyr-q7-VVf">
             <objects>
-                <viewController id="YWK-Lm-eqQ" customClass="retrieveViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="retrieve" id="YWK-Lm-eqQ" customClass="retrieveViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kLm-Wr-pHb">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -685,6 +691,7 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="dd5-Xc-WWn" id="HiY-rv-yD6"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="showSharedNotebook" id="Noy-7X-jaB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f5E-0J-vm8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -708,4 +715,8 @@
         <image name="spiralNotebook" width="958" height="1321"/>
         <image name="undo" width="50" height="50"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="MRj-bY-e0I"/>
+        <segue reference="Noy-7X-jaB"/>
+    </inferredMetricsTieBreakers>
 </document>

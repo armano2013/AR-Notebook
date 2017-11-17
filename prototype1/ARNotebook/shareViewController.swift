@@ -3,6 +3,10 @@ import ARKit
 import Firebase
 import FirebaseDatabase
 
+protocol shareBookDelegate {
+    func retrieveShareContent(id : String)
+}
+
 class shareViewController: UIViewController {
     
     /*
@@ -11,9 +15,11 @@ class shareViewController: UIViewController {
      -----
      */
     var notebookID: String = ""
-    var accessType: String = ""
-
-
+    var accessType: Bool = false
+    let DYNAMIC_LINK_DOMAIN = "h3qpv.app.goo.gl"
+    var longLink: URL?
+    var shortLink: URL?
+    var delegate : shareBookDelegate?
     /*
      -----
      Generic Set Up
@@ -21,12 +27,30 @@ class shareViewController: UIViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    @IBAction func dismissShare(){
+        if let retrieveVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "retrieve") as? retrieveViewController {
+            self.navigationController?.pushViewController(retrieveVC, animated: true)
+           // retrieveVC.retrievePreviousNotebookWithID(id: notebookID)
+            //delegate?.retrieveShareContent(id: notebookID)
+            performSegue(withIdentifier: "retrieveBooks", sender: self)
+        }
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "retrieveBooks"
+        {
+            let retrieveVC = segue.destination as? retrieveViewController
+            retrieveVC?.cameFromShare = true
+            retrieveVC?.accessToWrite = self.accessType
+            retrieveVC?.sharedNotebookID = self.notebookID
+            retrieveVC?.delegate?.retrievedFlag = true
+        }
+    }
+   
     
     /*
      -----
@@ -35,10 +59,38 @@ class shareViewController: UIViewController {
      */
     func setShareParams(arr: [String]){
         notebookID =  arr[0]
-        accessType = arr[1]
+        accessType = Bool(arr[1])!
     }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.dismiss(animated: true, completion: nil)
+    func buildLinkOptions(access: Bool, id: String){
+        self.notebookID = id
+        self.accessType = access
+        let link = "https://www.arnotebook.com/" + notebookID + "/" + String(accessType)
+        buildFDLLink(link: link)
+    }
+    @objc func buildFDLLink(link: String) {
+        
+        guard let link = URL(string: link) else { return }
+        let components = DynamicLinkComponents(link: link, domain: DYNAMIC_LINK_DOMAIN)
+        
+        // iOS params
+        let bundleID = "WSU.ARNotebook"
+        let iOSParams = DynamicLinkIOSParameters(bundleID: bundleID)
+        iOSParams.appStoreID = "1009116743"
+        components.iOSParameters = iOSParams
+        
+        
+        
+        longLink = components.url
+        print(longLink?.absoluteString ?? "")
+        
+        let options = DynamicLinkComponentsOptions()
+        options.pathLength = .unguessable
+        components.options = options
+
+    }
+    
+    func returnShareLink() -> String {
+        return (self.longLink?.absoluteString ?? "")
     }
     
 }

@@ -26,8 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //FirebaseOptions.defaultOptions()?.deepLinkURLScheme = self.customURLScheme
         FirebaseApp.configure()
         Firebase.Database().isPersistenceEnabled = true
-       
-       SDKApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
+        
+        SDKApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         return true
     }
     
@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return SDKApplicationDelegate.shared.application(app, open: url, options:options)
     }
     
-
+    
     //This is called when a dynamic link into the app is recognized. We only need to support ios11+ so only need this  restorationHandler. Taken from Firebase Documentation
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
         guard let dynamicLinks = DynamicLinks.dynamicLinks() else {
@@ -57,13 +57,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //use firebase API method to break into path components, discard the first '/'
             //urls should have the notebook id and the read/ write access?? So 2 parameters expected
             if nextPiece != "/" {
-                    //save the 2 params in an array
+                //save the 2 params in an array
                 passedParams.append(nextPiece)
             }
         }
-        //pass the 2 params to the share view controller to store in it's variables
-        let shareVC = shareViewController()
-        shareVC.setShareParams(arr: passedParams)
+        if let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "share") as? shareViewController {
+            if let window = self.window, let rootViewController = window.rootViewController {
+                var currentController = rootViewController
+                while let presentedController = currentController.presentedViewController {
+                    currentController = presentedController
+                }
+                controller.setShareParams(arr: passedParams)
+                currentController.present(controller, animated: true, completion: nil)
+            }
+        }
     }
     
     //func application()
