@@ -26,7 +26,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Global Variables
      -----
      */
-
+    
     @IBOutlet weak var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     var maxScale: CGFloat = 0
@@ -88,7 +88,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.registerGestureRecognizers()
         /// Create a session configuration
         self.registerGestureRecognizers()
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+        //self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         // Run the view's session
         self.configuration.planeDetection = .horizontal
         sceneView.session.run(configuration)
@@ -147,7 +147,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             sender.scale = 1.0
         }
     }
-
+    
     /*
      -----
      Main Story - View Controller Buttons
@@ -259,7 +259,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 oneSlotTemplate()
                 templateExists = true
                 template = text
-            
+                
             }
             else if text == "double"{
                 createPage()
@@ -298,12 +298,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPageNode = pageNode
             self.bookNode?.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
-  //          page.currentPageNode = pageNode
- //           pageStack.append(page)
-//            topTempNodeContent = "empty"
-//            bottomTempNodeContent = "empty"
+            //          page.currentPageNode = pageNode
+            //           pageStack.append(page)
+            //            topTempNodeContent = "empty"
+            //            bottomTempNodeContent = "empty"
             addPageNum()
-//            print(pageStack.count)
+            //            print(pageStack.count)
         }
         else{//book error
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -390,50 +390,49 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else if notebookExists == true {
             let tapLocation2 = sender.location(in: sceneView)
             let hitTest2 = sceneView.hitTest(tapLocation2)
-                if hitTest2.isEmpty {
-                    print("nothing has been tapped on")
-                }
-                else {
-                    let results = hitTest2.first!
-                    selectTemplate(hitTest: results)
-                    print("successful tap")
-                }
+            if hitTest2.isEmpty {
+                print("nothing has been tapped on")
+            }
+            else {
+                let results = hitTest2
+                selectTemplate(hitTest: results)
+                print("successful tap")
             }
         }
-    func selectTemplate(hitTest : SCNHitTestResult){
+    }
+    func selectTemplate(hitTest : [SCNHitTestResult]){
         if self.templateExists == true {
-            self.hitResult2 = hitTest
-            let node = hitTest.node
-            if node == topTempNode{
-            print("node selected")
-            self.selectedTemplate = node
-            print(node)
+            self.hitResult2 = hitTest.first
+            let node = hitTest.first?.node
+            if node == self.topTempNode{
+                print("node selected")
+                self.selectedTemplate = node
+                print(node)
             }
             else if node == bottomTempNode{
                 self.selectedTemplate = node
                 print("node selected")
                 print(node)
             }
-            else if node == templateNode{
+            else if node == self.templateNode{
                 self.selectedTemplate = node
-               print("node selected")
-                print(node)
+                print("node selected")
             }
             else{
                 print("cant find a node")
             }
         }
-
+        
     }
     
     func addBook(hitTestResult: ARHitTestResult) {
         if self.notebookExists == true {
             /*
-            let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
-            }
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)*/
+             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
+             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
+             }
+             alertController.addAction(cancelAction)
+             self.present(alertController, animated: true, completion: nil)*/
             return
         }
         else{
@@ -448,13 +447,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addTextField { (textField) in
                 textField.placeholder = "New Notebook"
                 /*// limit the text characters to be less than 15
-                func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-                    let startingLength = textField.text?.characters.count ?? 0
-                    let lengthToAdd = string.characters.count
-                    let lengthToReplace = range.length
-                    let newLength = startingLength + lengthToAdd - lengthToReplace
-                    return newLength <= 500
-                }*/
+                 func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+                 let startingLength = textField.text?.characters.count ?? 0
+                 let lengthToAdd = string.characters.count
+                 let lengthToReplace = range.length
+                 let newLength = startingLength + lengthToAdd - lengthToReplace
+                 return newLength <= 500
+                 }*/
             }
             alertController.addAction(confirmAction)
             alertController.addAction(cancel)
@@ -466,10 +465,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         //check if another book object exists
         if self.notebookExists == true {
             /* broken right now
-            let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in }
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)*/
+             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
+             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in }
+             alertController.addAction(cancelAction)
+             self.present(alertController, animated: true, completion: nil)*/
             return
         }
         else{
@@ -676,7 +675,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
             }
             else if template == "double"{
-                 if selectedTemplate != nil{
+                if selectedTemplate != nil{
                     let tempNode = selectedTemplate
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
@@ -686,20 +685,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
             }
         }
-            else { //error for no page
-                dismiss(animated: true, completion: nil)
-                let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
-                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-                let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                    //@FIXME Add page needs to call other view controller.
-                    //self.addPage(self)
-                }
-                alertController.addAction(cancelAction)
-                alertController.addAction(addPageAction)
-                self.present(alertController, animated: true, completion: nil)
+        else { //error for no page
+            dismiss(animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                //@FIXME Add page needs to call other view controller.
+                //self.addPage(self)
             }
-            
+            alertController.addAction(cancelAction)
+            alertController.addAction(addPageAction)
+            self.present(alertController, animated: true, completion: nil)
         }
+        
+    }
     
     /*
      -----
@@ -757,10 +756,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     /*func deleteBook(node: SCNNode) {
-        self.notebookExists = false
-        self.ref?.child("notebooks").child((self.notebookID)!).removeValue()
-        self.ref?.child("users").child(self.currentProfile).child("notebooks").child((self.notebookID)!).removeValue()
-    }*/
+     self.notebookExists = false
+     self.ref?.child("notebooks").child((self.notebookID)!).removeValue()
+     self.ref?.child("users").child(self.currentProfile).child("notebooks").child((self.notebookID)!).removeValue()
+     }*/
     
     func deletePage(node: SCNNode){
         let bookID : Int = notebookID
@@ -901,8 +900,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             //adding both to the page
             page.addChildNode(node)
             page.addChildNode(node2)
-            node.name = " Top node"
-            node2.name = " Bottom node"
+            node.name = "Top node"
+            node2.name = "Bottom node"
             topTempNode = node
             bottomTempNode = node2
         }
@@ -913,28 +912,28 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     func addPageWithContent(content: String, temp: String){
-//        if self.notebookExists == true || self.retrievedFlag == true {
-//            if temp == "single" {
-//                createPage()
-//                oneSlotTemplate()
-//                template = temp
-//                passText(text: content, f: 1)
-//            }
-//            else if temp == "double"{
-//                createPage()
-//                twoSlotTemplate()
-//                template = temp
-//                passText(text: content, f: 1)
-//            }
-//            else if temp == "doubleSecond" {
-//                template = "double"
-//                passText(text: content, f:1)
-//            }
-//        }
-//        else {
-//            //error no book
-//        }
-//
+        //        if self.notebookExists == true || self.retrievedFlag == true {
+        //            if temp == "single" {
+        //                createPage()
+        //                oneSlotTemplate()
+        //                template = temp
+        //                passText(text: content, f: 1)
+        //            }
+        //            else if temp == "double"{
+        //                createPage()
+        //                twoSlotTemplate()
+        //                template = temp
+        //                passText(text: content, f: 1)
+        //            }
+        //            else if temp == "doubleSecond" {
+        //                template = "double"
+        //                passText(text: content, f:1)
+        //            }
+        //        }
+        //        else {
+        //            //error no book
+        //        }
+        //
     }
     
     func addContent(id: String, pageObjs: [Page]) {
