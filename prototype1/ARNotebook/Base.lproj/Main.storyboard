@@ -520,7 +520,6 @@
         <!--Share View Controller-->
         <scene sceneID="g4S-ev-LYG">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KZk-iF-gcV" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="share" modalPresentationStyle="overCurrentContext" id="VTS-dt-pDS" customClass="shareViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oQs-Pg-oif">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
@@ -542,6 +541,7 @@
                         <segue destination="YWK-Lm-eqQ" kind="presentation" identifier="retrieveBooks" id="MRj-bY-e0I"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KZk-iF-gcV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3210.9375" y="304.6875"/>
         </scene>
@@ -691,6 +691,7 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="dd5-Xc-WWn" id="HiY-rv-yD6"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="showSharedNotebook" id="Noy-7X-jaB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f5E-0J-vm8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -716,5 +717,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="MRj-bY-e0I"/>
+        <segue reference="Noy-7X-jaB"/>
     </inferredMetricsTieBreakers>
 </document>

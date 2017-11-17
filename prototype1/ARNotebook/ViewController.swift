@@ -86,7 +86,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.registerGestureRecognizers()
         /// Create a session configuration
         self.registerGestureRecognizers()
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         // Run the view's session
         self.configuration.planeDetection = .horizontal
         sceneView.session.run(configuration)

@@ -6,6 +6,7 @@ import FirebaseDatabase
 protocol shareBookDelegate {
     func retrieveShareContent(id : String)
 }
+
 class shareViewController: UIViewController {
     
     /*
@@ -35,10 +36,20 @@ class shareViewController: UIViewController {
         if let retrieveVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "retrieve") as? retrieveViewController {
             self.navigationController?.pushViewController(retrieveVC, animated: true)
            // retrieveVC.retrievePreviousNotebookWithID(id: notebookID)
+            //delegate?.retrieveShareContent(id: notebookID)
             performSegue(withIdentifier: "retrieveBooks", sender: self)
         }
     }
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "retrieveBooks"
+        {
+            let retrieveVC = segue.destination as? retrieveViewController
+            retrieveVC?.cameFromShare = true
+            retrieveVC?.sharedNotebookID = self.notebookID
+            retrieveVC?.delegate?.retrievedFlag = true
+        }
+    }
+   
     
     /*
      -----

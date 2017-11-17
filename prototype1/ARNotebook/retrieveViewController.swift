@@ -16,7 +16,7 @@ protocol retrieveDelegate {
     var pageObjectArray: [Page] {get set}
 }
 
-class retrieveViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, shareBookDelegate {
+class retrieveViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     
     /*
@@ -34,7 +34,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var notebookArray = [String]()
     var retrievedNotebookID: Int!
     var cameFromShare : Bool = false
-    
+    var sharedNotebookID : String = ""
     /*
      -----
      Generic Set Up
@@ -47,7 +47,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
           getList()
         }
         else{
-            retrievePreviousNotebookWithID(id: String(retrievedNotebookID))
+            retrievePreviousNotebookWithID(id: sharedNotebookID)
         }
 
     }
@@ -70,9 +70,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
    func retrieveShareContent(id : String){
         retrievePreviousNotebookWithID(id: id)
     }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.dismiss(animated: true, completion: nil)
-    }
+
     
     func setTime(id: String){
         let now = Date()
@@ -136,9 +134,10 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                 }
                 self.delegate?.pageObjectArray = self.pageObjArray
-                /*if(!self.pageObjArray.isEmpty){
-                   self.delegate?.addContent(id: id, pageObjs: self.pageObjArray)
-                }*/
+                if(self.cameFromShare == true){
+                  //preform segue?
+                    self.performSegue(withIdentifier: "showSharedNotebook", sender: self)
+                }
             }
         })
     }
@@ -188,10 +187,13 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         }
         //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
     }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? shareViewController{
-            destination.delegate = self
-            self.cameFromShare = true;
-        }        
-    }}
+        if segue.identifier == "showSharedNotebook"
+        {
+            let mainVC = segue.destination as? ViewController
+            mainVC?.retrievedFlag = true
+            mainVC?.notebookID = Int(self.sharedNotebookID)!
+            mainVC?.pageObjectArray = self.pageObjArray
+        }
+    }
+ }
