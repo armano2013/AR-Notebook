@@ -58,6 +58,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var notebookExists : Bool = false
     var retrievedFlag : Bool = false
     var pageObjectArray = [Page]()
+    var accessToWrite : Bool = false
     
     /*
      -----

@@ -35,6 +35,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var retrievedNotebookID: Int!
     var cameFromShare : Bool = false
     var sharedNotebookID : String = ""
+    var accessToWrite : Bool = false
     /*
      -----
      Generic Set Up
@@ -192,8 +193,11 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         {
             let mainVC = segue.destination as? ViewController
             mainVC?.retrievedFlag = true
-            mainVC?.notebookID = Int(self.sharedNotebookID)!
             mainVC?.pageObjectArray = self.pageObjArray
+            mainVC?.accessToWrite  = self.accessToWrite
+            if(self.accessToWrite) {
+                 mainVC?.notebookID = Int(self.sharedNotebookID)! //if the user can write update the notebookID flag so the updates are managed in DB
+            }
         }
     }
  }

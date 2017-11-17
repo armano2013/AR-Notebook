@@ -45,6 +45,7 @@ class shareViewController: UIViewController {
         {
             let retrieveVC = segue.destination as? retrieveViewController
             retrieveVC?.cameFromShare = true
+            retrieveVC?.accessToWrite = self.accessType
             retrieveVC?.sharedNotebookID = self.notebookID
             retrieveVC?.delegate?.retrievedFlag = true
         }
@@ -59,8 +60,6 @@ class shareViewController: UIViewController {
     func setShareParams(arr: [String]){
         notebookID =  arr[0]
         accessType = Bool(arr[1])!
-        performSegue(withIdentifier: "retrieveBooks", sender: self)
-        
     }
     func buildLinkOptions(access: Bool, id: String){
         self.notebookID = id
