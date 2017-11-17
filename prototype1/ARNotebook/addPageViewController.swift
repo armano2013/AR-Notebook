@@ -16,18 +16,6 @@ protocol addPageDelegate {
     var currentPage: Int {get set}
     func addPage(text : String)
 }
-struct Pages {
-    var currentPageNode : SCNNode?
-    var pageColor : UIImage?
-    var template  : Template?
-}
-struct Template {
-//    var singleNode = SCNNode()
-//    var topNode = SCNNode()
-//    var bottomNode = SCNNode()
-    var nodes = [SCNNode]()
-}
-
 
 class addPageViewController: UIViewController {
     
