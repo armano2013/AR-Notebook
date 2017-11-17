@@ -383,11 +383,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func addBook(hitTestResult: ARHitTestResult) {
         if self.notebookExists == true {
             /*
-            let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
-            }
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)*/
+             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
+             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
+             }
+             alertController.addAction(cancelAction)
+             self.present(alertController, animated: true, completion: nil)*/
             return
         }
         else{
@@ -402,13 +402,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addTextField { (textField) in
                 textField.placeholder = "New Notebook"
                 /*// limit the text characters to be less than 15
-                func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-                    let startingLength = textField.text?.characters.count ?? 0
-                    let lengthToAdd = string.characters.count
-                    let lengthToReplace = range.length
-                    let newLength = startingLength + lengthToAdd - lengthToReplace
-                    return newLength <= 500
-                }*/
+                 func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+                 let startingLength = textField.text?.characters.count ?? 0
+                 let lengthToAdd = string.characters.count
+                 let lengthToReplace = range.length
+                 let newLength = startingLength + lengthToAdd - lengthToReplace
+                 return newLength <= 500
+                 }*/
             }
             alertController.addAction(confirmAction)
             alertController.addAction(cancel)
@@ -420,10 +420,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         //check if another book object exists
         if self.notebookExists == true {
             /* broken right now
-            let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in }
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)*/
+             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
+             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in }
+             alertController.addAction(cancelAction)
+             self.present(alertController, animated: true, completion: nil)*/
             return
         }
         else{
@@ -720,10 +720,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     /*func deleteBook(node: SCNNode) {
-        self.notebookExists = false
-        self.ref?.child("notebooks").child((self.notebookID)!).removeValue()
-        self.ref?.child("users").child(self.currentProfile).child("notebooks").child((self.notebookID)!).removeValue()
-    }*/
+     self.notebookExists = false
+     self.ref?.child("notebooks").child((self.notebookID)!).removeValue()
+     self.ref?.child("users").child(self.currentProfile).child("notebooks").child((self.notebookID)!).removeValue()
+     }*/
     
     func deletePage(node: SCNNode){
         let bookID : Int = notebookID
@@ -839,10 +839,49 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     @IBAction func shareNotebook(){
-        let shareContent = "http://www.TEST.com"
-        //create dynamic link here and set to sharecontnet.
+        //notebook ID of the notebook to share
+        if self.notebookID > 0 {
+            let id = String(self.notebookID)
+            showShareAlert(id: id)
+        }
+        else {
+            showErrorShareAlert()
+        }
+    }
+    func showShareAlert(id: String){
+        let shareVC = shareViewController()
+        var link = ""
         
-        let activityViewController = UIActivityViewController(activityItems: [shareContent as String], applicationActivities: nil)
+        //on click of share present popup asking for read or write access.
+        var writeAccess = false
+        
+        let alertController = UIAlertController(title: "Share", message: "You are sharing this notebook. Do you wish to give the receiver read or write access?", preferredStyle: UIAlertControllerStyle.alert)
+        let addReadAccess = UIAlertAction(title: "Read", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+            writeAccess = false
+            //call to dynamic link generator here??
+            shareVC.buildLinkOptions(access: writeAccess, id: id)
+            link = shareVC.returnShareLink()
+           self.showShareLink(url: link)
+        }
+        let addWriteAccess = UIAlertAction(title: "Write", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+            writeAccess = true
+           shareVC.buildLinkOptions(access: writeAccess, id: id)
+           link = shareVC.returnShareLink()
+            self.showShareLink(url: link)
+        }
+        alertController.addAction(addReadAccess)
+        alertController.addAction(addWriteAccess)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    func showErrorShareAlert(){
+        let alertController = UIAlertController(title: "Error", message: "You have no notebook visible to share!", preferredStyle: UIAlertControllerStyle.alert)
+        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
+        
+    }
+    func showShareLink(url: String) {
+        let activityViewController = UIActivityViewController(activityItems: [url as String], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
         activityViewController.popoverPresentationController?.sourceRect = CGRect(x:185.0, y:95.0, width:1.0, height:1.0);
         present(activityViewController, animated: true, completion: nil)
