@@ -520,7 +520,7 @@
         <!--Share View Controller-->
         <scene sceneID="g4S-ev-LYG">
             <objects>
-                <viewController id="VTS-dt-pDS" customClass="shareViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="share" id="VTS-dt-pDS" customClass="shareViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FPr-8p-9lr" customClass="ShareButton" customModule="FacebookShare">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -534,6 +534,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="dg3-8u-xmu"/>
                     </view>
+                    <connections>
+                        <segue destination="YWK-Lm-eqQ" kind="presentation" identifier="retrieveBooks" id="MRj-bY-e0I"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KZk-iF-gcV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -708,4 +711,7 @@
         <image name="spiralNotebook" width="958" height="1321"/>
         <image name="undo" width="50" height="50"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="MRj-bY-e0I"/>
+    </inferredMetricsTieBreakers>
 </document>

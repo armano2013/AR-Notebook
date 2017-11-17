@@ -16,7 +16,7 @@ protocol retrieveDelegate {
     var pageObjectArray: [Page] {get set}
 }
 
-class retrieveViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class retrieveViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, shareBookDelegate {
     
     
     /*
@@ -60,7 +60,9 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             print(error)
         }
     }
-    
+   func retrieveShareContent(text : String){
+        print(text)
+    }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -179,4 +181,9 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         }
         //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
     }
-}
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? shareViewController{
+            destination.delegate = self
+        }        
+    }}

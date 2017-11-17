@@ -3,6 +3,9 @@ import ARKit
 import Firebase
 import FirebaseDatabase
 
+protocol shareBookDelegate {
+    func retrieveShareContent(text : String)
+}
 class shareViewController: UIViewController {
     
     /*
@@ -15,6 +18,7 @@ class shareViewController: UIViewController {
     let DYNAMIC_LINK_DOMAIN = "h3qpv.app.goo.gl"
     var longLink: URL?
     var shortLink: URL?
+    var delegate : shareBookDelegate?
     /*
      -----
      Generic Set Up
@@ -38,6 +42,8 @@ class shareViewController: UIViewController {
     func setShareParams(arr: [String]){
         notebookID =  arr[0]
         accessType = Bool(arr[1])!
+        performSegue(withIdentifier: "retrieveBooks", sender: self)
+        
     }
     func buildLinkOptions(access: Bool, id: String){
         self.notebookID = id
