@@ -388,14 +388,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         else if notebookExists == true {
-                let hitTest2 = sceneView.hitTest(tapLocation)
+            let tapLocation2 = sender.location(in: sceneView)
+            let hitTest2 = sceneView.hitTest(tapLocation2)
                 if hitTest2.isEmpty {
                     print("nothing has been tapped on")
                 }
                 else {
                     let results = hitTest2.first!
-                    //                let geometry = results.node.geometry
-                    //                print(geometry)
                     selectTemplate(hitTest: results)
                     print("successful tap")
                 }
@@ -404,15 +403,29 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func selectTemplate(hitTest : SCNHitTestResult){
         if self.templateExists == true {
             self.hitResult2 = hitTest
-            let temp = hitTest.node
+            let node = hitTest.node
+            if node == topTempNode{
             print("node selected")
-            self.selectedTemplate = temp
-            print(temp.geometry)
+            self.selectedTemplate = node
+            print(node)
+            }
+            else if node == bottomTempNode{
+                self.selectedTemplate = node
+                print("node selected")
+                print(node)
+            }
+            else if node == templateNode{
+                self.selectedTemplate = node
+               print("node selected")
+                print(node)
+            }
+            else{
+                print("cant find a node")
+            }
         }
-        else{
-            print("error")
-        }
+
     }
+    
     func addBook(hitTestResult: ARHitTestResult) {
         if self.notebookExists == true {
             /*
@@ -653,21 +666,23 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         if currentPageNode != nil {
             if template == "single"{
-                if let tempNode = selectedTemplate{
+                if selectedTemplate != nil{
+                    let tempNode = selectedTemplate
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                     node.position = SCNVector3(0,0, 0.001)
                     lastNode.append(node)
-                    tempNode.addChildNode(node)
+                    tempNode?.addChildNode(node)
                 }
             }
             else if template == "double"{
-                 if let tempNode = selectedTemplate{
+                 if selectedTemplate != nil{
+                    let tempNode = selectedTemplate
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                     node.position = SCNVector3(0,0, 0.001)
                     lastNode.append(node)
-                    tempNode.addChildNode(node)
+                    tempNode?.addChildNode(node)
                 }
             }
         }
@@ -867,7 +882,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
             node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             node.position = SCNVector3(0,0, 0.001)
+            node.name = "Single Template"
             page.addChildNode(node)
+            templateNode = node
         }
     }
     
@@ -884,6 +901,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             //adding both to the page
             page.addChildNode(node)
             page.addChildNode(node2)
+            node.name = " Top node"
+            node2.name = " Bottom node"
             topTempNode = node
             bottomTempNode = node2
         }
