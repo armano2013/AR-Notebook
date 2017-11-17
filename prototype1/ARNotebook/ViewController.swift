@@ -33,6 +33,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var maxScale: CGFloat = 0
     var minScale: CGFloat = 5
     var hitResult : ARHitTestResult? = nil
+    var hitResult2 : SCNHitTestResult? = nil
     var offset = Float(0.025);
     var notebookName = "Untitled"
     var bookNode: SCNNode?
@@ -56,6 +57,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var currentTemplate : Int = 1
     var topTempNodeContent :String = ""
     var bottomTempNodeContent :String = ""
+    var templateExists : Bool = false
     var notebookExists : Bool = false
     var retrievedFlag : Bool = false
     var pageObjectArray = [Page]()
@@ -117,8 +119,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
         let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinch))
         self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
-        let tapGestureRecognizer2 = UITapGestureRecognizer(target: self, action: #selector(tapped2))
-        self.sceneView.addGestureRecognizer(tapGestureRecognizer2)
     }
     
     //@objc becuse selector is an object c
@@ -148,17 +148,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             sender.scale = 1.0
         }
     }
-    @objc func tapped2(sender: UITapGestureRecognizer) {
-        let sceneView = sender.view as! ARSCNView
-        let tapLocation = sender.location(in: sceneView)
-        let hitTest = sceneView.hitTest(tapLocation)
-            if !hitTest.isEmpty {
-                print("nothing has been tapped on")
-            }
-            else if hitTest.isEmpty && tapLocation == templateNode{
-                
-            }
-    }
+
     /*
      -----
      Main Story - View Controller Buttons
@@ -271,11 +261,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             if text == "single" {
                 createPage(page : &newPage)
                 oneSlotTemplate()
+                templateExists = true
             
             }
             else if text == "double"{
                 createPage(page : &newPage)
                 twoSlotTemplate()
+                templateExists = true
         
             }
         }
@@ -388,16 +380,43 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let sceneView = sender.view as! ARSCNView
         let tapLocation = sender.location(in: sceneView)
         let hitTest = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
-        if retrievedFlag == true {
-            if !hitTest.isEmpty {
-                self.addRetrievedBook(hitTestResult: hitTest.first!)
+        if notebookExists == false{
+            if retrievedFlag == true {
+                if !hitTest.isEmpty {
+                    self.addRetrievedBook(hitTestResult: hitTest.first!)
+                }
+            }
+            else if !hitTest.isEmpty {
+                self.addBook(hitTestResult: hitTest.first!)
             }
         }
-        else if !hitTest.isEmpty {
-            self.addBook(hitTestResult: hitTest.first!)
+        else if notebookExists == true {
+                let hitTest2 = sceneView.hitTest(tapLocation)
+                if hitTest2.isEmpty {
+                    print("nothing has been tapped on")
+                }
+                else {
+                    let results = hitTest2.first!
+                    //                let geometry = results.node.geometry
+                    //                print(geometry)
+                    selectTemplate(hitTest: results)
+                    print("successful tap")
+                }
+            }
+        }
+    func selectTemplate(hitTest : SCNHitTestResult){
+        if self.templateExists == true {
+            self.hitResult2 = hitTest
+            let temp = hitTest.node
+            currentTemplateNode = temp
+            print("node selected")
+            let geo = temp.geometry
+            print(geo)
+        }
+        else{
+
         }
     }
-    
     func addBook(hitTestResult: ARHitTestResult) {
         if self.notebookExists == true {
             /*
@@ -715,6 +734,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.notebookExists = false
         self.hitResult = nil
         self.retrievedFlag = false
+        self.templateExists = false
     }
     
     func clearBook(){
