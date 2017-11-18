@@ -267,7 +267,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func createPage(){
         if self.notebookExists == true || self.retrievedFlag == true  {
-            var offset = 0.02
+            var offset = 0.0
             let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
             
@@ -278,9 +278,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             
             
             if(pages.count != 0){
-                offset = Double(pages.count) * 0.01
+                offset = Double(pages.count) * 0.02
             }
-            pageNode.position = SCNVector3(0.0, offset, 0)
+            pageNode.position = SCNVector3(0.0, 0.02 + offset, 0)
             pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count)
@@ -319,19 +319,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
         if (pages.count > 0 && currentPage > 1) {
-             var offset = 0.02
+             var offset = 0.0
             let  i = Int((currentPageNode?.name)!)
             let previous = i! - 2;
             let turnPage = pages[previous]
             //need to calculate some offset.
             
             if(pages.count != 0){
-                offset = Double(pages.count) * 0.01;
+                offset = Double(pages.count) * 0.02;
             }
             turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, offset, 0)
+            turnPage.position = SCNVector3(-0.9, 0.02 + offset, 0)
             currentPageNode?.isHidden = true;
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -342,18 +342,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         //if there is more than one page and the current page node is the last one in the array turn the page forward
         
         if (pages.count > 1 && (currentPage <= Int(pages.count - 1))) {
-            var offset = 0.02
+            var offset = 0.0
             let i = Int((currentPageNode?.name)!)
             let previous = i!;
             let turnPage = pages[previous]
             if(pages.count != 0){
-                offset = Double(pages.count) * 0.01;
+                offset = Double(pages.count) * 0.02;
             }
             // Point in the -z direction
             turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
             turnPage.runAction(SCNAction.rotate(by: -.pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, offset, 0)
+            turnPage.position = SCNVector3(-0.9, 0.02 + offset, 0)
             turnPage.isHidden = false
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!

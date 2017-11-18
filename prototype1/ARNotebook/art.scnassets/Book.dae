@@ -4,24 +4,11 @@
   <contributor>
    <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
   </contributor>
-  <created>2017-11-09T16:34:02Z</created>
-  <modified>2017-11-09T16:34:02Z</modified>
+  <created>2017-11-18T17:00:36Z</created>
+  <modified>2017-11-18T17:00:36Z</modified>
   <unit meter="1.000000"/>
   <up_axis>Z_UP</up_axis>
  </asset>
- <library_cameras>
-  <camera id="Camera-camera" name="Camera">
-   <optics>
-    <technique_common>
-     <perspective>
-      <xfov>49.1343</xfov>
-      <znear>0.1</znear>
-      <zfar>100</zfar>
-     </perspective>
-    </technique_common>
-   </optics>
-  </camera>
- </library_cameras>
  <library_materials>
   <material id="Book_Cover-material" name="Book_Cover">
    <instance_effect url="#effect_Book_Cover-material"/>
@@ -231,7 +218,7 @@
  <library_visual_scenes>
   <visual_scene id="scene9">
    <node id="Book_" name="Book_">
-    <matrix>-0.1 8.742278e-09 -5.923998e-29 -0.0002577528 -8.742278e-09 -0.1 6.776264e-22 0.0004018098 0 6.776264e-22 0.1 -0.001031723 0 0 0 1 </matrix>
+    <matrix>0.1 0 0 0 0 0.1 -6.776265e-22 0.0004018097 0 6.776265e-22 0.1 0 0 0 0 1 </matrix>
     <instance_geometry url="#geometry1">
      <bind_material>
       <technique_common>
@@ -242,10 +229,6 @@
       </technique_common>
      </bind_material>
     </instance_geometry>
-   </node>
-   <node id="Camera" name="Camera">
-    <matrix>-0.9846826 -0.01895101 0.1733197 -3.923428 0.1741106 -0.05451882 0.9832152 5.488717 -0.009183723 0.9983327 0.05698363 -2.25228 0 0 0 1 </matrix>
-    <instance_camera url="#Camera-camera"/>
    </node>
   </visual_scene>
  </library_visual_scenes>
