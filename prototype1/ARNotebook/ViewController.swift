@@ -280,17 +280,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             if(pages.count != 0){
                 offset = offset + Float(0.02);
             }
-            //coordinates from the hit test give us the plane anchor to put the book ontop of, coordiantes are stored in the 3rd column.
-            let transform = hitResult?.localTransform
-            guard let thirdColumn = transform?.columns.3 else{return}
-            
-            //let thirdColumn = transform?.columns.3
-            pageNode.position = SCNVector3(thirdColumn.x, thirdColumn.y + offset, thirdColumn.z)
-            
-            // pageNode.position = SCNVector3(bookNode.position.x, 0.05 + offset, bookNode.position.z)
+            pageNode.position = SCNVector3(0.0, 0.2+offset, 0)
             pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
-            pageNode.name = String(pages.count) //minus one so 0 index array  why??
+            pageNode.name = String(pages.count)
             currentPageNode = pageNode
             self.bookNode?.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
