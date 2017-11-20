@@ -57,7 +57,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var notebookExists : Bool = false
     var retrievedFlag : Bool = false
     var pageObjectArray = [Page]()
-    var accessToWrite : Bool = false
+    var accessToWrite : Bool = true
     
     /*
      -----
@@ -152,33 +152,38 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func undo(_ sender: Any) {
-        if template == "single" {
-            if let last = (lastNode.last){
-                last.removeFromParentNode()
-                lastNode.removeLast()
-            }
-        }
-        else if template == "double"{
-            if topTempNodeContent == "full"{
+        if accessToWrite == true {
+            if template == "single" {
                 if let last = (lastNode.last){
                     last.removeFromParentNode()
                     lastNode.removeLast()
-                    topTempNodeContent = "empty"
                 }
             }
-            else if bottomTempNodeContent == "full"{
-                if let last = (lastNode.last){
-                    last.removeFromParentNode()
-                    lastNode.removeLast()
-                    bottomTempNodeContent = "empty"
+            else if template == "double"{
+                if topTempNodeContent == "full"{
+                    if let last = (lastNode.last){
+                        last.removeFromParentNode()
+                        lastNode.removeLast()
+                        topTempNodeContent = "empty"
+                    }
                 }
+                else if bottomTempNodeContent == "full"{
+                    if let last = (lastNode.last){
+                        last.removeFromParentNode()
+                        lastNode.removeLast()
+                        bottomTempNodeContent = "empty"
+                    }
+                }
+            }
+            else {
+                let alertController = UIAlertController(title: "Nothing to Undo", message: "There is nothing you are able to undo", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
             }
         }
         else {
-            let alertController = UIAlertController(title: "Nothing to Undo", message: "There is nothing you are able to undo", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
+            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     
@@ -245,29 +250,34 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addPage(text: String){
         dismiss(animated: true, completion: nil)
-        if bookNode == nil {
-            let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
+        if accessToWrite == false && pageObjectArray.count == pages.count - 1 {
+            if bookNode == nil {
+                let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+            else{
+                if text == "single" {
+                    createPage()
+                    oneSlotTemplate()
+                    template = text
+                }
+                else if text == "double"{
+                    createPage()
+                    twoSlotTemplate()
+                    template = text
+                }
+            }
         }
         else{
-            if text == "single" {
-                createPage()
-                oneSlotTemplate()
-                template = text
-            }
-            else if text == "double"{
-                createPage()
-                twoSlotTemplate()
-                template = text
-            }
+            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     
     func createPage(){
         if self.notebookExists == true || self.retrievedFlag == true  {
-            var offset = 0.02
+            var offset = 0.0
             let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
             
@@ -278,9 +288,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             
             
             if(pages.count != 0){
-                offset = Double(pages.count) * 0.01
+                offset = Double(pages.count) * 0.02
             }
-            pageNode.position = SCNVector3(0.0, offset, 0)
+            pageNode.position = SCNVector3(0.0, 0.02 + offset, 0)
             pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
             pages.append(pageNode)
             pageNode.name = String(pages.count)
@@ -319,19 +329,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
         if (pages.count > 0 && currentPage > 1) {
-             var offset = 0.02
+            var offset = 0.0
             let  i = Int((currentPageNode?.name)!)
             let previous = i! - 2;
             let turnPage = pages[previous]
             //need to calculate some offset.
             
             if(pages.count != 0){
-                offset = Double(pages.count) * 0.01;
+                offset = Double(pages.count) * 0.02;
             }
             turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, offset, 0)
+            turnPage.position = SCNVector3(-0.9, 0.02 + offset, 0)
             currentPageNode?.isHidden = true;
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -342,18 +352,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         //if there is more than one page and the current page node is the last one in the array turn the page forward
         
         if (pages.count > 1 && (currentPage <= Int(pages.count - 1))) {
-            var offset = 0.02
+            var offset = 0.0
             let i = Int((currentPageNode?.name)!)
             let previous = i!;
             let turnPage = pages[previous]
             if(pages.count != 0){
-                offset = Double(pages.count) * 0.01;
+                offset = Double(pages.count) * 0.02;
             }
             // Point in the -z direction
             turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
             turnPage.runAction(SCNAction.rotate(by: -.pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, offset, 0)
+            turnPage.position = SCNVector3(-0.9, 0.02 + offset, 0)
             turnPage.isHidden = false
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -714,12 +724,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      
      */
     
-    /*func deleteBook(node: SCNNode) {
-     self.notebookExists = false
-     self.ref?.child("notebooks").child((self.notebookID)!).removeValue()
-     self.ref?.child("users").child(self.currentProfile).child("notebooks").child((self.notebookID)!).removeValue()
-     }*/
-    
     func deletePage(node: SCNNode){
         let bookID : Int = notebookID
         let bookString = String(bookID)
@@ -738,63 +742,74 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func deletePage(){
         dismiss(animated: true, completion: nil)
-        if  bookNode == nil && currentPageNode == nil{
-            let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book and page.", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
-        }
-        else {
-            let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
-            let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                self.currentPageNode?.removeFromParentNode()
-                self.deletePage(node: self.currentPageNode!)
-                self.pages.removeLast()
-                self.currentPageNode = self.pages.last
+        if accessToWrite == true {
+            if  bookNode == nil && currentPageNode == nil{
+                let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book and page.", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
             }
-            alertController.addAction(cancelAction)
-            alertController.addAction(deletePageAction)
-            self.present(alertController, animated: true, completion: nil)
+            else {
+                let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+                let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                    self.currentPageNode?.removeFromParentNode()
+                    self.deletePage(node: self.currentPageNode!)
+                    self.pages.removeLast()
+                    self.currentPageNode = self.pages.last
+                }
+                alertController.addAction(cancelAction)
+                alertController.addAction(deletePageAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+        }
+        else{
+            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     
     func deleteNotebook(){
         dismiss(animated: true, completion: nil)
-        if  bookNode == nil {
-            let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book.", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
-        }
-        else {
-            let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
-            let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                if self.bookNode != nil && self.pages.isEmpty == true{
-                    let loadingAlert = UIAlertController(title: nil, message: "Deleting", preferredStyle: .alert)
-                    self.present(loadingAlert, animated: true, completion: nil)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                        self.clearBook()
-                        loadingAlert.dismiss(animated: true, completion: nil)
-                    })                }
-                else if self.bookNode != nil && self.pages.isEmpty == false{
-                    let loadingAlert = UIAlertController(title: nil, message: "Deleting", preferredStyle: .alert)
-                    self.present(loadingAlert, animated: true, completion: nil)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                        self.ref?.child("notebooks").child(String(self.notebookID)).removeValue()
-                        self.ref?.child("users").child(self.currentProfile).child("notebooks").child(String(self.notebookID)).removeValue()
-                        self.clearBook()
-                        loadingAlert.dismiss(animated: true, completion: nil)
-                    })
-                }
-                self.clearBook()
+        if accessToWrite == true {
+            dismiss(animated: true, completion: nil)
+            if  bookNode == nil {
+                let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book.", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
             }
-            alertController.addAction(cancelAction)
-            alertController.addAction(deletePageAction)
-            self.present(alertController, animated: true, completion: nil)
+            else {
+                let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+                let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                    if self.bookNode != nil && self.pages.isEmpty == true{
+                        let loadingAlert = UIAlertController(title: nil, message: "Deleting", preferredStyle: .alert)
+                        self.present(loadingAlert, animated: true, completion: nil)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                            self.clearBook()
+                            loadingAlert.dismiss(animated: true, completion: nil)
+                        })                }
+                    else if self.bookNode != nil && self.pages.isEmpty == false{
+                        let loadingAlert = UIAlertController(title: nil, message: "Deleting", preferredStyle: .alert)
+                        self.present(loadingAlert, animated: true, completion: nil)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                            self.ref?.child("notebooks").child(String(self.notebookID)).removeValue()
+                            self.ref?.child("users").child(self.currentProfile).child("notebooks").child(String(self.notebookID)).removeValue()
+                            self.clearBook()
+                            loadingAlert.dismiss(animated: true, completion: nil)
+                        })
+                    }
+                    self.clearBook()
+                }
+                alertController.addAction(cancelAction)
+                alertController.addAction(deletePageAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+            self.notebookExists = false
         }
-        self.notebookExists = false
+        else{
+            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+        }
     }
     
     /*
@@ -804,17 +819,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     func pageColor(image: UIImage) {
-        if bookNode != nil && currentPageNode != nil {
-            for page in pages {
-                page.geometry?.firstMaterial?.diffuse.contents = image
+        if accessToWrite == true {
+            if bookNode != nil && currentPageNode != nil {
+                for page in pages {
+                    page.geometry?.firstMaterial?.diffuse.contents = image
+                }
+                // maybe an array for all the pages to change all or a single page at a time ?
             }
-            // maybe an array for all the pages to change all or a single page at a time ?
-        }
-        else{ //error for if there is no book
-            let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
+            else{ //error for if there is no book
+                let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
         }
     }
     
@@ -825,8 +842,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     func bookColor(imageOne: UIImage, cover: String) {
-        bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
-        ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : cover])
+        if accessToWrite == true {
+            bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
+            ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : cover])
+        }
+        else {
+            //alet extension
+        }
     }
     /*
      -----
@@ -834,13 +856,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     @IBAction func shareNotebook(){
-        //notebook ID of the notebook to share
-        if self.notebookID > 0 {
-            let id = String(self.notebookID)
-            showShareAlert(id: id)
+        if accessToWrite == true {
+            //notebook ID of the notebook to share
+            if self.notebookID > 0 {
+                let id = String(self.notebookID)
+                showShareAlert(id: id)
+            }
+            else {
+                showErrorShareAlert()
+            }
         }
-        else {
-            showErrorShareAlert()
+        else{
+            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     func showShareAlert(id: String){
@@ -856,12 +883,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             //call to dynamic link generator here??
             shareVC.buildLinkOptions(access: writeAccess, id: id)
             link = shareVC.returnShareLink()
-           self.showShareLink(url: link)
+            self.showShareLink(url: link)
         }
         let addWriteAccess = UIAlertAction(title: "Write", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
             writeAccess = true
-           shareVC.buildLinkOptions(access: writeAccess, id: id)
-           link = shareVC.returnShareLink()
+            shareVC.buildLinkOptions(access: writeAccess, id: id)
+            link = shareVC.returnShareLink()
             self.showShareLink(url: link)
         }
         alertController.addAction(addReadAccess)
@@ -990,6 +1017,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
+    }
+    func alert(title: String = "", message: String) {
+        let alertController2 = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in}
+        alertController2.addAction(cancelAction)
+        self.present(alertController2, animated: true, completion: nil)
     }
 }
 //converts degrees to radians, since objects are oriented according to radians
