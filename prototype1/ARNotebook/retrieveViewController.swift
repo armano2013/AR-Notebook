@@ -36,7 +36,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var cameFromShare : Bool = false
     var sharedNotebookID : String = ""
     var accessToWrite : Bool = false
-    /*
+    var prevVC: shareViewController!    /*
      -----
      Generic Set Up
      -----
@@ -48,10 +48,13 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
           getList()
         }
         else{
+            prevVC.dismiss(animated: true, completion: nil)
+            //self.navigationController?.pushViewController(self, animated: false)
             retrievePreviousNotebookWithID(id: sharedNotebookID)
         }
 
     }
+
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -136,8 +139,10 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 }
                 self.delegate?.pageObjectArray = self.pageObjArray
                 if(self.cameFromShare == true){
-                  //preform segue?
-                    self.performSegue(withIdentifier: "showSharedNotebook", sender: self)
+                    if let mainVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainViewController") as? ViewController {
+                        self.navigationController?.pushViewController(mainVC, animated: true)
+                        self.performSegue(withIdentifier: "showSharedNotebook", sender: self)
+                    }
                 }
             }
         })
@@ -195,6 +200,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             mainVC?.retrievedFlag = true
             mainVC?.pageObjectArray = self.pageObjArray
             mainVC?.accessToWrite  = self.accessToWrite
+            mainVC?.prevVC = self
             if(self.accessToWrite) {
                  mainVC?.notebookID = Int(self.sharedNotebookID)! //if the user can write update the notebookID flag so the updates are managed in DB
             }

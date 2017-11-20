@@ -58,6 +58,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var retrievedFlag : Bool = false
     var pageObjectArray = [Page]()
     var accessToWrite : Bool = true
+    var alert = alertHelper()
+    var prevVC: retrieveViewController!
     
     /*
      -----
@@ -183,7 +185,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         else {
-            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+          alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     
@@ -250,7 +252,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addPage(text: String){
         dismiss(animated: true, completion: nil)
-        if accessToWrite == false && pageObjectArray.count == pages.count - 1 {
             if bookNode == nil {
                 let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
                 let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
@@ -269,10 +270,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     template = text
                 }
             }
-        }
-        else{
-            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
-        }
     }
     
     func createPage(){
@@ -336,7 +333,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             //need to calculate some offset.
             
             if(pages.count != 0){
-                offset = Double(pages.count) * 0.02;
+                offset = Double(i!) * 0.02;
             }
             turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
@@ -357,7 +354,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let previous = i!;
             let turnPage = pages[previous]
             if(pages.count != 0){
-                offset = Double(pages.count) * 0.02;
+                offset = Double(i!) * 0.02;
             }
             // Point in the -z direction
             turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
@@ -387,12 +384,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addBook(hitTestResult: ARHitTestResult) {
         if self.notebookExists == true {
-            /*
-             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
-             let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in
-             }
-             alertController.addAction(cancelAction)
-             self.present(alertController, animated: true, completion: nil)*/
             return
         }
         else{
@@ -424,11 +415,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func addRetrievedBook(hitTestResult: ARHitTestResult){
         //check if another book object exists
         if self.notebookExists == true {
-            /* broken right now
-             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
+            self.dismiss(animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
              let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in }
              alertController.addAction(cancelAction)
-             self.present(alertController, animated: true, completion: nil)*/
+             self.present(alertController, animated: true, completion: nil)
             return
         }
         else{
@@ -710,6 +701,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.pages.removeAll()
         self.lastNode.removeAll()
         self.clearNodes()
+        self.accessToWrite = true;
     }
     
     /*
@@ -764,7 +756,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         else{
-            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     
@@ -808,7 +800,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.notebookExists = false
         }
         else{
-            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     
@@ -867,7 +859,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         else{
-            alert(title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     func showShareAlert(id: String){
@@ -1018,15 +1010,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
     }
-    func alert(title: String = "", message: String) {
-        let alertController2 = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in}
-        alertController2.addAction(cancelAction)
-        self.present(alertController2, animated: true, completion: nil)
-    }
+
 }
 //converts degrees to radians, since objects are oriented according to radians
 //credit to udemy video
 extension Int {
     var degreesToRadians: Double {return Double(self) * .pi/180}
+}
+class alertHelper {
+    func alert(fromController controller: UIViewController, title: String = "", message: String) {
+        let alertController2 = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in}
+        alertController2.addAction(cancelAction)
+        controller.present(alertController2, animated: true, completion: nil)
+    }
 }

@@ -35,8 +35,6 @@ class shareViewController: UIViewController {
     @IBAction func dismissShare(){
         if let retrieveVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "retrieve") as? retrieveViewController {
             self.navigationController?.pushViewController(retrieveVC, animated: true)
-           // retrieveVC.retrievePreviousNotebookWithID(id: notebookID)
-            //delegate?.retrieveShareContent(id: notebookID)
             performSegue(withIdentifier: "retrieveBooks", sender: self)
         }
     }
@@ -48,6 +46,7 @@ class shareViewController: UIViewController {
             retrieveVC?.accessToWrite = self.accessType
             retrieveVC?.sharedNotebookID = self.notebookID
             retrieveVC?.delegate?.retrievedFlag = true
+            retrieveVC?.prevVC = self
         }
     }
    
