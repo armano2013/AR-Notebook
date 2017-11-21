@@ -71,6 +71,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         super.viewDidLoad()
         ref = Database.database().reference()
         storageRef = Storage.storage().reference()
+        if prevVC != nil {
+            prevVC.dismiss(animated: false, completion: nil)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -332,13 +335,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let turnPage = pages[previous]
             //need to calculate some offset.
             
-            if(pages.count != 0){
-                offset = Double(i!) * 0.02;
+            if(previous != 0){
+                offset = Double(previous) * 0.02;
             }
             turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, 0.02 + offset, 0)
+            turnPage.position = SCNVector3(-0.9, 0.021 + offset, 0)
             currentPageNode?.isHidden = true;
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -353,14 +356,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let i = Int((currentPageNode?.name)!)
             let previous = i!;
             let turnPage = pages[previous]
-            if(pages.count != 0){
-                offset = Double(i!) * 0.02;
+            if(previous != 0){
+                offset = Double(previous) * 0.02;
             }
             // Point in the -z direction
             turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
             turnPage.runAction(SCNAction.rotate(by: -.pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
             turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, 0.02 + offset, 0)
+            turnPage.position = SCNVector3(-0.9, 0.021 + offset, 0)
             turnPage.isHidden = false
             currentPageNode = turnPage
             currentPage = Int((currentPageNode?.name)!)!
@@ -415,12 +418,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func addRetrievedBook(hitTestResult: ARHitTestResult){
         //check if another book object exists
         if self.notebookExists == true {
-            self.dismiss(animated: true, completion: nil)
+            /*
             let alertController = UIAlertController(title: "Error", message: "You can only place one book at a time.", preferredStyle: UIAlertControllerStyle.alert)
              let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel){ (result : UIAlertAction) -> Void in }
              alertController.addAction(cancelAction)
              self.present(alertController, animated: true, completion: nil)
-            return
+            return*/
         }
         else{
             let node = createBook(hitTestResult: hitTestResult)

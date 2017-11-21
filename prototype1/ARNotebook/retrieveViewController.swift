@@ -140,7 +140,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 self.delegate?.pageObjectArray = self.pageObjArray
                 if(self.cameFromShare == true){
                     if let mainVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainViewController") as? ViewController {
-                        self.navigationController?.pushViewController(mainVC, animated: true)
+                        self.navigationController?.pushViewController(mainVC, animated: false)
                         self.performSegue(withIdentifier: "showSharedNotebook", sender: self)
                     }
                 }
