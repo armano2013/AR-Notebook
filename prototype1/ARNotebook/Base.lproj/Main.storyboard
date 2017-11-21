@@ -692,9 +692,11 @@
                     <connections>
                         <outlet property="tableView" destination="dd5-Xc-WWn" id="HiY-rv-yD6"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="showSharedNotebook" id="Noy-7X-jaB"/>
+                        <segue destination="wPE-lQ-U0v" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="obt-X2-c1q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f5E-0J-vm8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="wPE-lQ-U0v" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2361.71875" y="-170.5078125"/>
         </scene>
