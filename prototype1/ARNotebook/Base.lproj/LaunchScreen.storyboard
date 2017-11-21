@@ -22,7 +22,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Ha-Xg-RKH">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Ha-Xg-RKH">
                                 <rect key="frame" x="0.0" y="105" width="414" height="175"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="175" id="Aue-e5-AMX"/>
@@ -52,8 +52,10 @@
                             <constraint firstItem="bhg-q6-oJ7" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="VFf-AT-UJD"/>
                             <constraint firstItem="bhg-q6-oJ7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="XZg-we-w3q"/>
                             <constraint firstItem="9Ha-Xg-RKH" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="85" id="drt-Ze-HGl"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9Ha-Xg-RKH" secondAttribute="trailing" constant="420" id="hCy-Q7-xvX"/>
                             <constraint firstItem="bhg-q6-oJ7" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="hiL-Mr-GGs"/>
                             <constraint firstItem="bhg-q6-oJ7" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="154" id="jYe-Im-R4z"/>
+                            <constraint firstItem="9Ha-Xg-RKH" firstAttribute="leading" secondItem="bhg-q6-oJ7" secondAttribute="leading" id="v3F-qL-Mhj"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
