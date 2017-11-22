@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
     <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -299,7 +299,7 @@
                                     <constraint firstAttribute="height" constant="70" id="i7t-4w-hiB"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXA-sQ-EEB">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXA-sQ-EEB">
                                 <rect key="frame" x="20" y="966" width="87" height="50"/>
                                 <state key="normal" title="New" image="newpage">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -308,7 +308,7 @@
                                     <segue destination="5N4-j2-ApC" kind="presentation" id="ALH-gY-G0s"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tYF-ND-GVF">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tYF-ND-GVF">
                                 <rect key="frame" x="654" y="30" width="94" height="50"/>
                                 <state key="normal" title="Undo" image="undo">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -317,7 +317,7 @@
                                     <action selector="undo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dGQ-F1-UVK"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFE-mw-2FI" userLabel="insert button">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFE-mw-2FI" userLabel="insert button">
                                 <rect key="frame" x="469" y="966" width="102" height="50"/>
                                 <state key="normal" title=" Insert" image="add">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -327,7 +327,7 @@
                                     <segue destination="ylS-d8-bpH" kind="presentation" id="UN5-yd-iFf"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0kK-Zk-BJV">
+                            <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0kK-Zk-BJV">
                                 <rect key="frame" x="642" y="966" width="106" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="95" id="b3d-OF-HbI"/>
@@ -339,7 +339,7 @@
                                     <segue destination="YWK-Lm-eqQ" kind="presentation" modalPresentationStyle="overCurrentContext" id="fmo-nK-Nk9"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gvf-9z-Pqb" userLabel="Delete">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gvf-9z-Pqb" userLabel="Delete">
                                 <rect key="frame" x="20" y="30" width="107" height="50"/>
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
                                 <state key="normal" title=" Delete" image="delete">
@@ -349,7 +349,7 @@
                                     <segue destination="Wxg-DW-Iu4" kind="presentation" id="MAi-h0-B79"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FT4-L0-4uA">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FT4-L0-4uA">
                                 <rect key="frame" x="473" y="28" width="96" height="50"/>
                                 <state key="normal" title="Reset" image="refresh">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -358,7 +358,7 @@
                                     <action selector="ClearNotebook:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FiZ-Bt-GjY"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qn-Z5-Zgq">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qn-Z5-Zgq">
                                 <rect key="frame" x="192" y="966" width="82" height="50"/>
                                 <state key="normal" title="Edit" image="edit">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -367,7 +367,7 @@
                                     <segue destination="Na5-He-KwX" kind="presentation" modalPresentationStyle="overCurrentContext" id="Xle-3o-ASm"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GIW-Jg-ywa">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GIW-Jg-ywa">
                                 <rect key="frame" x="212" y="30" width="97" height="50"/>
                                 <state key="normal" title="Share" image="share">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -718,7 +718,7 @@
         <image name="undo" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="MRj-bY-e0I"/>
+        <segue reference="fmo-nK-Nk9"/>
         <segue reference="Noy-7X-jaB"/>
     </inferredMetricsTieBreakers>
 </document>
