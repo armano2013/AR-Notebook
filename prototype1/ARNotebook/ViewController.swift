@@ -979,28 +979,28 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     func addPageWithContent(content: String, temp: String){
-        //        if self.notebookExists == true || self.retrievedFlag == true {
-        //            if temp == "single" {
-        //                createPage()
-        //                oneSlotTemplate()
-        //                template = temp
-        //                passText(text: content, f: 1)
-        //            }
-        //            else if temp == "double"{
-        //                createPage()
-        //                twoSlotTemplate()
-        //                template = temp
-        //                passText(text: content, f: 1)
-        //            }
-        //            else if temp == "doubleSecond" {
-        //                template = "double"
-        //                passText(text: content, f:1)
-        //            }
-        //        }
-        //        else {
-        //            //error no book
-        //        }
-        //
+                if self.notebookExists == true || self.retrievedFlag == true {
+                    if temp == "single" {
+                        createPage()
+                        oneSlotTemplate()
+                        template = temp
+                        passText(text: content, f: 1)
+                    }
+                    else if temp == "double"{
+                        createPage()
+                        twoSlotTemplate()
+                        template = temp
+                        passText(text: content, f: 1)
+                    }
+                    else if temp == "doubleSecond" {
+                        template = "double"
+                        passText(text: content, f:1)
+                    }
+                }
+                else {
+                    //error no book
+                }
+        
     }
     
     func addContent(id: String, pageObjs: [Page]) {
