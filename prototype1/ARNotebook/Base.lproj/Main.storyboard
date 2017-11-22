@@ -457,7 +457,7 @@
                                         </connections>
                                     </button>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-Gh-LMb">
-                                        <rect key="frame" x="264" y="83" width="240" height="30"/>
+                                        <rect key="frame" x="264.5" y="83" width="240" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="RuA-RI-Od3"/>
                                             <constraint firstAttribute="width" constant="240" id="SFa-kD-PBq"/>
@@ -525,9 +525,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXS-KD-Nr0">
-                                <rect key="frame" x="370" y="521" width="161" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXS-KD-Nr0">
+                                <rect key="frame" x="102" y="270" width="563" height="527"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="170" id="e6A-AQ-nvs"/>
+                                    <constraint firstAttribute="height" constant="170" id="rky-zq-F9d"/>
+                                </constraints>
                                 <state key="normal" title="Open Shared Notebook"/>
                                 <connections>
                                     <action selector="dismissShare" destination="VTS-dt-pDS" eventType="touchUpInside" id="NoE-GE-3ii"/>
@@ -535,6 +538,12 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="LKC-mn-2XH" firstAttribute="bottom" secondItem="fXS-KD-Nr0" secondAttribute="bottom" constant="227" id="2e3-iK-nZh"/>
+                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="top" secondItem="LKC-mn-2XH" secondAttribute="top" constant="250" id="5KP-Iz-E6Z"/>
+                            <constraint firstItem="LKC-mn-2XH" firstAttribute="trailing" secondItem="fXS-KD-Nr0" secondAttribute="trailing" constant="103" id="tx4-bL-8LS"/>
+                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="leading" secondItem="LKC-mn-2XH" secondAttribute="leading" constant="102" id="x6Y-uD-X2n"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="LKC-mn-2XH"/>
                     </view>
                     <connections>
