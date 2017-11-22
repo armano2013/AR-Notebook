@@ -949,6 +949,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             node.name = "Single Template"
             page.addChildNode(node)
             templateNode = node
+            templateExists = true
         }
     }
     
@@ -969,6 +970,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             node2.name = "Bottom node"
             topTempNode = node
             bottomTempNode = node2
+            templateExists = true
         }
     }
     /*
