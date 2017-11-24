@@ -19,7 +19,9 @@ protocol profileNameDelegate {
 }
 
 
-class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, deleteDelegate, pageColorDelegate, retrieveDelegate {    
+class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, pageColorDelegate, retrieveDelegate {
+
+    
     
     /*
      -----
@@ -485,8 +487,18 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.ref.child("notebooks/\(id)").setValue(["name": self.notebookName])
         //render book on root
         self.sceneView.scene.rootNode.addChildNode(node)
+        self.setTime(id: String(notebookID))
         self.notebookExists = true
         
+    }
+    
+    func setTime(id: String){
+        let now = Date()
+        let format = DateFormatter()
+        format.timeZone = TimeZone.current
+        format.dateFormat = "MM-dd-yyyy"
+        let dateString = format.string(from: now)
+        self.ref.child("notebooks/\(id)").updateChildValues(["LastAccessed":dateString])
     }
     
     func generateUniqueNotebookID(node: SCNNode) ->Int {
@@ -703,7 +715,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func ClearNotebook(_ sender: Any) {
         let alertController = UIAlertController(title: "Confirm Clear Notebook", message: "Are you sure you want to clear the Notebook ?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        let deletePageAction = UIAlertAction(title: "Clear", style: .default) { (result : UIAlertAction) -> Void in
+        let deleteAction = UIAlertAction(title: "Clear", style: .default) { (result : UIAlertAction) -> Void in
             let loadingAlert = UIAlertController(title: nil, message: "Clearing", preferredStyle: .alert)
             self.present(loadingAlert, animated: true, completion: nil)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
@@ -712,7 +724,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             })
         }
         alertController.addAction(cancelAction)
-        alertController.addAction(deletePageAction)
+        alertController.addAction(deleteAction)
         self.present(alertController, animated: true, completion: nil)
     }
     
@@ -749,27 +761,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      of page
      
      */
-
-    func deletePage(node: SCNNode){
-        let bookID : Int = notebookID
-        let bookString = String(bookID)
-        let pageID : Int = currentPage
-        let pageString = String(pageID)
-        self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
-    }
     
-    func pageContent(node: SCNNode){
-        let bookID : Int = notebookID
-        let bookString = String(bookID)
-        let pageID : Int = currentPage
-        let pageString = String(pageID)
-        self.ref?.child("notebooks").child(bookString).child(pageString).removeValue()
+    @IBAction func deletePage(_ sender: Any) {
+        self.deletePage()
     }
     
     func deletePage(){
         dismiss(animated: true, completion: nil)
         if accessToWrite == true {
-            if  bookNode == nil && currentPageNode == nil{
+            if  bookNode == nil || currentPageNode == nil{
                 let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book and page.", preferredStyle: UIAlertControllerStyle.alert)
                 let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
                 alertController.addAction(cancelAction)
@@ -780,7 +780,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
                 let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
                     self.currentPageNode?.removeFromParentNode()
-                    self.deletePage(node: self.currentPageNode!)
+                    self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
                     self.pages.removeLast()
                     self.currentPageNode = self.pages.last
                 }
@@ -794,48 +794,34 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    func deleteNotebook(){
+    func deleteNotebook(book: String){
         dismiss(animated: true, completion: nil)
         if accessToWrite == true {
             dismiss(animated: true, completion: nil)
-            if  bookNode == nil {
-                let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book.", preferredStyle: UIAlertControllerStyle.alert)
-                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-                alertController.addAction(cancelAction)
-                self.present(alertController, animated: true, completion: nil)
-            }
-            else {
-                let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
-                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
-                let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                    if self.bookNode != nil && self.pages.isEmpty == true{
-                        let loadingAlert = UIAlertController(title: nil, message: "Deleting", preferredStyle: .alert)
-                        self.present(loadingAlert, animated: true, completion: nil)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                            self.clearBook()
-                            loadingAlert.dismiss(animated: true, completion: nil)
-                        })                }
-                    else if self.bookNode != nil && self.pages.isEmpty == false{
-                        let loadingAlert = UIAlertController(title: nil, message: "Deleting", preferredStyle: .alert)
-                        self.present(loadingAlert, animated: true, completion: nil)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                            self.ref?.child("notebooks").child(String(self.notebookID)).removeValue()
-                            self.ref?.child("users").child(self.currentProfile).child("notebooks").child(String(self.notebookID)).removeValue()
-                            self.clearBook()
-                            loadingAlert.dismiss(animated: true, completion: nil)
-                        })
-                    }
+            let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+            let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                let loadingAlert = UIAlertController(title: nil, message: "Deleting", preferredStyle: .alert)
+                self.present(loadingAlert, animated: true, completion: nil)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                    self.ref?.child("notebooks").child(book).removeValue()
+                    self.ref?.child("users").child(self.currentProfile).child("notebooks").child(book).removeValue()
                     self.clearBook()
-                }
-                alertController.addAction(cancelAction)
-                alertController.addAction(deletePageAction)
-                self.present(alertController, animated: true, completion: nil)
+                    loadingAlert.dismiss(animated: true, completion: nil)
+                })
             }
+            alertController.addAction(cancelAction)
+            alertController.addAction(deletePageAction)
+            self.present(alertController, animated: true, completion: nil)
             self.notebookExists = false
         }
         else{
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
+    }
+    
+    func deleteFromDatabase() {
+        
     }
     
     /*
@@ -1039,9 +1025,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             destination.delegate = self
         }
         else if let destination = segue.destination as? addPageViewController {
-            destination.delegate = self
-        }
-        else if let destination = segue.destination as? deleteViewController {
             destination.delegate = self
         }
         else if let destination = segue.destination as? pageColorViewController{

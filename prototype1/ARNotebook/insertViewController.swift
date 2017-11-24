@@ -116,16 +116,15 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     @IBAction func chooseGalleryImage(_ sender: Any) {
         let image = UIImagePickerController()
         image.delegate = self
-        
         image.sourceType = UIImagePickerControllerSourceType.photoLibrary
-        
         image.allowsEditing = false
-        
         self.present(image, animated: true)
     }
+    
     @IBAction func backButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
+    
     /*
      -----
      Gesture Recognizers

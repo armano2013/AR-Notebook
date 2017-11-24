@@ -11,6 +11,8 @@ struct Page {
 
 protocol retrieveDelegate {
     func addContent(id: String, pageObjs: [Page])
+    func setTime(id: String)
+    func deleteNotebook(book: String)
     var retrievedFlag : Bool {get set}
     var notebookID: Int {get set}
     var pageObjectArray: [Page] {get set}
@@ -36,7 +38,9 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var cameFromShare : Bool = false
     var sharedNotebookID : String = ""
     var accessToWrite : Bool = false
-    var prevVC: shareViewController!    /*
+    var prevVC: shareViewController!
+    
+    /*
      -----
      Generic Set Up
      -----
@@ -45,20 +49,23 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         ref = Database.database().reference()
         if(!cameFromShare) {
-          getList()
+            getList()
         }
         else{
             prevVC.dismiss(animated: true, completion: nil)
             //self.navigationController?.pushViewController(self, animated: false)
             retrievePreviousNotebookWithID(id: sharedNotebookID)
         }
-
     }
 
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.tableView.reloadData()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -73,16 +80,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     }
    func retrieveShareContent(id : String){
         retrievePreviousNotebookWithID(id: id)
-    }
-
-    
-    func setTime(id: String){
-        let now = Date()
-        let format = DateFormatter()
-        format.timeZone = TimeZone.current
-        format.dateFormat = "MM-dd-yyyy"
-        let dateString = format.string(from: now)
-        self.ref.child("notebooks/\(id)").updateChildValues(["LastAccessed":dateString])
     }
     
     func getTime(id: String, completion: @escaping (String?) -> Void) {
@@ -173,26 +170,27 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "notebookIDCell", for: indexPath)
-        cell.textLabel?.text = self.notebookArray[indexPath.row]
+        getTime(id: self.notebookIDArray[indexPath.row]) { date in
+            guard let date = date else { return }
+            cell.textLabel?.text = "\(self.notebookArray[indexPath.row])" + " : \(date)"
+        }
         return cell
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.delegate?.notebookID = Int(self.notebookIDArray[indexPath.row])!
-        setTime(id: self.notebookIDArray[indexPath.row])
         self.delegate?.retrievedFlag = true
         retrievePreviousNotebookWithID(id: self.notebookIDArray[indexPath.row])
         self.dismiss(animated: true, completion: nil)
     }
     
-    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
         if editingStyle == UITableViewCellEditingStyle.delete{
-            getTime(id: self.notebookIDArray[indexPath.row]) { date in
-                guard let date = date else { return } }
+            self.delegate?.deleteNotebook(book: self.notebookIDArray[indexPath.row])
+            self.getList()
         }
-        //this is code for deleting the table view cell. Could be a cleaner way of deleting entire notebooks
     }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showSharedNotebook"
         {
