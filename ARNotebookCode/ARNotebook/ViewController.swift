@@ -219,7 +219,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         text.materials = [material]
         let node = SCNNode();
         node.geometry = text
-        node.name = "text"
+        node.name = "content"
         node.scale = SCNVector3(x: 0.1, y:0.1, z:0.1)
         node.position = SCNVector3(-0.5, 0.0, 0.001)
         return node;
@@ -550,7 +550,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func createSlots(xf: Double, yf: Double, hght: Int, text: String){
         let textNode = SCNText(string: text, extrusionDepth: 0.1)
         textNode.font = UIFont(name: "Arial", size:1)
-        textNode.name = "text"
+        textNode.name = "content"
         textNode.containerFrame = CGRect(origin:CGPoint(x: xf, y:yf), size: CGSize(width: 10, height: hght))
         textNode.truncationMode = kCATruncationEnd
         textNode.alignmentMode = kCAAlignmentLeft
@@ -559,7 +559,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         material.diffuse.contents = UIColor.black
         textNode.materials = [material]
         let node = createTextNode(text: textNode)
-        renderNode(node: node)
+        self.selectedTemplate.addChildNode(node)
+        //renderNode(node: node)
     }
     
     /*
@@ -584,9 +585,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                 guard let image = UIImage(data: data!) else {return}
                                 let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
                                 node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                                node.name = "content"
                                 node.position = SCNVector3(0,0, 0.01)
                                 self.lastNode.append(node)
-                                page.addChildNode(node)
+                                self.selectedTemplate.addChildNode(node)
                             }).resume()
                         }
                         
@@ -605,7 +607,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             else if template == "double"{
                 if selectedTemplate != nil{
                     if topTempNode == selectedTemplate{
-                        // let tempNode = selectedTemplate
                         if text.range(of:"firebasestorage.googleapis.com") != nil {
                             if currentPageNode != nil {
                                 let url = URL(string: text)
@@ -615,8 +616,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                     node.position = SCNVector3(0,0, 0.01)
                                     self.lastNode.append(node)
-                                    //tempNode?.addChildNode(node)
-                                    self.topTempNode?.addChildNode(node)
+                                   self.selectedTemplate.addChildNode(node)
                                 }).resume()
                             }
                         }
@@ -628,8 +628,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         }
                     }
                     else if bottomTempNode == selectedTemplate{
-                        //let tempNode = selectedTemplate
-                        //else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
                         if text.range(of:"firebasestorage.googleapis.com") != nil {
                             if currentPageNode != nil {
                                 let url = URL(string: text)
@@ -640,7 +638,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                     node.position = SCNVector3(0,0, 0.001)
                                     self.lastNode.append(node)
-                                    self.bottomTempNode?.addChildNode(node)
+                                    //self.bottomTempNode?.addChildNode(node)
+                                    self.selectedTemplate.addChildNode(node)
                                 }).resume()
                             }
                         }
@@ -989,8 +988,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 passText(text: content, f: 1)
             }
             else if temp == "doubleSecond" {
-                self.selectedTemplate = self.bottomTempNode
                 template = "double"
+                self.selectedTemplate = self.bottomTempNode
                 passText(text: content, f:1)
             }
         }
@@ -1025,15 +1024,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 print("no book")
             }
         }
-        if self.retrievedFlag{
+        //probably need to also check if shared flag? Dont need to listen for changes on own notebook.
+        if self.retrievedFlag {
             //connect listener to notebook to see if anything changes.
             attachEventListeners()
-            let postRef = self.ref.child("notebooks/\(notebookID)")
-            postRef.observe(.childChanged, with: { (snapshot) -> Void in
-                print("something changed")
-                print("snapshot key:", snapshot.key)
-                print("snapshot value:", snapshot.value)
-            })
         }
     }
     func attachEventListeners(){
@@ -1042,25 +1036,57 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             print("something changed")
             print("snapshot key:", snapshot.key)
             print("snapshot value:", snapshot.value)
-            self.handleChildChange(snapshot: snapshot)
+            print("snapshot children count", snapshot.childrenCount)
+            if snapshot.childrenCount == 1 {
+                self.handleSingleChildChange(snapshot: snapshot)
+            }
+            else if snapshot.childrenCount == 2 {
+                self.handleDoubleChildChange(snapshot: snapshot)
+            }
         })
     }
-    func handleChildChange(snapshot: DataSnapshot){
+    func handleSingleChildChange(snapshot: DataSnapshot){
         print("snapshot value from other func:", snapshot.children)
         moveCurrentPage(i: snapshot.key)
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
             print(page.value)
             let text = page.value as! String
-            //let textNode = currentPageNode?.childNode(withName: "text", recursively: true)
-            selectedTemplate?.childNode(withName: "text", recursively: true)?.removeFromParentNode()
+            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
             createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
         }
+    }
+    func handleDoubleChildChange(snapshot: DataSnapshot) {
+         moveCurrentPage(i: snapshot.key)
+        let enumPages = snapshot.children
+        while let page = enumPages.nextObject() as? DataSnapshot {
+            print(page.value)
+            let text = page.value as! String
+            //let textNode = currentPageNode?.childNode(withName: "text", recursively: true)
+            if (page.key == "content1"){
+                //select the top node of current page
+                let temp = currentPageNode?.childNode(withName: "Top node", recursively: false);
+                self.selectedTemplate = temp
+                 selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                 createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+            }
+            else if (page.key == "content2"){
+                //select the top node of current page
+                let temp = currentPageNode?.childNode(withName: "Bottom node", recursively: false);
+                self.selectedTemplate = temp
+                selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+            }
+        }
+        //reset ages to last for testing purposes
+        currentPageNode = self.pages.last
+        
     }
     func moveCurrentPage(i: String){
         if let index = Int(i) {
             //check to see if we need to call right/left swipe here to move pages forward backward.
             currentPageNode = self.pages[index - 1]
+            //try to do some animation if needed.
         }
     }
     func alertAddTemplate() {
