@@ -22,7 +22,6 @@ protocol profileNameDelegate {
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, pageColorDelegate, retrieveDelegate {
     
     
-    
     /*
      -----
      Global Variables

@@ -17,7 +17,8 @@ import FacebookLogin
 protocol insertDelegate {
     var currentProfile: String!  {get set}
     var currentPage: Int {get set}
-    var notebookID : Int { get set }
+    var notebookID : Int { get set}
+    var selectedTemplate: SCNNode! {get set}
     func passImage (image: UIImage)
     func passText(text: String, f: Int)
 }
@@ -127,20 +128,6 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     
     /*
      -----
-     Gesture Recognizers
-     -----
-     */
-    
-    // hitting enter on the keyboard
-    //    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    //        dismiss(animated: true, completion: nil)
-    //
-    //        updateText(self)
-    //        return true
-    //    }
-    
-    /*
-     -----
      Insert View Controller - Logical functions, and database connections
      -----
      */
@@ -162,18 +149,17 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         }
     }
     
-    //called after check if the user profile is null. if not null add text to the database at the correct page num
-    func addTextToDatabase(profile: String, text: String){
-        self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["content" : text])
-    }
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         dismiss(animated: true, completion: nil)
         
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
-                saveImage(profile: profile!, pickedImage: pickedImage)
+                var name = "content1"
+                if(delegate?.selectedTemplate.name == "Bottom node"){
+                    name = "content2"
+                }
+                saveImage(profile: profile!, pickedImage: pickedImage, name: name)
             }
             delegate?.passImage(image: pickedImage)
         }
@@ -182,7 +168,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         }
     }
     
-    func saveImage(profile: String, pickedImage: UIImage){
+    func saveImage(profile: String, pickedImage: UIImage, name: String){
         let imageRef = storageRef?.child("images").child(profile)
         let fileRef = imageRef?.child(String(pickedImage.hashValue))
         let data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
@@ -195,7 +181,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
             // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
             guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
-            self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues(["image url":imageURL])
+            self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name:imageURL])
         }
     }
 }
