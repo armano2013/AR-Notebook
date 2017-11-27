@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1F6625A81FA8D4CC0068D448 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F6625A71FA8CB2D0068D448 /* GoogleService-Info.plist */; };
 		1F6625AA1FA933320068D448 /* shareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6625A91FA933320068D448 /* shareViewController.swift */; };
-		1F777BAA1FA25632006C59E4 /* deleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F777BA91FA25632006C59E4 /* deleteViewController.swift */; };
 		1F86DB431FB1593F00FC5270 /* retrieveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F86DB421FB1593F00FC5270 /* retrieveViewController.swift */; };
 		1FE350D51FA24C03006AADA7 /* addPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE350D41FA24C03006AADA7 /* addPageViewController.swift */; };
 		6D079B941FA269010086BDDB /* pageColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D079B931FA269010086BDDB /* pageColorViewController.swift */; };
@@ -33,7 +32,6 @@
 		1F6625A61FA8B9BF0068D448 /* ARNotebook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ARNotebook.entitlements; sourceTree = "<group>"; };
 		1F6625A71FA8CB2D0068D448 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F6625A91FA933320068D448 /* shareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shareViewController.swift; sourceTree = "<group>"; };
-		1F777BA91FA25632006C59E4 /* deleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = deleteViewController.swift; sourceTree = "<group>"; };
 		1F86DB421FB1593F00FC5270 /* retrieveViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = retrieveViewController.swift; sourceTree = "<group>"; };
 		1FE350D41FA24C03006AADA7 /* addPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addPageViewController.swift; sourceTree = "<group>"; };
 		6D079B931FA269010086BDDB /* pageColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pageColorViewController.swift; sourceTree = "<group>"; };
@@ -116,7 +114,6 @@
 				E4CDB5101F93BE1900BBFE12 /* ViewController.swift */,
 				E4CDB5121F93BE1900BBFE12 /* Main.storyboard */,
 				6D079B971FA41B8E0086BDDB /* buttonClass.swift */,
-				1F777BA91FA25632006C59E4 /* deleteViewController.swift */,
 				6D079B931FA269010086BDDB /* pageColorViewController.swift */,
 				6DBF880D1F953ECB005C1456 /* designableView.swift */,
 				E4CDB52E1F93D64F00BBFE12 /* insertViewController.swift */,
@@ -297,7 +294,6 @@
 				1F86DB431FB1593F00FC5270 /* retrieveViewController.swift in Sources */,
 				E4CDB52F1F93D64F00BBFE12 /* insertViewController.swift in Sources */,
 				C267263E1F9552A200E6EEA1 /* arScene.swift in Sources */,
-				1F777BAA1FA25632006C59E4 /* deleteViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

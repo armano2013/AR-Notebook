@@ -91,12 +91,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.registerGestureRecognizers()
-        /// Create a session configuration
-        self.registerGestureRecognizers()
-        // Run the view's session
-        self.configuration.planeDetection = .horizontal
-        sceneView.session.run(configuration)
+        self.registerGestures()
+        self.configuration.planeDetection = .horizontal  // Create a session configuration
+        sceneView.session.run(configuration) // Run the view's session
         self.sceneView.delegate = self
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
@@ -109,26 +106,41 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             if self.notebookExists == true{
                 planetimeout?.invalidate()
             } else {
-                let alertController = UIAlertController(title: "No Surface Detected", message: "Please place a notebook, or try a clear flat surface.", preferredStyle: UIAlertControllerStyle.alert)
+                let alertController = UIAlertController(title: "No Book Detected", message: "Please place a notebook, or try a clear flat surface.", preferredStyle: UIAlertControllerStyle.alert)
                 let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true, completion: nil)
             }
-            
         })
     }
     
-    func registerGestureRecognizers() {
+    func registerGestures(){
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        self.sceneView.addGestureRecognizer(tapGestureRecognizer)
         let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinch))
         self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
+        self.sceneView.addGestureRecognizer(tapGestureRecognizer)
+        print((self.sceneView.gestureRecognizers)!)
     }
+    
+    func tapGestureEnabling(){
+        let tempGesture = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        for object in self.sceneView.gestureRecognizers!{
+            if object == tempGesture{
+                if notebookExists == true {
+                    object.isEnabled = false
+                }
+                else {
+                    object.isEnabled = true
+                }
+            }
+        }
+    }
+    
     
     //@objc becuse selector is an object c
     @objc func pinch(sender: UIPinchGestureRecognizer) {
         if sender.state == .began{
-        }else if sender.state == .ended{
+        } else if sender.state == .ended{
             //stops all actions once user removes finger
         }
         let scale: CGFloat = sender.scale
@@ -402,7 +414,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 self.selectedTemplate = node
                 print(node)
             }
-            else if node == bottomTempNode{
+            else if node == self.bottomTempNode{
                 self.selectedTemplate = node
                 print("Bottom node selected")
                 print(node)
@@ -433,14 +445,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let cancel = UIAlertAction(title: "Cancel", style: .default) { (_) in }
             alertController.addTextField { (textField) in
                 textField.placeholder = "New Notebook"
-                /*// limit the text characters to be less than 15
-                 func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-                 let startingLength = textField.text?.characters.count ?? 0
-                 let lengthToAdd = string.characters.count
-                 let lengthToReplace = range.length
-                 let newLength = startingLength + lengthToAdd - lengthToReplace
-                 return newLength <= 500
-                 }*/
             }
             alertController.addAction(confirmAction)
             alertController.addAction(cancel)
@@ -459,6 +463,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.sceneView.scene.rootNode.addChildNode(node)
             self.notebookExists = true
             self.addContent(id: String(notebookID), pageObjs: self.pageObjectArray)
+            self.setTime(id: String(notebookID))
+            self.tapGestureEnabling()
         }
     }
     
@@ -485,11 +491,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.notebookName = name
         self.ref.child("users/\((self.currentProfile)!)/notebooks/\(id)").setValue(["name": self.notebookName])
         self.ref.child("notebooks/\(id)").setValue(["name": self.notebookName])
-        //render book on root
-        self.sceneView.scene.rootNode.addChildNode(node)
+        self.sceneView.scene.rootNode.addChildNode(node)  //render book on root
         self.setTime(id: String(notebookID))
         self.notebookExists = true
-        
+        self.tapGestureEnabling()
     }
     
     func setTime(id: String){
@@ -521,6 +526,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         planeNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
         return planeNode
     }
+    
     //add more page nodes on detecting of planes... Not useful for our application added as example.
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
@@ -528,7 +534,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             childNode.removeFromParentNode()
         }
         let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
-        
         node.addChildNode(planeNode)
     }
     
@@ -748,6 +753,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.lastNode.removeAll()
         self.clearNodes()
         self.accessToWrite = true;
+        self.registerGestures()
     }
     
     /*

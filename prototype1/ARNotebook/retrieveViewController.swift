@@ -29,7 +29,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     
     var ref: DatabaseReference!
     var delegate : retrieveDelegate?
-    var delegate2: deleteDelegate?
     var pageNum : Int = 1
     var notebookIDArray = [String]()
     var pageObjArray = [Page]()
