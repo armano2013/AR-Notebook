@@ -314,6 +314,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         //            bottomTempNodeContent = "empty"
         addPageNum()
         //            print(pageStack.count)
+        self.enablePageButtons()
     }
 
     func addPageNum () {

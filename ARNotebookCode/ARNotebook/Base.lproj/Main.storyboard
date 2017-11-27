@@ -319,13 +319,13 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gvf-9z-Pqb" userLabel="Delete">
-                                <rect key="frame" x="3" y="30" width="98" height="45"/>
+                                <rect key="frame" x="3" y="30" width="107" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="eCv-E5-QfE"/>
                                     <constraint firstAttribute="height" constant="45" id="qBl-sF-zjs"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
-                                <state key="normal" title=" Delet" image="delete">
+                                <state key="normal" title=" Delete" image="delete">
                                     <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                 </state>
                                 <connections>
