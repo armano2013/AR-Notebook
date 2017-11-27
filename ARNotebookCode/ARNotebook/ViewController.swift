@@ -20,7 +20,7 @@ protocol profileNameDelegate {
 
 
 class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UINavigationControllerDelegate, insertDelegate, addPageDelegate, pageColorDelegate, retrieveDelegate {
-
+    
     
     
     /*
@@ -203,7 +203,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         else {
-          alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     
@@ -259,24 +259,24 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addPage(text: String){
         dismiss(animated: true, completion: nil)
-            if bookNode == nil {
-                let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
-                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-                alertController.addAction(cancelAction)
-                self.present(alertController, animated: true, completion: nil)
+        if bookNode == nil {
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else{
+            if text == "single" {
+                createPage()
+                oneSlotTemplate()
+                template = text
             }
-            else{
-                if text == "single" {
-                    createPage()
-                    oneSlotTemplate()
-                    template = text
-                }
-                else if text == "double"{
-                    createPage()
-                    twoSlotTemplate()
-                    template = text
-                }
+            else if text == "double"{
+                createPage()
+                twoSlotTemplate()
+                template = text
             }
+        }
     }
     
     func createPage(){
@@ -573,27 +573,27 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if bookNode != nil && currentPageNode != nil{
             if template == "single"{
                 if selectedTemplate != nil{
-                let tempNode = selectedTemplate
-                //check to see if the content is a sotrage url - which means its an image.
-                if text.range(of:"firebasestorage.googleapis.com") != nil {
-                    if let page = currentPageNode {
-                        let url = URL(string: text)
-                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                            guard let image = UIImage(data: data!) else {return}
-                            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
-                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                            node.position = SCNVector3(0,0, 0.01)
-                            self.lastNode.append(node)
-                            page.addChildNode(node)
-                        }).resume()
+                    let tempNode = selectedTemplate
+                    //check to see if the content is a sotrage url - which means its an image.
+                    if text.range(of:"firebasestorage.googleapis.com") != nil {
+                        if let page = currentPageNode {
+                            let url = URL(string: text)
+                            URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                                guard let image = UIImage(data: data!) else {return}
+                                let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+                                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                                node.position = SCNVector3(0,0, 0.01)
+                                self.lastNode.append(node)
+                                page.addChildNode(node)
+                            }).resume()
+                        }
+                        
                     }
-                    
-                }
-                else{
-                    if(f == 0){
-                        addTopContent(content1: text)
-                    }
-                    createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+                    else{
+                        if(f == 0){
+                            addTopContent(content1: text)
+                        }
+                        createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
                     }
                 }
                 else {
@@ -601,56 +601,56 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
             }
             else if template == "double"{
-                 if selectedTemplate != nil{
+                if selectedTemplate != nil{
                     if topTempNode == selectedTemplate{
-                           // let tempNode = selectedTemplate
-                                if text.range(of:"firebasestorage.googleapis.com") != nil {
-                                    if currentPageNode != nil {
-                                        let url = URL(string: text)
-                                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                                            guard let image = UIImage(data: data!) else {return}
-                                            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-                                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                                            node.position = SCNVector3(0,0, 0.01)
-                                            self.lastNode.append(node)
-                                            //tempNode?.addChildNode(node)
-                                            self.topTempNode?.addChildNode(node)
-                                        }).resume()
-                                    }
-                                }
-                                else{
-                                    if(f == 0){
-                                        addTopContent(content1: text)
-                                    }
-                                    createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
-                                    }
+                        // let tempNode = selectedTemplate
+                        if text.range(of:"firebasestorage.googleapis.com") != nil {
+                            if currentPageNode != nil {
+                                let url = URL(string: text)
+                                URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                                    guard let image = UIImage(data: data!) else {return}
+                                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                                    node.position = SCNVector3(0,0, 0.01)
+                                    self.lastNode.append(node)
+                                    //tempNode?.addChildNode(node)
+                                    self.topTempNode?.addChildNode(node)
+                                }).resume()
                             }
-                else if bottomTempNode == selectedTemplate{
-                    //let tempNode = selectedTemplate
-                //else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
-                    if text.range(of:"firebasestorage.googleapis.com") != nil {
-                        if currentPageNode != nil {
-                            let url = URL(string: text)
-                            URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                                guard let image = UIImage(data: data!) else {return}
-                                let node = SCNNode()
-                                node.geometry = SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0)
-                                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                                node.position = SCNVector3(0,0, 0.001)
-                                self.lastNode.append(node)
-                                self.bottomTempNode?.addChildNode(node)
-                            }).resume()
+                        }
+                        else{
+                            if(f == 0){
+                                addTopContent(content1: text)
+                            }
+                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
-                    else{
-                        if(f == 0){
-                            addBottomContent(content2: text)
+                    else if bottomTempNode == selectedTemplate{
+                        //let tempNode = selectedTemplate
+                        //else if topTempNodeContent == "full" && bottomTempNodeContent == "empty"{
+                        if text.range(of:"firebasestorage.googleapis.com") != nil {
+                            if currentPageNode != nil {
+                                let url = URL(string: text)
+                                URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                                    guard let image = UIImage(data: data!) else {return}
+                                    let node = SCNNode()
+                                    node.geometry = SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0)
+                                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                                    node.position = SCNVector3(0,0, 0.001)
+                                    self.lastNode.append(node)
+                                    self.bottomTempNode?.addChildNode(node)
+                                }).resume()
+                            }
                         }
-                        createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                        else{
+                            if(f == 0){
+                                addBottomContent(content2: text)
+                            }
+                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                        }
                     }
                 }
-            }
-                 else {
+                else {
                     alertAddTemplate()
                 }
             }
@@ -677,21 +677,21 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if currentPageNode != nil {
             if selectedTemplate != nil{
                 if template == "single"{
-                        let tempNode = selectedTemplate
-                        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
-                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                        node.position = SCNVector3(0,0, 0.001)
-                        lastNode.append(node)
-                        tempNode?.addChildNode(node)
-                    }
+                    let tempNode = selectedTemplate
+                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    node.position = SCNVector3(0,0, 0.001)
+                    lastNode.append(node)
+                    tempNode?.addChildNode(node)
+                }
                 else if template == "double"{
-                        let tempNode = selectedTemplate
-                        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                        node.position = SCNVector3(0,0, 0.001)
-                        lastNode.append(node)
-                        tempNode?.addChildNode(node)
-                    }
+                    let tempNode = selectedTemplate
+                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    node.position = SCNVector3(0,0, 0.001)
+                    lastNode.append(node)
+                    tempNode?.addChildNode(node)
+                }
             }
             else { // no template selected
                 alertAddTemplate()
@@ -971,29 +971,33 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     func addPageWithContent(content: String, temp: String){
-                if self.notebookExists == true || self.retrievedFlag == true {
-                    if temp == "single" {
-                        createPage()
-                        oneSlotTemplate()
-                        template = temp
-                        passText(text: content, f: 1)
-                    }
-                    else if temp == "double"{
-                        createPage()
-                        twoSlotTemplate()
-                        template = temp
-                        passText(text: content, f: 1)
-                    }
-                    else if temp == "doubleSecond" {
-                        template = "double"
-                        passText(text: content, f:1)
-                    }
-                }
-                else {
-                    //error no book
-                }
+        if self.notebookExists == true || self.retrievedFlag == true {
+            if temp == "single" {
+                createPage()
+                oneSlotTemplate()
+                template = temp
+                 self.selectedTemplate = self.templateNode
+                passText(text: content, f: 1)
+            }
+            else if temp == "double"{
+                createPage()
+                twoSlotTemplate()
+                template = temp
+                self.selectedTemplate = self.topTempNode
+                passText(text: content, f: 1)
+            }
+            else if temp == "doubleSecond" {
+                self.selectedTemplate = self.bottomTempNode
+                template = "double"
+                passText(text: content, f:1)
+            }
+        }
+        else {
+            //error no book
+        }
         
     }
+    
     
     func addContent(id: String, pageObjs: [Page]) {
         self.notebookExists = true
@@ -1007,12 +1011,53 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             else{
                 t = "single"
             }
-            for i in 0...end {
-                if (i == 1 && t == "double"){
-                    t = "doubleSecond"
+            if end >= 0{
+                for i in 0...end {
+                    if (i == 1 && t == "double"){
+                        t = "doubleSecond"
+                    }
+                    addPageWithContent(content: page.content[i], temp: t)
                 }
-                addPageWithContent(content: page.content[i], temp: t)
             }
+            else {
+                print("no book")
+            }
+        }
+        if self.retrievedFlag{
+            //connect listener to notebook to see if anything changes.
+            attachEventListeners()
+            let postRef = self.ref.child("notebooks/\(notebookID)")
+            postRef.observe(.childChanged, with: { (snapshot) -> Void in
+                print("something changed")
+                print("snapshot key:", snapshot.key)
+                print("snapshot value:", snapshot.value)
+            })
+        }
+    }
+    func attachEventListeners(){
+        let postRef = self.ref.child("notebooks/\(notebookID)")
+        postRef.observe(.childChanged, with: { (snapshot) -> Void in
+            print("something changed")
+            print("snapshot key:", snapshot.key)
+            print("snapshot value:", snapshot.value)
+            self.handleChildChange(snapshot: snapshot)
+        })
+    }
+    func handleChildChange(snapshot: DataSnapshot){
+        print("snapshot value from other func:", snapshot.children)
+        moveCurrentPage(i: snapshot.key)
+        let enumPages = snapshot.children
+        while let page = enumPages.nextObject() as? DataSnapshot {
+            templateNode?.removeFromParentNode()
+            print(page.value)
+            let text = page.value as! String
+            createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+        }
+    }
+    func moveCurrentPage(i: String){
+        if let index = Int(i) {
+            //check to see if we need to call right/left swipe here to move pages forward backward.
+            currentPageNode = self.pages[index - 1]
         }
     }
     func alertAddTemplate() {
@@ -1044,7 +1089,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBAction func myUnwindAction(unwindSegue:UIStoryboardSegue){
         //
     }
-
+    
 }
 //converts degrees to radians, since objects are oriented according to radians
 //credit to udemy video
