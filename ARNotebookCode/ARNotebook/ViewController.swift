@@ -219,6 +219,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         text.materials = [material]
         let node = SCNNode();
         node.geometry = text
+        node.name = "text"
         node.scale = SCNVector3(x: 0.1, y:0.1, z:0.1)
         node.position = SCNVector3(-0.5, 0.0, 0.001)
         return node;
@@ -549,6 +550,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func createSlots(xf: Double, yf: Double, hght: Int, text: String){
         let textNode = SCNText(string: text, extrusionDepth: 0.1)
         textNode.font = UIFont(name: "Arial", size:1)
+        textNode.name = "text"
         textNode.containerFrame = CGRect(origin:CGPoint(x: xf, y:yf), size: CGSize(width: 10, height: hght))
         textNode.truncationMode = kCATruncationEnd
         textNode.alignmentMode = kCAAlignmentLeft
@@ -1048,9 +1050,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         moveCurrentPage(i: snapshot.key)
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
-            templateNode?.removeFromParentNode()
             print(page.value)
             let text = page.value as! String
+            //let textNode = currentPageNode?.childNode(withName: "text", recursively: true)
+            selectedTemplate?.childNode(withName: "text", recursively: true)?.removeFromParentNode()
             createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
         }
     }
