@@ -130,16 +130,8 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
      Gesture Recognizers
      -----
      */
-    
-    // hitting enter on the keyboard
-    //    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    //        dismiss(animated: true, completion: nil)
-    //
-    //        updateText(self)
-    //        return true
-    //    }
-    
-    /*
+
+     /*
      -----
      Insert View Controller - Logical functions, and database connections
      -----

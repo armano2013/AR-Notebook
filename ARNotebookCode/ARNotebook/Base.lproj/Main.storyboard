@@ -27,62 +27,6 @@
             </objects>
             <point key="canvasLocation" x="-711.20000000000005" y="31.934032983508249"/>
         </scene>
-        <!--Delete View Controller-->
-        <scene sceneID="Ivj-KI-Pi2">
-            <objects>
-                <viewController modalPresentationStyle="overCurrentContext" id="Wxg-DW-Iu4" customClass="deleteViewController" customModule="ARNotebook" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="bPC-6p-cAn">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nd7-ti-qq5" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="20" y="110" width="150" height="100"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NdV-Wy-JQd">
-                                        <rect key="frame" x="39" y="8" width="83" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Delete Page">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="deletePg:" destination="Wxg-DW-Iu4" eventType="touchUpInside" id="hUf-sc-It0"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XbJ-tw-3FI">
-                                        <rect key="frame" x="22" y="62" width="116" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Delete Notebook">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="deleteNotebook:" destination="Wxg-DW-Iu4" eventType="touchUpInside" id="Oy4-OE-1WA"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="Myi-DH-Wxd"/>
-                                    <constraint firstAttribute="width" constant="150" id="VDD-NT-M0F"/>
-                                </constraints>
-                                <viewLayoutGuide key="safeArea" id="Dsb-YY-Lo3"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="12"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="nd7-ti-qq5" firstAttribute="leading" secondItem="O7S-rK-LRo" secondAttribute="leading" constant="20" id="1Ci-VV-htl"/>
-                            <constraint firstItem="nd7-ti-qq5" firstAttribute="top" secondItem="O7S-rK-LRo" secondAttribute="top" constant="90" id="tF7-K6-TM2"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="O7S-rK-LRo"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="M8W-KS-rUv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="532" y="496"/>
-        </scene>
         <!--Page Color View Controller-->
         <scene sceneID="Won-td-MPy">
             <objects>
@@ -440,7 +384,14 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="addPageButton" destination="eXA-sQ-EEB" id="jUH-w3-DTq"/>
+                        <outlet property="deletePageButton" destination="gvf-9z-Pqb" id="daP-6B-qVu"/>
+                        <outlet property="dismissButton" destination="FT4-L0-4uA" id="0E3-OQ-e1n"/>
+                        <outlet property="editButton" destination="1qn-Z5-Zgq" id="lUk-Hn-RFa"/>
+                        <outlet property="insertButton" destination="cFE-mw-2FI" id="uWp-Wo-fsH"/>
                         <outlet property="sceneView" destination="7rB-xZ-A2i" id="KUY-j7-7m4"/>
+                        <outlet property="shareButton" destination="GIW-Jg-ywa" id="PXB-kl-jlL"/>
+                        <outlet property="undoButton" destination="tYF-ND-GVF" id="AN1-ph-mWF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
