@@ -563,10 +563,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    func passText(text: String, f: Int = 0, i: Int = 0) {
-        if(f == 0) {
-            dismiss(animated: true, completion: nil)
-        }
+    func passText(text: String, i: Int = 0) {
+       print("presenting view controller", self.presentingViewController)
         if bookNode != nil && currentPageNode != nil{
             if template == "single"{
                 if selectedTemplate != nil{
@@ -589,9 +587,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         
                     }
                     else{
-                        if(f == 0){
-                            addTopContent(content1: text)
-                        }
+
                         createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
                     }
                 }
@@ -619,9 +615,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             }
                         }
                         else{
-                            if(f == 0){
-                                addTopContent(content1: text)
-                            }
                             createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
@@ -645,9 +638,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             }
                         }
                         else{
-                            if(f == 0){
-                                addBottomContent(content2: text)
-                            }
                             createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
@@ -664,15 +654,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.present(alertController, animated: true, completion: nil)
         }
     }
-    
-    func addTopContent(content1: String){
-        ref.child("notebooks/\((self.notebookID))/\(self.currentPage)").updateChildValues(["content1" : content1])
-    }
-    
-    func addBottomContent(content2: String){
-        ref.child("notebooks/\((self.notebookID))/\(self.currentPage)").updateChildValues(["content2" : content2])
-    }
-    
     // functions to pass the image through to the VIEW CONTROLLER
     func passImage(image: UIImage) {
         dismiss(animated: true, completion: nil)
@@ -980,7 +961,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 template = temp
                  self.selectedTemplate = self.templateNode
                 guard let index = currentPageNode?.name else {return}
-                passText(text: content, f: 1, i: Int(index)!)
+                passText(text: content, i: Int(index)!)
             }
             else if temp == "double"{
                 createPage()
@@ -988,13 +969,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 template = temp
                 self.selectedTemplate = self.topTempNode
                 guard let index = currentPageNode?.name else {return}
-                passText(text: content, f: 1, i: Int(index)!)
+                passText(text: content, i: Int(index)!)
             }
             else if temp == "doubleSecond" {
                 template = "double"
                guard let index = currentPageNode?.name else {return}
                 self.selectedTemplate = self.bottomTempNode
-                passText(text: content, f:1, i: Int(index)!)
+                passText(text: content, i: Int(index)!)
             }
         }
         else {
@@ -1031,7 +1012,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         //probably need to also check if shared flag? Dont need to listen for changes on own notebook.
         if self.retrievedFlag {
             //connect listener to notebook to see if anything changes.
-            attachEventListeners()
+            //attachEventListeners()
         }
     }
     func attachEventListeners(){

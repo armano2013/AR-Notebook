@@ -62,11 +62,11 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidAppear(animated)
         self.tableView.reloadData()
     }
-    
+    /*
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.dismiss(animated: true, completion: nil)
     }
-    
+    */
     @IBOutlet weak var tableView: UITableView!
     
     @IBAction func logOutFacebook(_ sender: Any) {
@@ -123,10 +123,16 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                         while let content = enumContent.nextObject() as? DataSnapshot {
                             var contentVal = content.value as! String
                             if(content.key != "color" ){
-                                if (content.key == "empty"){
-                                    contentVal = " "
+                                if (content.key == "empty" && contentVal == "false"){
+                                    continue
                                 }
-                                pageContent.append(contentVal)
+                                else if (content.key == "empty" && contentVal == "true"){
+                                    contentVal = " "
+                                    pageContent.append(contentVal)
+                                }
+                                else{
+                                    pageContent.append(contentVal)
+                                }
                             }
                             else {
                                 //update page struct to handle
