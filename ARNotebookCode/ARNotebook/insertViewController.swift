@@ -20,7 +20,7 @@ protocol insertDelegate {
     var notebookID : Int { get set}
     var selectedTemplate: SCNNode! {get set}
     func passImage (image: UIImage)
-    func passText(text: String, f: Int)
+    func passText(text: String, f: Int, i: Int)
 }
 
 
@@ -104,14 +104,14 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     //for keyboard
     @IBAction func updateText(_ sender: Any) {
         if let keyText = UserInputText.text {
-            delegate?.passText(text: keyText, f: 0)
+            delegate?.passText(text: keyText, f: 0, i: -1)
         }
     }
     
     //for clipboard
     @IBAction func addClipboardText(_ sender: Any) {
         let text = getClipboard()
-        delegate?.passText(text: text, f: 0)
+        delegate?.passText(text: text, f: 0, i: -1)
     }
     
     @IBAction func chooseGalleryImage(_ sender: Any) {
