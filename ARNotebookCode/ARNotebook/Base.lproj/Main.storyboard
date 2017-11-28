@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -65,7 +65,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3mv-FJ-jPj">
-                                        <rect key="frame" x="217.66666666666663" y="44" width="72.333333333333371" height="80"/>
+                                        <rect key="frame" x="217.66666666666666" y="44" width="72.333333333333343" height="80"/>
                                         <state key="normal" backgroundImage="brownBook"/>
                                         <connections>
                                             <action selector="blackButton:" destination="Na5-He-KwX" eventType="touchUpInside" id="8Ix-p9-BF2"/>
@@ -258,7 +258,7 @@
                                 <rect key="frame" x="0.0" y="666" width="414" height="70"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qn-Z5-Zgq">
-                                        <rect key="frame" x="100" y="17" width="82" height="45"/>
+                                        <rect key="frame" x="100" y="13" width="82" height="45"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="bCu-F3-w2T"/>
                                         </constraints>
@@ -270,7 +270,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFE-mw-2FI" userLabel="insert button">
-                                        <rect key="frame" x="196" y="17" width="102" height="45"/>
+                                        <rect key="frame" x="196" y="13" width="102" height="45"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="Fpl-z4-eZg"/>
                                         </constraints>
@@ -283,7 +283,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0kK-Zk-BJV">
-                                        <rect key="frame" x="310" y="17" width="94" height="45"/>
+                                        <rect key="frame" x="310" y="13" width="94" height="45"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="cZ7-Pz-BnB"/>
                                         </constraints>
@@ -297,17 +297,17 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="cFE-mw-2FI" secondAttribute="bottom" constant="8" id="2Pj-j6-tQO"/>
-                                    <constraint firstAttribute="bottom" secondItem="1qn-Z5-Zgq" secondAttribute="bottom" constant="8" id="89e-vr-Bbk"/>
+                                    <constraint firstAttribute="bottom" secondItem="cFE-mw-2FI" secondAttribute="bottom" constant="12" id="2Pj-j6-tQO"/>
+                                    <constraint firstAttribute="bottom" secondItem="1qn-Z5-Zgq" secondAttribute="bottom" constant="12" id="89e-vr-Bbk"/>
                                     <constraint firstAttribute="trailing" secondItem="cFE-mw-2FI" secondAttribute="trailing" constant="116" id="9oU-SB-REI"/>
                                     <constraint firstItem="1qn-Z5-Zgq" firstAttribute="leading" secondItem="1wb-iz-sJt" secondAttribute="leading" constant="100" id="LOs-UM-i1k"/>
                                     <constraint firstAttribute="height" constant="70" id="i7t-4w-hiB"/>
                                     <constraint firstAttribute="trailing" secondItem="0kK-Zk-BJV" secondAttribute="trailing" constant="10" id="jFw-rJ-aVK"/>
-                                    <constraint firstAttribute="bottom" secondItem="0kK-Zk-BJV" secondAttribute="bottom" constant="8" id="uTQ-RJ-I8B"/>
+                                    <constraint firstAttribute="bottom" secondItem="0kK-Zk-BJV" secondAttribute="bottom" constant="12" id="uTQ-RJ-I8B"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXA-sQ-EEB">
-                                <rect key="frame" x="3" y="683" width="87" height="45"/>
+                                <rect key="frame" x="3" y="679" width="87" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="gYq-Cb-Al1"/>
                                 </constraints>
@@ -319,7 +319,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gvf-9z-Pqb" userLabel="Delete">
-                                <rect key="frame" x="3" y="30" width="107" height="45"/>
+                                <rect key="frame" x="3" y="35" width="107" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="eCv-E5-QfE"/>
                                     <constraint firstAttribute="height" constant="45" id="qBl-sF-zjs"/>
@@ -374,11 +374,11 @@
                             <constraint firstItem="GIW-Jg-ywa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="UVr-Cu-Pd8"/>
                             <constraint firstItem="FT4-L0-4uA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="110" id="VQi-fB-Fot"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Z4S-TT-Sg8"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eXA-sQ-EEB" secondAttribute="bottom" constant="8" id="eJt-gu-bye"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eXA-sQ-EEB" secondAttribute="bottom" constant="12" id="eJt-gu-bye"/>
                             <constraint firstItem="eXA-sQ-EEB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="3" id="jZj-HW-fvp"/>
                             <constraint firstItem="1wb-iz-sJt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="u9d-uk-Zd1"/>
                             <constraint firstItem="1wb-iz-sJt" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="uql-4p-YSG"/>
-                            <constraint firstItem="gvf-9z-Pqb" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="30" id="vXa-QC-a2w" userLabel="Delete.top = top + 30"/>
+                            <constraint firstItem="gvf-9z-Pqb" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="35" id="vXa-QC-a2w" userLabel="Delete.top = top + 30"/>
                             <constraint firstItem="ncg-as-6m8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="wiT-eN-daX"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -406,7 +406,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="639.84375" y="-420.703125"/>
+            <point key="canvasLocation" x="639.13043478260875" y="-421.46739130434787"/>
         </scene>
         <!--Insert View Controller-->
         <scene sceneID="9CG-wg-Kx1">
