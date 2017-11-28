@@ -121,11 +121,14 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                     if(pages.key != "name" && pages.key != "CoverStyle" && pages.key != "LastAccessed" ) {
                         var pageContent = [String]()
                         while let content = enumContent.nextObject() as? DataSnapshot {
-                            let contentVal = content.value as! String
-                            if(content.key != "color"){
+                            var contentVal = content.value as! String
+                            if(content.key != "color" ){
+                                if (content.key == "empty"){
+                                    contentVal = " "
+                                }
                                 pageContent.append(contentVal)
                             }
-                            else{
+                            else {
                                 //update page struct to handle
                             }
                         }

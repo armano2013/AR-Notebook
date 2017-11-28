@@ -301,12 +301,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             currentPageNode = pageNode
             self.bookNode?.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
-            //          page.currentPageNode = pageNode
-            //           pageStack.append(page)
-            //            topTempNodeContent = "empty"
-            //            bottomTempNodeContent = "empty"
             addPageNum()
-            //            print(pageStack.count)
         }
         else{//book error
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -615,6 +610,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                     node.position = SCNVector3(0,0, 0.01)
+                                    node.name = "content"
                                     self.lastNode.append(node)
                                     print("current page in pass", self.currentPageNode?.name)
                                     let page = self.pages[i-1]
@@ -640,6 +636,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                     node.position = SCNVector3(0,0, 0.001)
                                     self.lastNode.append(node)
+                                    node.name = "content"
                                     print("current page in pass:", self.currentPageNode?.name)
                                     let page = self.pages[i-1]
                                     page.childNode(withName: "Bottom node", recursively: false)?.addChildNode(node)
@@ -1034,7 +1031,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         //probably need to also check if shared flag? Dont need to listen for changes on own notebook.
         if self.retrievedFlag {
             //connect listener to notebook to see if anything changes.
-            //attachEventListeners()
+            attachEventListeners()
         }
     }
     func attachEventListeners(){
