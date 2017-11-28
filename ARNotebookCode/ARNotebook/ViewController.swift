@@ -568,14 +568,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    func passText(text: String, f: Int = 0) {
+    func passText(text: String, f: Int = 0, i: Int = 0) {
         if(f == 0) {
             dismiss(animated: true, completion: nil)
         }
         if bookNode != nil && currentPageNode != nil{
             if template == "single"{
                 if selectedTemplate != nil{
-                    let tempNode = selectedTemplate
+                   // let tempNode = currentPageNode?.childNode(withName: "temp", recursively: false)
                     //check to see if the content is a sotrage url - which means its an image.
                     if text.range(of:"firebasestorage.googleapis.com") != nil {
                         if let page = currentPageNode {
@@ -587,7 +587,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                 node.name = "content"
                                 node.position = SCNVector3(0,0, 0.01)
                                 self.lastNode.append(node)
-                                self.selectedTemplate.addChildNode(node)
+                                let page = self.pages[i-1]
+                                page.childNode(withName: "Single node", recursively: false)?.addChildNode(node)
                             }).resume()
                         }
                         
@@ -615,7 +616,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                     node.position = SCNVector3(0,0, 0.01)
                                     self.lastNode.append(node)
-                                   self.selectedTemplate.addChildNode(node)
+                                    print("current page in pass", self.currentPageNode?.name)
+                                    let page = self.pages[i-1]
+                                    page.childNode(withName: "Top node", recursively: false)?.addChildNode(node)                                   //self.topTempNode?.addChildNode(node)
                                 }).resume()
                             }
                         }
@@ -637,8 +640,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                     node.position = SCNVector3(0,0, 0.001)
                                     self.lastNode.append(node)
+                                    print("current page in pass:", self.currentPageNode?.name)
+                                    let page = self.pages[i-1]
+                                    page.childNode(withName: "Bottom node", recursively: false)?.addChildNode(node)
                                     //self.bottomTempNode?.addChildNode(node)
-                                    self.selectedTemplate.addChildNode(node)
                                 }).resume()
                             }
                         }
@@ -938,7 +943,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
             node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             node.position = SCNVector3(0,0, 0.001)
-            node.name = "Single Template"
+            node.name = "Single node"
             page.addChildNode(node)
             templateNode = node
             templateExists = true
@@ -977,19 +982,22 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 oneSlotTemplate()
                 template = temp
                  self.selectedTemplate = self.templateNode
-                passText(text: content, f: 1)
+                guard let index = currentPageNode?.name else {return}
+                passText(text: content, f: 1, i: Int(index)!)
             }
             else if temp == "double"{
                 createPage()
                 twoSlotTemplate()
                 template = temp
                 self.selectedTemplate = self.topTempNode
-                passText(text: content, f: 1)
+                guard let index = currentPageNode?.name else {return}
+                passText(text: content, f: 1, i: Int(index)!)
             }
             else if temp == "doubleSecond" {
                 template = "double"
+               guard let index = currentPageNode?.name else {return}
                 self.selectedTemplate = self.bottomTempNode
-                passText(text: content, f:1)
+                passText(text: content, f:1, i: Int(index)!)
             }
         }
         else {
@@ -1026,7 +1034,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         //probably need to also check if shared flag? Dont need to listen for changes on own notebook.
         if self.retrievedFlag {
             //connect listener to notebook to see if anything changes.
-            attachEventListeners()
+            //attachEventListeners()
         }
     }
     func attachEventListeners(){
