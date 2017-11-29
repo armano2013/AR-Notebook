@@ -211,7 +211,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CGQ-qs-Ix6" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="1HY-xK-Lqw" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-371.01449275362324" y="738.58695652173924"/>
+            <point key="canvasLocation" x="39" y="1154"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -494,7 +494,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mJ6-ff-Ffs" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="fsJ-kF-Ing" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1667" y="563"/>
+            <point key="canvasLocation" x="1121" y="1093"/>
         </scene>
         <!--Share View Controller-->
         <scene sceneID="g4S-ev-LYG">
@@ -527,7 +527,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KZk-iF-gcV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3210" y="304"/>
+            <point key="canvasLocation" x="2696" y="-769"/>
         </scene>
         <!--Add Page View Controller-->
         <scene sceneID="Be6-hA-khY">
@@ -682,7 +682,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f5E-0J-vm8" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="wPE-lQ-U0v" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2361.71875" y="-170.5078125"/>
+            <point key="canvasLocation" x="2633" y="557"/>
         </scene>
     </scenes>
     <resources>
@@ -702,7 +702,7 @@
         <image name="undo" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fmo-nK-Nk9"/>
-        <segue reference="2FT-pc-jpI"/>
+        <segue reference="MRj-bY-e0I"/>
+        <segue reference="Noy-7X-jaB"/>
     </inferredMetricsTieBreakers>
 </document>
