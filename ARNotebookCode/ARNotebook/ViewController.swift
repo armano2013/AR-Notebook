@@ -315,6 +315,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.bookNode?.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
             addPageNum()
+            self.enablePageButtons()
         }
         else{//book error
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -322,20 +323,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }
-        pageNode.position = SCNVector3(0.0, 0.02 + offset, 0)
-        pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
-        pages.append(pageNode)
-        pageNode.name = String(pages.count)
-        currentPageNode = pageNode
-        self.bookNode?.addChildNode(pageNode)
-        currentPage = Int((currentPageNode?.name)!)!
-        //          page.currentPageNode = pageNode
-        //           pageStack.append(page)
-        //            topTempNodeContent = "empty"
-        //            bottomTempNodeContent = "empty"
-        addPageNum()
-        //            print(pageStack.count)
-        self.enablePageButtons()
     }
 
     func addPageNum () {
