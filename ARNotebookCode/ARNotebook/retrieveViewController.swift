@@ -38,6 +38,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var sharedNotebookID : String = ""
     var accessToWrite : Bool = false
     var prevVC: shareViewController!
+    var notebookID : String = "0"
     
     /*
      -----
@@ -62,11 +63,11 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidAppear(animated)
         self.tableView.reloadData()
     }
-    
+    /*
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.dismiss(animated: true, completion: nil)
     }
-    
+    */
     @IBOutlet weak var tableView: UITableView!
     
     @IBAction func logOutFacebook(_ sender: Any) {
@@ -121,12 +122,21 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                     if(pages.key != "name" && pages.key != "CoverStyle" && pages.key != "LastAccessed" ) {
                         var pageContent = [String]()
                         while let content = enumContent.nextObject() as? DataSnapshot {
-                            let contentVal = content.value as! String
-                            if(content.key != "color"){
-                                pageContent.append(contentVal)
+                            var contentVal = content.value as! String
+                            if(content.key != "color" ){
+                                if (content.key == "empty" && contentVal == "false"){
+                                    continue
+                                }
+                                else if (content.key == "empty" && contentVal == "true"){
+                                    contentVal = " "
+                                    pageContent.append(contentVal)
+                                }
+                                else{
+                                    pageContent.append(contentVal)
+                                }
                             }
-                            else{
-                                //update page struct to handle
+                            else {
+                                //update page struct to handle retrieved page color
                             }
                         }
                         let newPage = Page(content: pageContent)
@@ -197,6 +207,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             mainVC?.retrievedFlag = true
             mainVC?.pageObjectArray = self.pageObjArray
             mainVC?.accessToWrite  = self.accessToWrite
+            mainVC?.notebookID = Int(self.notebookID)!
+            mainVC?.cameFromShare = true
             mainVC?.prevVC = self
             if(self.accessToWrite) {
                  mainVC?.notebookID = Int(self.sharedNotebookID)! //if the user can write update the notebookID flag so the updates are managed in DB

@@ -16,6 +16,7 @@ protocol addPageDelegate {
     var currentPage: Int {get set}
     func addPage(text : String)
     var accessToWrite: Bool {get set}
+    var notebookID: Int {get set}
 }
 
 class addPageViewController: UIViewController {
@@ -51,6 +52,8 @@ class addPageViewController: UIViewController {
     @IBAction func addTwoSlotPage(_ sender: Any) {
         if (delegate?.accessToWrite)! {
             let string = "double"
+            //add to database even if empty
+            savePage()
             delegate?.addPage(text : string)
         }
         else{
@@ -61,6 +64,7 @@ class addPageViewController: UIViewController {
     @IBAction func addOneSlotPage(_ sender: Any) {
         if (delegate?.accessToWrite)! {
             let string = "single"
+            savePage()
             delegate?.addPage(text : string)
         }
         else{
@@ -71,6 +75,9 @@ class addPageViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.dismiss(animated: true, completion: nil)
+    }
+    func savePage(){
+        self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").setValue(["empty": "true"])
     }
 }
 

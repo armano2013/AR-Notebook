@@ -57,6 +57,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var templateExists : Bool = false
     var notebookExists : Bool = false
     var retrievedFlag : Bool = false
+    var cameFromShare: Bool = false
     var pageObjectArray = [Page]()
     var selectedTemplate : SCNNode!
     var accessToWrite : Bool = true
@@ -292,14 +293,34 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func createPage(){
-        var offset = 0.0
-        let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
-        //@FIXME have fixed hieght for now bounding box isnt working
-        pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
-        pageNode.geometry?.firstMaterial?.isDoubleSided = true
-        //@FIXME issues with y position here, the page isnt placed right ontop of the book
-        if(pages.count != 0){
-            offset = Double(pages.count) * 0.02
+        if self.notebookExists == true || self.retrievedFlag == true  {
+            var offset = 0.0
+            let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
+            //@FIXME have fixed hieght for now bounding box isnt working
+            
+            pageNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "page")
+            
+            pageNode.geometry?.firstMaterial?.isDoubleSided = true
+            //@FIXME issues with y position here, the page isnt placed right ontop of the book
+            
+            
+            if(pages.count != 0){
+                offset = Double(pages.count) * 0.02
+            }
+            pageNode.position = SCNVector3(0.0, 0.02 + offset, 0)
+            pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
+            pages.append(pageNode)
+            pageNode.name = String(pages.count)
+            currentPageNode = pageNode
+            self.bookNode?.addChildNode(pageNode)
+            currentPage = Int((currentPageNode?.name)!)!
+            addPageNum()
+        }
+        else{//book error
+            let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
         }
         pageNode.position = SCNVector3(0.0, 0.02 + offset, 0)
         pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
@@ -335,48 +356,60 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Tap Interactions
      -----
      */
+    func setPagesForSwipe(previous: Int) -> SCNNode{
+        var offset = 0.0
+        let turnPage = pages[previous]
+        if(previous != 0){
+            offset = Double(previous) * 0.02;
+        }
+        turnPage.position = SCNVector3(-0.9, 0.021 + offset, 0)
+        return turnPage
+    }
+    func leftSwipeAnimation(turnPage: SCNNode, currentPointer: Int){
+        var i = currentPointer
+        var x = Int(turnPage.name!)!
+        turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
+        turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
+        turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
+        x -= 1
+        repeat {
+            currentPageNode?.isHidden = true;
+            i -= 1
+            currentPageNode = self.pages[i]
+        } while x != i
+        currentPageNode = turnPage
+        currentPage = Int((currentPageNode?.name)!)!
+    }
+    func rightSwipeAnimation(turnPage: SCNNode, currentPointer: Int){
+        var i = currentPointer
+        let x = Int(turnPage.name!)!
+        turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
+        turnPage.runAction(SCNAction.rotate(by: -.pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
+        turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
+         while x != i  {
+           turnPage.isHidden = false
+            i += 1
+        }
+        currentPageNode = turnPage
+        currentPage = Int((currentPageNode?.name)!)!
+    }
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
-        if (pages.count > 0 && currentPage > 1) {
-            var offset = 0.0
-            let  i = Int((currentPageNode?.name)!)
-            let previous = i! - 2;
-            let turnPage = pages[previous]
-            //need to calculate some offset.
-            
-            if(previous != 0){
-                offset = Double(previous) * 0.02;
-            }
-            turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
-            turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
-            turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, 0.021 + offset, 0)
-            currentPageNode?.isHidden = true;
-            currentPageNode = turnPage
-            currentPage = Int((currentPageNode?.name)!)!
+        if (pages.count > 1 && (currentPage <= Int(pages.count - 1))) {
+            let i = Int((currentPageNode?.name)!)
+            let previous = i!;
+            let turnPage = setPagesForSwipe(previous: previous)
+            rightSwipeAnimation(turnPage: turnPage, currentPointer: currentPage)
         }
     }
     
     @IBAction func leftSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page forward
-        
-        if (pages.count > 1 && (currentPage <= Int(pages.count - 1))) {
-            var offset = 0.0
-            let i = Int((currentPageNode?.name)!)
-            let previous = i!;
-            let turnPage = pages[previous]
-            if(previous != 0){
-                offset = Double(previous) * 0.02;
-            }
-            // Point in the -z direction
-            turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
-            turnPage.runAction(SCNAction.rotate(by: -.pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
-            turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, 0.021 + offset, 0)
-            turnPage.isHidden = false
-            currentPageNode = turnPage
-            currentPage = Int((currentPageNode?.name)!)!
-            
+        if (pages.count > 0 && currentPage > 1) {
+            let  i = Int((currentPageNode?.name)!)
+            let previous = i! - 2;
+            let turnPage = setPagesForSwipe(previous: previous)
+            leftSwipeAnimation(turnPage: turnPage, currentPointer: i!)
         }
     }
     
@@ -569,10 +602,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    func passText(text: String, f: Int = 0, i: Int = 0) {
-        if(f == 0) {
-            dismiss(animated: true, completion: nil)
-        }
+    func passText(text: String, i: Int = 0) {
+       print("presenting view controller", self.presentingViewController)
         if bookNode != nil && currentPageNode != nil{
             if template == "single"{
                 if selectedTemplate != nil{
@@ -596,9 +627,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         
                     }
                     else{
-                        if(f == 0){
-                            addTopContent(content1: text)
-                        }
+
                         createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
                     }
                 }
@@ -617,6 +646,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                     node.position = SCNVector3(0,0, 0.01)
+                                    node.name = "content"
                                     self.lastNode.append(node)
                                     print("current page in pass", self.currentPageNode?.name)
                                     let page = self.pages[i-1]
@@ -625,9 +655,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             }
                         }
                         else{
-                            if(f == 0){
-                                addTopContent(content1: text)
-                            }
                             createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
@@ -642,6 +669,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
                                     node.position = SCNVector3(0,0, 0.001)
                                     self.lastNode.append(node)
+                                    node.name = "content"
                                     print("current page in pass:", self.currentPageNode?.name)
                                     let page = self.pages[i-1]
                                     page.childNode(withName: "Bottom node", recursively: false)?.addChildNode(node)
@@ -650,9 +678,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             }
                         }
                         else{
-                            if(f == 0){
-                                addBottomContent(content2: text)
-                            }
                             createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
@@ -664,15 +689,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
     }
-    
-    func addTopContent(content1: String){
-        ref.child("notebooks/\((self.notebookID))/\(self.currentPage)").updateChildValues(["content1" : content1])
-    }
-    
-    func addBottomContent(content2: String){
-        ref.child("notebooks/\((self.notebookID))/\(self.currentPage)").updateChildValues(["content2" : content2])
-    }
-    
     // functions to pass the image through to the VIEW CONTROLLER
     func passImage(image: UIImage) {
         dismiss(animated: true, completion: nil)
@@ -746,6 +762,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func clearBook(){
+        //remove the listeners from firebase
+        if self.cameFromShare{
+            ref.removeAllObservers()
+        }
         //dismiss(animated: true, completion: nil) might delete if this is in the main view controller
         self.bookNode?.removeFromParentNode()
         self.pages.removeAll()
@@ -967,7 +987,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 template = temp
                  self.selectedTemplate = self.templateNode
                 guard let index = currentPageNode?.name else {return}
-                passText(text: content, f: 1, i: Int(index)!)
+                passText(text: content, i: Int(index)!)
             }
             else if temp == "double"{
                 createPage()
@@ -975,13 +995,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 template = temp
                 self.selectedTemplate = self.topTempNode
                 guard let index = currentPageNode?.name else {return}
-                passText(text: content, f: 1, i: Int(index)!)
+                passText(text: content, i: Int(index)!)
             }
             else if temp == "doubleSecond" {
                 template = "double"
                guard let index = currentPageNode?.name else {return}
                 self.selectedTemplate = self.bottomTempNode
-                passText(text: content, f:1, i: Int(index)!)
+                passText(text: content, i: Int(index)!)
             }
         }
         else {
@@ -993,7 +1013,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addContent(id: String, pageObjs: [Page]) {
         self.notebookExists = true
-        notebookID = Int(id)!
+        self.notebookID = Int(id)!
         var t = "single"
         for page in pageObjs {
             let end = page.content.count - 1
@@ -1016,42 +1036,47 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         //probably need to also check if shared flag? Dont need to listen for changes on own notebook.
-        if self.retrievedFlag {
+        if self.retrievedFlag && self.cameFromShare {
             //connect listener to notebook to see if anything changes.
-            //attachEventListeners()
+            attachEventListeners()
+           
         }
     }
     func attachEventListeners(){
-        let postRef = self.ref.child("notebooks/\(notebookID)")
+        let postRef = self.ref.child("notebooks/\(self.notebookID)")
         postRef.observe(.childChanged, with: { (snapshot) -> Void in
             print("something changed")
             print("snapshot key:", snapshot.key)
             print("snapshot value:", snapshot.value)
             print("snapshot children count", snapshot.childrenCount)
-            if snapshot.childrenCount == 1 {
+            if snapshot.childrenCount == 2 {
                 self.handleSingleChildChange(snapshot: snapshot)
             }
-            else if snapshot.childrenCount == 2 {
+            else if snapshot.childrenCount == 3 {
                 self.handleDoubleChildChange(snapshot: snapshot)
             }
         })
     }
     func handleSingleChildChange(snapshot: DataSnapshot){
-        print("snapshot value from other func:", snapshot.children)
-        moveCurrentPage(i: snapshot.key)
+        if(Int(snapshot.key) != currentPage) {
+            moveCurrentPage(i: snapshot.key)
+        }
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
-            print(page.value)
-            let text = page.value as! String
-            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
-            createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+            if(page.key == "content1") {
+                let text = page.value as! String
+                selectedTemplate = currentPageNode?.childNode(withName: "Single node", recursively: true)
+                selectedTemplate.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+            }
         }
     }
     func handleDoubleChildChange(snapshot: DataSnapshot) {
-         moveCurrentPage(i: snapshot.key)
+        if(Int(snapshot.key) != currentPage) {
+            moveCurrentPage(i: snapshot.key)
+        }
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
-            print(page.value)
             let text = page.value as! String
             //let textNode = currentPageNode?.childNode(withName: "text", recursively: true)
             if (page.key == "content1"){
@@ -1069,15 +1094,22 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
             }
         }
-        //reset ages to last for testing purposes
-        currentPageNode = self.pages.last
-        
     }
     func moveCurrentPage(i: String){
         if let index = Int(i) {
             //check to see if we need to call right/left swipe here to move pages forward backward.
-            currentPageNode = self.pages[index - 1]
-            //try to do some animation if needed.
+            let i = index - 1
+            let testPage = self.pages[i]
+            let turnPage = setPagesForSwipe(previous: i)
+            guard let currentPageIndex = Int((currentPageNode?.name!)!) else {return}
+            guard let turnPageIndex = Int(testPage.name!) else {return}
+            if turnPageIndex < currentPageIndex {
+                //right swipe
+               leftSwipeAnimation(turnPage: turnPage, currentPointer: currentPageIndex)
+            }
+            else{
+                rightSwipeAnimation(turnPage: turnPage, currentPointer: currentPageIndex)
+            }
         }
     }
     
