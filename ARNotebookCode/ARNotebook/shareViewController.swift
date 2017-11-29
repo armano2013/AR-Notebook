@@ -20,6 +20,7 @@ class shareViewController: UIViewController {
     var longLink: URL?
     var shortLink: URL?
     var delegate : shareBookDelegate?
+    @IBOutlet weak var accessLabel: UILabel!
     /*
      -----
      Generic Set Up
@@ -27,6 +28,15 @@ class shareViewController: UIViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        var text = accessLabel.text
+        if accessType {
+            text! += "Write"
+            accessLabel.text = text
+        }
+        else {
+            text! += "Read Only"
+            accessLabel.text = text
+        }
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -38,6 +48,7 @@ class shareViewController: UIViewController {
             performSegue(withIdentifier: "retrieveBooks", sender: self)
         }
     }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "retrieveBooks"
         {
