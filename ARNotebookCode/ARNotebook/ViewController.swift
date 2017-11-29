@@ -1140,8 +1140,12 @@ extension Int {
 class alertHelper {
     func alert(fromController controller: UIViewController, title: String = "", message: String) {
         let alertController2 = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in}
+        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
+            if !(controller is ViewController) {
+                controller.dismiss(animated: true, completion: nil)
+            }
+        }
         alertController2.addAction(cancelAction)
-        controller.present(alertController2, animated: true, completion: nil)
+        controller.present(alertController2, animated: true, completion:nil)
     }
 }
