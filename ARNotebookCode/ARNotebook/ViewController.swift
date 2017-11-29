@@ -59,6 +59,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var retrievedFlag : Bool = false
     var pageObjectArray = [Page]()
     var selectedTemplate : SCNNode!
+    var previousSelectedTemplate :SCNNode?
     var accessToWrite : Bool = true
     var alert = alertHelper()
     var prevVC: retrieveViewController!
@@ -243,11 +244,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func renderNode(node: SCNNode) {
         if template == "single"{
+            selectedTemplate.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             let temp = selectedTemplate
             lastNode.append(node)
             temp?.addChildNode(node)
         }
         else if template == "double"{
+            selectedTemplate.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             if selectedTemplate != nil{
                 let tempNode = selectedTemplate
                 lastNode.append(node)
@@ -394,26 +397,44 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
     }
+   
     func selectTemplate(hitTest : [SCNHitTestResult]){
         if self.templateExists == true {
             self.hitResult2 = hitTest.first
             let node = hitTest.first?.node
             if node == self.topTempNode{
-                print("Top node selected")
                 self.selectedTemplate = node
+                print("Top node selected")
+                templateSelectColorChange(node: node!)
+                print(node)
             }
             else if node == self.bottomTempNode{
                 self.selectedTemplate = node
                 print("Bottom node selected")
+                templateSelectColorChange(node: node!)
+                print(node)
             }
             else if node == self.templateNode{
                 self.selectedTemplate = node
                 print("Single template selected")
+                templateSelectColorChange(node: node!)
+                print(node)
             }
             else{
                 print("cant find a node")
             }
         }
+    }
+    func templateSelectColorChange(node :SCNNode){
+        templateDeselectColorChange()
+        if node == selectedTemplate{
+            node.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+            self.previousSelectedTemplate = node
+        }
+    }
+    
+    func templateDeselectColorChange(){
+        previousSelectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
     }
     
     func addBook(hitTestResult: ARHitTestResult) {
