@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="ipad10_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,40 +22,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Ha-Xg-RKH">
-                                <rect key="frame" x="0.0" y="105" width="414" height="175"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="175" id="Aue-e5-AMX"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="175" id="Hah-cu-Hkm"/>
-                                </constraints>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PVk-6h-dJB">
+                                <rect key="frame" x="0.0" y="45" width="329.5" height="209.5"/>
                                 <fontDescription key="fontDescription" name="Zapfino" family="Zapfino" pointSize="62"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVn-k6-6nT">
-                                <rect key="frame" x="189" y="218" width="83" height="68"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ypE-rm-2uJ">
+                                <rect key="frame" x="175" y="170" width="62" height="84.5"/>
                                 <fontDescription key="fontDescription" name="Zapfino" family="Zapfino" pointSize="25"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon" translatesAutoresizingMaskIntoConstraints="NO" id="bhg-q6-oJ7">
-                                <rect key="frame" x="0.0" y="174" width="834" height="934"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="744" id="7xJ-wV-lFM"/>
-                                </constraints>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cov2SMALL23" translatesAutoresizingMaskIntoConstraints="NO" id="bhg-q6-oJ7">
+                                <rect key="frame" x="43" y="238" width="746" height="655"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="bhg-q6-oJ7" secondAttribute="bottom" constant="4" id="GZY-J1-816"/>
-                            <constraint firstItem="bhg-q6-oJ7" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="VFf-AT-UJD"/>
+                            <constraint firstItem="bhg-q6-oJ7" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="218" id="Dnn-Km-3E4"/>
+                            <constraint firstItem="PVk-6h-dJB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="25" id="ICv-00-4dv"/>
+                            <constraint firstItem="ypE-rm-2uJ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="150" id="Jfd-FG-bmu"/>
+                            <constraint firstItem="bhg-q6-oJ7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="43" id="PRY-xq-eBL"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bhg-q6-oJ7" secondAttribute="trailing" constant="45" id="Q6W-Ae-BlR"/>
                             <constraint firstItem="bhg-q6-oJ7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="XZg-we-w3q"/>
-                            <constraint firstItem="9Ha-Xg-RKH" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="85" id="drt-Ze-HGl"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9Ha-Xg-RKH" secondAttribute="trailing" constant="420" id="hCy-Q7-xvX"/>
-                            <constraint firstItem="bhg-q6-oJ7" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="hiL-Mr-GGs"/>
-                            <constraint firstItem="bhg-q6-oJ7" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="154" id="jYe-Im-R4z"/>
-                            <constraint firstItem="9Ha-Xg-RKH" firstAttribute="leading" secondItem="bhg-q6-oJ7" secondAttribute="leading" id="v3F-qL-Mhj"/>
+                            <constraint firstItem="ypE-rm-2uJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="175" id="ZMF-o8-xVc"/>
+                            <constraint firstItem="bhg-q6-oJ7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="43" id="d52-Rs-K60"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="bhg-q6-oJ7" secondAttribute="bottom" constant="219" id="fDS-Xk-erJ"/>
+                            <constraint firstItem="PVk-6h-dJB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="hcB-nj-gaO"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -66,6 +60,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Icon" width="115" height="72"/>
+        <image name="cov2SMALL23" width="300" height="279"/>
     </resources>
 </document>

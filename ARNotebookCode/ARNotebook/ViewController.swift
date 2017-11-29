@@ -77,6 +77,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if prevVC != nil {
             prevVC.dismiss(animated: false, completion: nil)
         }
+        self.disableButtons()
     }
     
     override func didReceiveMemoryWarning() {
@@ -98,6 +99,42 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
         addTimer()
+    }
+    
+    /*
+     -----
+     Outlets to buttons
+     -----
+     */
+    @IBOutlet weak var deletePageButton: UIButton!
+    @IBOutlet weak var dismissButton: UIButton!
+    @IBOutlet weak var shareButton: UIButton!
+    @IBOutlet weak var undoButton: UIButton!
+    @IBOutlet weak var addPageButton: UIButton!
+    @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var insertButton: UIButton!
+    
+    func disableButtons(){
+        self.deletePageButton.isEnabled = false
+        self.dismissButton.isEnabled = false
+        self.shareButton.isEnabled = false
+        self.undoButton.isEnabled = false
+        self.addPageButton.isEnabled = false
+        self.editButton.isEnabled = false
+        self.insertButton.isEnabled = false
+    }
+    
+    func enableBookButtons(){
+        self.dismissButton.isEnabled = true
+        self.addPageButton.isEnabled = true
+        self.editButton.isEnabled = true
+    }
+    
+    func enablePageButtons(){
+        self.deletePageButton.isEnabled = true
+        self.undoButton.isEnabled = true
+        self.insertButton.isEnabled = true
+        self.shareButton.isEnabled = true
     }
     
     func addTimer(){
@@ -195,12 +232,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
             }
-            else {
-                let alertController = UIAlertController(title: "Nothing to Undo", message: "There is nothing you are able to undo", preferredStyle: UIAlertControllerStyle.alert)
-                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-                alertController.addAction(cancelAction)
-                self.present(alertController, animated: true, completion: nil)
-            }
         }
         else {
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
@@ -225,59 +256,40 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         return node;
     }
     func renderNode(node: SCNNode) {
-        if currentPageNode != nil {
-            if template == "single"{
-                let temp = selectedTemplate
-                lastNode.append(node)
-                temp?.addChildNode(node)
-            }
-            else if template == "double"{
-                if selectedTemplate != nil{
-                    let tempNode = selectedTemplate
-                    lastNode.append(node)
-                    tempNode?.addChildNode(node)
-                }
-                else if selectedTemplate != nil{
-                    let tempNode = selectedTemplate
-                    lastNode.append(node)
-                    bottomTempNode?.addChildNode(node)
-                    tempNode?.addChildNode(node)
-                }
-            }
+        if template == "single"{
+            let temp = selectedTemplate
+            lastNode.append(node)
+            temp?.addChildNode(node)
         }
-        else {
-            dismiss(animated: true, completion: nil)
-            let alertController = UIAlertController(title: "Error", message: "Please add a page before adding any text", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                //self.addPage(self)
+        else if template == "double"{
+            if selectedTemplate != nil{
+                let tempNode = selectedTemplate
+                lastNode.append(node)
+                tempNode?.addChildNode(node)
             }
-            alertController.addAction(cancelAction)
-            alertController.addAction(addPageAction)
-            self.present(alertController, animated: true, completion: nil)
+            else if selectedTemplate != nil{
+                let tempNode = selectedTemplate
+                lastNode.append(node)
+                bottomTempNode?.addChildNode(node)
+                tempNode?.addChildNode(node)
+            }
         }
     }
     
     func addPage(text: String){
         dismiss(animated: true, completion: nil)
-        if bookNode == nil {
-            let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding a page", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
+
+        if text == "single" {
+            createPage()
+            oneSlotTemplate()
+            template = text
         }
-        else{
-            if text == "single" {
-                createPage()
-                oneSlotTemplate()
-                template = text
-            }
-            else if text == "double"{
-                createPage()
-                twoSlotTemplate()
-                template = text
-            }
+        else if text == "double"{
+            createPage()
+            twoSlotTemplate()
+            template = text
         }
+        self.enablePageButtons()
     }
     
     func createPage(){
@@ -310,7 +322,22 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         }
+        pageNode.position = SCNVector3(0.0, 0.02 + offset, 0)
+        pageNode.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0)
+        pages.append(pageNode)
+        pageNode.name = String(pages.count)
+        currentPageNode = pageNode
+        self.bookNode?.addChildNode(pageNode)
+        currentPage = Int((currentPageNode?.name)!)!
+        //          page.currentPageNode = pageNode
+        //           pageStack.append(page)
+        //            topTempNodeContent = "empty"
+        //            bottomTempNodeContent = "empty"
+        addPageNum()
+        //            print(pageStack.count)
+        self.enablePageButtons()
     }
+
     func addPageNum () {
         if let pageNumberNode = currentPageNode{
             let node = SCNText(string: String(self.currentPage), extrusionDepth: 0.1)
@@ -420,17 +447,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             if node == self.topTempNode{
                 print("Top node selected")
                 self.selectedTemplate = node
-                print(node)
             }
             else if node == self.bottomTempNode{
                 self.selectedTemplate = node
                 print("Bottom node selected")
-                print(node)
             }
             else if node == self.templateNode{
                 self.selectedTemplate = node
                 print("Single template selected")
-                print(node)
             }
             else{
                 print("cant find a node")
@@ -473,6 +497,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.addContent(id: String(notebookID), pageObjs: self.pageObjectArray)
             self.setTime(id: String(notebookID))
             self.tapGestureEnabling()
+            self.enableBookButtons()
         }
     }
     
@@ -503,6 +528,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.setTime(id: String(notebookID))
         self.notebookExists = true
         self.tapGestureEnabling()
+        self.enableBookButtons()
     }
     
     func setTime(id: String){
@@ -583,6 +609,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 if selectedTemplate != nil{
                    // let tempNode = currentPageNode?.childNode(withName: "temp", recursively: false)
                     //check to see if the content is a sotrage url - which means its an image.
+
                     if text.range(of:"firebasestorage.googleapis.com") != nil {
                         if let page = currentPageNode {
                             let url = URL(string: text)
@@ -658,13 +685,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 else {
                     alertAddTemplate()
                 }
+
             }
-        }
-        else{ //error for if there is no book
-            let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            alertController.addAction(cancelAction)
-            self.present(alertController, animated: true, completion: nil)
         }
     }
     // functions to pass the image through to the VIEW CONTROLLER
@@ -688,22 +710,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     lastNode.append(node)
                     tempNode?.addChildNode(node)
                 }
+
             }
-            else { // no template selected
-                alertAddTemplate()
+            else if template == "double"{
+                let tempNode = selectedTemplate
+                let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                node.position = SCNVector3(0,0, 0.001)
+                lastNode.append(node)
+                tempNode?.addChildNode(node)
             }
         }
-        else { //error for no page
-            dismiss(animated: true, completion: nil)
-            let alertController = UIAlertController(title: "Error", message: "Please add a page before adding an image", preferredStyle: UIAlertControllerStyle.alert)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-            let addPageAction = UIAlertAction(title: "Add Page", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                //@FIXME Add page needs to call other view controller.
-                //self.addPage(self)
-            }
-            alertController.addAction(cancelAction)
-            alertController.addAction(addPageAction)
-            self.present(alertController, animated: true, completion: nil)
+        else { // no template selected
+            alertAddTemplate()
         }
     }
     
@@ -775,25 +794,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func deletePage(){
         dismiss(animated: true, completion: nil)
         if accessToWrite == true {
-            if  bookNode == nil || currentPageNode == nil{
-                let alertController = UIAlertController(title: "Error", message: "There is nothing to delete, Please add a book and page.", preferredStyle: UIAlertControllerStyle.alert)
-                let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-                alertController.addAction(cancelAction)
-                self.present(alertController, animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+            let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                self.currentPageNode?.removeFromParentNode()
+                self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
+                self.pages.removeLast()
+                self.currentPageNode = self.pages.last
             }
-            else {
-                let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
-                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
-                let deletePageAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
-                    self.currentPageNode?.removeFromParentNode()
-                    self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
-                    self.pages.removeLast()
-                    self.currentPageNode = self.pages.last
-                }
-                alertController.addAction(cancelAction)
-                alertController.addAction(deletePageAction)
-                self.present(alertController, animated: true, completion: nil)
-            }
+            alertController.addAction(cancelAction)
+            alertController.addAction(deletePageAction)
+            self.present(alertController, animated: true, completion: nil)
         }
         else{
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
@@ -825,11 +836,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
-    
-    func deleteFromDatabase() {
-        
-    }
-    
+
     /*
      -----
      Page Color Delegate Functions
@@ -845,7 +852,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 // maybe an array for all the pages to change all or a single page at a time ?
             }
             else{ //error for if there is no book
-                let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
+                let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding text", preferredStyle: UIAlertControllerStyle.alert)
                 let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true, completion: nil)
@@ -913,6 +920,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         alertController.addAction(addWriteAccess)
         self.present(alertController, animated: true, completion: nil)
     }
+    
     func showErrorShareAlert(){
         let alertController = UIAlertController(title: "Error", message: "You have no notebook visible to share!", preferredStyle: UIAlertControllerStyle.alert)
         let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
@@ -965,6 +973,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             templateExists = true
         }
     }
+    
     /*
      -----
      Retrieve delegate function
@@ -1103,6 +1112,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
     }
+    
     func alertAddTemplate() {
         let alertController = UIAlertController(title: "Error", message: "select a Template before adding content.", preferredStyle: UIAlertControllerStyle.alert)
         let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
@@ -1114,6 +1124,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Segue definitions
      -----
      */
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? insertViewController{
             destination.delegate = self
