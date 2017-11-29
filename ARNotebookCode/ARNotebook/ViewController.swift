@@ -209,27 +209,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     @IBAction func undo(_ sender: Any) {
         if accessToWrite == true {
-            if template == "single" {
+            if templateExists == true {
                 if let last = (lastNode.last){
                     last.removeFromParentNode()
                     lastNode.removeLast()
                 }
             }
-            else if template == "double"{
-                if topTempNodeContent == "full"{
-                    if let last = (lastNode.last){
-                        last.removeFromParentNode()
-                        lastNode.removeLast()
-                        topTempNodeContent = "empty"
-                    }
-                }
-                else if bottomTempNodeContent == "full"{
-                    if let last = (lastNode.last){
-                        last.removeFromParentNode()
-                        lastNode.removeLast()
-                        bottomTempNodeContent = "empty"
-                    }
-                }
+            else {
+                 alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
             }
         }
         else {
@@ -603,7 +590,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
                 else {
-                    alertAddTemplate()
+                    alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
                 }
             }
             else if template == "double"{
@@ -658,7 +645,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
                 else {
-                    alertAddTemplate()
+                    alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
                 }
 
             }
@@ -706,7 +693,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         else { // no template selected
-            alertAddTemplate()
+            alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
         }
     }
     
@@ -1081,12 +1068,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    func alertAddTemplate() {
-        let alertController = UIAlertController(title: "Error", message: "select a Template before adding content.", preferredStyle: UIAlertControllerStyle.alert)
-        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-        alertController.addAction(cancelAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
     /*
      -----
      Segue definitions
