@@ -29,7 +29,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TO" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ypE-rm-2uJ">
-                                <rect key="frame" x="175" y="142" width="448" height="105"/>
+                                <rect key="frame" x="120" y="142" width="558" height="105"/>
                                 <fontDescription key="fontDescription" name="Zapfino" family="Zapfino" pointSize="31"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -40,17 +40,17 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="ypE-rm-2uJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="120" id="3fI-Ec-SYf"/>
                             <constraint firstItem="bhg-q6-oJ7" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="218" id="Dnn-Km-3E4"/>
                             <constraint firstItem="PVk-6h-dJB" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="F5i-Is-x6s"/>
                             <constraint firstItem="PVk-6h-dJB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="1" id="ICv-00-4dv"/>
-                            <constraint firstItem="ypE-rm-2uJ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="122" id="Jfd-FG-bmu"/>
                             <constraint firstItem="bhg-q6-oJ7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="43" id="PRY-xq-eBL"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bhg-q6-oJ7" secondAttribute="trailing" constant="45" id="Q6W-Ae-BlR"/>
                             <constraint firstItem="PVk-6h-dJB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="UVC-YO-LFd"/>
-                            <constraint firstItem="ypE-rm-2uJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="175" id="ZMF-o8-xVc"/>
                             <constraint firstItem="ypE-rm-2uJ" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="15" id="as0-cA-Evb"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="bhg-q6-oJ7" secondAttribute="bottom" constant="219" id="fDS-Xk-erJ"/>
                             <constraint firstItem="PVk-6h-dJB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="hcB-nj-gaO"/>
+                            <constraint firstItem="ypE-rm-2uJ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="122" id="vVw-cg-8e3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

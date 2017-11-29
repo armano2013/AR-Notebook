@@ -342,10 +342,9 @@
                                     <action selector="deletePage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DiA-Li-xdb"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FT4-L0-4uA">
-                                <rect key="frame" x="105" y="35" width="96" height="45"/>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FT4-L0-4uA">
+                                <rect key="frame" x="105" y="34" width="96" height="45"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="RyK-NY-ibR"/>
                                     <constraint firstAttribute="height" constant="45" id="S8h-Om-iLa"/>
                                 </constraints>
                                 <state key="normal" title="Reset" image="refresh">
@@ -364,13 +363,14 @@
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="52S-uA-7os"/>
                             <constraint firstItem="ncg-as-6m8" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Aph-7A-YGe"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="20" id="FTP-3e-8mq" userLabel="Scene View.top = top + 10"/>
+                            <constraint firstItem="FT4-L0-4uA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="105" id="INC-CU-mgP"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1wb-iz-sJt" secondAttribute="trailing" id="LKP-Lb-Rtk"/>
-                            <constraint firstItem="FT4-L0-4uA" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="OqK-zU-DU4"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="P2R-p2-pD4"/>
                             <constraint firstItem="FT4-L0-4uA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="105" id="VQi-fB-Fot"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Z4S-TT-Sg8"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eXA-sQ-EEB" secondAttribute="bottom" constant="12" id="eJt-gu-bye"/>
                             <constraint firstItem="eXA-sQ-EEB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="3" id="jZj-HW-fvp"/>
+                            <constraint firstItem="FT4-L0-4uA" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="14" id="ock-Dr-Ne8"/>
                             <constraint firstItem="1wb-iz-sJt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="u9d-uk-Zd1"/>
                             <constraint firstItem="1wb-iz-sJt" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="uql-4p-YSG"/>
                             <constraint firstItem="gvf-9z-Pqb" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="35" id="vXa-QC-a2w" userLabel="Delete.top = top + 30"/>
@@ -511,10 +511,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="LKC-mn-2XH" firstAttribute="bottom" secondItem="fXS-KD-Nr0" secondAttribute="bottom" constant="368" id="06D-fF-lMm"/>
-                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="top" secondItem="LKC-mn-2XH" secondAttribute="top" constant="318" id="Ock-Tr-tbH"/>
-                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="leading" secondItem="LKC-mn-2XH" secondAttribute="leading" constant="122" id="iUH-7y-zJ9"/>
-                            <constraint firstItem="LKC-mn-2XH" firstAttribute="trailing" secondItem="fXS-KD-Nr0" secondAttribute="trailing" constant="122" id="iys-dT-xIN"/>
+                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="leading" secondItem="LKC-mn-2XH" secondAttribute="leading" constant="122" id="BPG-jr-HwR"/>
+                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="top" secondItem="LKC-mn-2XH" secondAttribute="top" constant="318" id="p9m-5D-Sfk"/>
+                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="centerX" secondItem="oQs-Pg-oif" secondAttribute="centerX" id="sQe-J6-Fb6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="LKC-mn-2XH"/>
                     </view>
