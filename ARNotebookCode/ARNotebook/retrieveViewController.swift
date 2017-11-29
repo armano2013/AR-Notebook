@@ -38,6 +38,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     var sharedNotebookID : String = ""
     var accessToWrite : Bool = false
     var prevVC: shareViewController!
+    var notebookID : String = "0"
     
     /*
      -----
@@ -206,6 +207,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             mainVC?.retrievedFlag = true
             mainVC?.pageObjectArray = self.pageObjArray
             mainVC?.accessToWrite  = self.accessToWrite
+            mainVC?.notebookID = Int(self.notebookID)!
             mainVC?.cameFromShare = true
             mainVC?.prevVC = self
             if(self.accessToWrite) {

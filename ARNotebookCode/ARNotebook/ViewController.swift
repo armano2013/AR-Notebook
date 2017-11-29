@@ -329,48 +329,60 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Tap Interactions
      -----
      */
+    func setPagesForSwipe(previous: Int) -> SCNNode{
+        var offset = 0.0
+        let turnPage = pages[previous]
+        if(previous != 0){
+            offset = Double(previous) * 0.02;
+        }
+        turnPage.position = SCNVector3(-0.9, 0.021 + offset, 0)
+        return turnPage
+    }
+    func leftSwipeAnimation(turnPage: SCNNode, currentPointer: Int){
+        var i = currentPointer
+        var x = Int(turnPage.name!)!
+        turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
+        turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
+        turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
+        x -= 1
+        repeat {
+            currentPageNode?.isHidden = true;
+            i -= 1
+            currentPageNode = self.pages[i]
+        } while x != i
+        currentPageNode = turnPage
+        currentPage = Int((currentPageNode?.name)!)!
+    }
+    func rightSwipeAnimation(turnPage: SCNNode, currentPointer: Int){
+        var i = currentPointer
+        let x = Int(turnPage.name!)!
+        turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
+        turnPage.runAction(SCNAction.rotate(by: -.pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
+        turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
+         while x != i  {
+           turnPage.isHidden = false
+            i += 1
+        }
+        currentPageNode = turnPage
+        currentPage = Int((currentPageNode?.name)!)!
+    }
     @IBAction func rightSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page backward?
-        if (pages.count > 0 && currentPage > 1) {
-            var offset = 0.0
-            let  i = Int((currentPageNode?.name)!)
-            let previous = i! - 2;
-            let turnPage = pages[previous]
-            //need to calculate some offset.
-            
-            if(previous != 0){
-                offset = Double(previous) * 0.02;
-            }
-            turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
-            turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
-            turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, 0.021 + offset, 0)
-            currentPageNode?.isHidden = true;
-            currentPageNode = turnPage
-            currentPage = Int((currentPageNode?.name)!)!
+        if (pages.count > 1 && (currentPage <= Int(pages.count - 1))) {
+            let i = Int((currentPageNode?.name)!)
+            let previous = i!;
+            let turnPage = setPagesForSwipe(previous: previous)
+            rightSwipeAnimation(turnPage: turnPage, currentPointer: currentPage)
         }
     }
     
     @IBAction func leftSwipe(_ sender: Any) {
         //if there is more than one page and the current page node is the last one in the array turn the page forward
-        
-        if (pages.count > 1 && (currentPage <= Int(pages.count - 1))) {
-            var offset = 0.0
-            let i = Int((currentPageNode?.name)!)
-            let previous = i!;
-            let turnPage = pages[previous]
-            if(previous != 0){
-                offset = Double(previous) * 0.02;
-            }
-            // Point in the -z direction
-            turnPage.pivot = SCNMatrix4MakeTranslation(-0.9, 0, 0)
-            turnPage.runAction(SCNAction.rotate(by: -.pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 1))
-            turnPage.runAction(SCNAction.rotate(by: .pi, around: SCNVector3(x: 0, y: 0, z: 1), duration: 0)) //rotate the rest of the way without animation
-            turnPage.position = SCNVector3(-0.9, 0.021 + offset, 0)
-            turnPage.isHidden = false
-            currentPageNode = turnPage
-            currentPage = Int((currentPageNode?.name)!)!
-            
+        if (pages.count > 0 && currentPage > 1) {
+            let  i = Int((currentPageNode?.name)!)
+            let previous = i! - 2;
+            let turnPage = setPagesForSwipe(previous: previous)
+            leftSwipeAnimation(turnPage: turnPage, currentPointer: i!)
         }
     }
     
@@ -731,6 +743,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func clearBook(){
+        //remove the listeners from firebase
+        if self.cameFromShare{
+            ref.removeAllObservers()
+        }
         //dismiss(animated: true, completion: nil) might delete if this is in the main view controller
         self.bookNode?.removeFromParentNode()
         self.pages.removeAll()
@@ -988,7 +1004,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addContent(id: String, pageObjs: [Page]) {
         self.notebookExists = true
-        notebookID = Int(id)!
+        self.notebookID = Int(id)!
         var t = "single"
         for page in pageObjs {
             let end = page.content.count - 1
@@ -1018,16 +1034,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     func attachEventListeners(){
-        let postRef = self.ref.child("notebooks/\(notebookID)")
+        let postRef = self.ref.child("notebooks/\(self.notebookID)")
         postRef.observe(.childChanged, with: { (snapshot) -> Void in
             print("something changed")
             print("snapshot key:", snapshot.key)
             print("snapshot value:", snapshot.value)
             print("snapshot children count", snapshot.childrenCount)
-            if snapshot.childrenCount == 1 {
+            if snapshot.childrenCount == 2 {
                 self.handleSingleChildChange(snapshot: snapshot)
             }
-            else if snapshot.childrenCount == 2 {
+            else if snapshot.childrenCount == 3 {
                 self.handleDoubleChildChange(snapshot: snapshot)
             }
         })
@@ -1065,14 +1081,23 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
             }
         }
-        //reset ages to last for testing purposes
-        currentPageNode = self.pages.last
-        
     }
     func moveCurrentPage(i: String){
         if let index = Int(i) {
             //check to see if we need to call right/left swipe here to move pages forward backward.
-            currentPageNode = self.pages[index - 1]
+            let i = index - 1
+            let testPage = self.pages[i]
+            let turnPage = setPagesForSwipe(previous: i)
+            guard let currentPageIndex = Int((currentPageNode?.name!)!) else {return}
+            guard let turnPageIndex = Int(testPage.name!) else {return}
+            if turnPageIndex < currentPageIndex {
+                //right swipe
+                rightSwipeAnimation(turnPage: turnPage, currentPointer: currentPageIndex)
+            }
+            else{
+                //left swipr
+                leftSwipeAnimation(turnPage: turnPage, currentPointer: currentPageIndex)
+            }
             //try to do some animation if needed.
         }
     }

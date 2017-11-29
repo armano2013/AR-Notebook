@@ -47,6 +47,7 @@ class shareViewController: UIViewController {
             retrieveVC?.sharedNotebookID = self.notebookID
             retrieveVC?.delegate?.retrievedFlag = true
             retrieveVC?.prevVC = self
+            retrieveVC?.notebookID = self.notebookID
         }
     }
    
