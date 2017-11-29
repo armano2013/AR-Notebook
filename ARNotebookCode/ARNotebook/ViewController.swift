@@ -1049,21 +1049,25 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         })
     }
     func handleSingleChildChange(snapshot: DataSnapshot){
-        print("snapshot value from other func:", snapshot.children)
-        moveCurrentPage(i: snapshot.key)
+        if(Int(snapshot.key) != currentPage) {
+            moveCurrentPage(i: snapshot.key)
+        }
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
-            print(page.value)
-            let text = page.value as! String
-            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
-            createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+            if(page.key == "content1") {
+                let text = page.value as! String
+                selectedTemplate = currentPageNode?.childNode(withName: "Single node", recursively: true)
+                selectedTemplate.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+            }
         }
     }
     func handleDoubleChildChange(snapshot: DataSnapshot) {
-         moveCurrentPage(i: snapshot.key)
+        if(Int(snapshot.key) != currentPage) {
+            moveCurrentPage(i: snapshot.key)
+        }
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
-            print(page.value)
             let text = page.value as! String
             //let textNode = currentPageNode?.childNode(withName: "text", recursively: true)
             if (page.key == "content1"){
@@ -1092,13 +1096,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             guard let turnPageIndex = Int(testPage.name!) else {return}
             if turnPageIndex < currentPageIndex {
                 //right swipe
-                rightSwipeAnimation(turnPage: turnPage, currentPointer: currentPageIndex)
+               leftSwipeAnimation(turnPage: turnPage, currentPointer: currentPageIndex)
             }
             else{
-                //left swipr
-                leftSwipeAnimation(turnPage: turnPage, currentPointer: currentPageIndex)
+                rightSwipeAnimation(turnPage: turnPage, currentPointer: currentPageIndex)
             }
-            //try to do some animation if needed.
         }
     }
     func alertAddTemplate() {
