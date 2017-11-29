@@ -57,6 +57,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var templateExists : Bool = false
     var notebookExists : Bool = false
     var retrievedFlag : Bool = false
+    var cameFromShare: Bool = false
     var pageObjectArray = [Page]()
     var selectedTemplate : SCNNode!
     var accessToWrite : Bool = true
@@ -1010,9 +1011,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         //probably need to also check if shared flag? Dont need to listen for changes on own notebook.
-        if self.retrievedFlag {
+        if self.retrievedFlag && self.cameFromShare {
             //connect listener to notebook to see if anything changes.
-            //attachEventListeners()
+            attachEventListeners()
+           
         }
     }
     func attachEventListeners(){

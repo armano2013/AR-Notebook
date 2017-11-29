@@ -135,7 +135,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                                 }
                             }
                             else {
-                                //update page struct to handle
+                                //update page struct to handle retrieved page color
                             }
                         }
                         let newPage = Page(content: pageContent)
@@ -206,6 +206,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             mainVC?.retrievedFlag = true
             mainVC?.pageObjectArray = self.pageObjArray
             mainVC?.accessToWrite  = self.accessToWrite
+            mainVC?.cameFromShare = true
             mainVC?.prevVC = self
             if(self.accessToWrite) {
                  mainVC?.notebookID = Int(self.sharedNotebookID)! //if the user can write update the notebookID flag so the updates are managed in DB
