@@ -61,9 +61,9 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     }
     
     // limit the text characters to be less than 500
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let startingLength = UserInputText.text?.characters.count ?? 0
-        let lengthToAdd = string.characters.count
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool { //Swift 3 to Swift 4 String is Collection type so you can directly use count on String.
+        let startingLength = UserInputText.text?.count ?? 0
+        let lengthToAdd = string.count
         let lengthToReplace = range.length
         let newLength = startingLength + lengthToAdd - lengthToReplace
         return newLength <= 500
@@ -173,7 +173,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         let fileRef = imageRef?.child(String(pickedImage.hashValue))
         let data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
         //normally would have your error handling; in this case we just do a return
-        let dataInfo = fileRef?.putData(data as Data, metadata: nil){
+        fileRef?.putData(data as Data, metadata: nil){
             (metadata, error) in guard metadata != nil else {
                 print("There was an error")
                 return

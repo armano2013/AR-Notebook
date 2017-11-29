@@ -250,7 +250,6 @@
                                     <constraint firstAttribute="trailing" secondItem="tYF-ND-GVF" secondAttribute="trailing" constant="10" id="1F1-uQ-iyS"/>
                                     <constraint firstItem="tYF-ND-GVF" firstAttribute="top" secondItem="ncg-as-6m8" secondAttribute="top" constant="10" id="3TA-xR-0xj"/>
                                     <constraint firstAttribute="height" constant="70" id="61J-fJ-L6Z"/>
-                                    <constraint firstAttribute="trailing" secondItem="tYF-ND-GVF" secondAttribute="trailing" constant="3" id="ScC-6I-P3l"/>
                                     <constraint firstAttribute="trailing" secondItem="tYF-ND-GVF" secondAttribute="trailing" constant="10" id="z2X-It-PCW"/>
                                 </constraints>
                             </view>
@@ -266,7 +265,7 @@
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <segue destination="Na5-He-KwX" kind="presentation" modalPresentationStyle="overCurrentContext" id="Xle-3o-ASm"/>
+                                            <segue destination="Na5-He-KwX" kind="presentation" identifier="colorPageseqgue" modalPresentationStyle="overCurrentContext" id="Xle-3o-ASm"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFE-mw-2FI" userLabel="insert button">
@@ -370,7 +369,6 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="GIW-Jg-ywa" secondAttribute="trailing" constant="108" id="MHW-Py-H5d"/>
                             <constraint firstItem="FT4-L0-4uA" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="OqK-zU-DU4"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="P2R-p2-pD4"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eXA-sQ-EEB" secondAttribute="bottom" constant="8" id="Sxo-AY-DBo"/>
                             <constraint firstItem="GIW-Jg-ywa" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="UVr-Cu-Pd8"/>
                             <constraint firstItem="FT4-L0-4uA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="110" id="VQi-fB-Fot"/>
                             <constraint firstItem="7rB-xZ-A2i" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Z4S-TT-Sg8"/>
@@ -507,11 +505,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXS-KD-Nr0">
-                                <rect key="frame" x="102" y="270" width="209" height="239"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="170" id="e6A-AQ-nvs"/>
-                                    <constraint firstAttribute="height" constant="170" id="rky-zq-F9d"/>
-                                </constraints>
+                                <rect key="frame" x="122" y="338" width="170" height="30"/>
                                 <state key="normal" title="Open Shared Notebook"/>
                                 <connections>
                                     <action selector="dismissShare" destination="VTS-dt-pDS" eventType="touchUpInside" id="NoE-GE-3ii"/>
@@ -520,10 +514,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="LKC-mn-2XH" firstAttribute="bottom" secondItem="fXS-KD-Nr0" secondAttribute="bottom" constant="227" id="2e3-iK-nZh"/>
-                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="top" secondItem="LKC-mn-2XH" secondAttribute="top" constant="250" id="5KP-Iz-E6Z"/>
-                            <constraint firstItem="LKC-mn-2XH" firstAttribute="trailing" secondItem="fXS-KD-Nr0" secondAttribute="trailing" constant="103" id="tx4-bL-8LS"/>
-                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="leading" secondItem="LKC-mn-2XH" secondAttribute="leading" constant="102" id="x6Y-uD-X2n"/>
+                            <constraint firstItem="LKC-mn-2XH" firstAttribute="bottom" secondItem="fXS-KD-Nr0" secondAttribute="bottom" constant="368" id="06D-fF-lMm"/>
+                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="top" secondItem="LKC-mn-2XH" secondAttribute="top" constant="318" id="Ock-Tr-tbH"/>
+                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="leading" secondItem="LKC-mn-2XH" secondAttribute="leading" constant="122" id="iUH-7y-zJ9"/>
+                            <constraint firstItem="LKC-mn-2XH" firstAttribute="trailing" secondItem="fXS-KD-Nr0" secondAttribute="trailing" constant="122" id="iys-dT-xIN"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="LKC-mn-2XH"/>
                     </view>
@@ -533,7 +527,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KZk-iF-gcV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3210.9375" y="304.6875"/>
+            <point key="canvasLocation" x="3210" y="304"/>
         </scene>
         <!--Add Page View Controller-->
         <scene sceneID="Be6-hA-khY">

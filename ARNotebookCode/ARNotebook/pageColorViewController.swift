@@ -104,47 +104,39 @@ class pageColorViewController: UIViewController {
     @IBAction func greenColor(_ sender: Any) {
         let green = #imageLiteral(resourceName: "GreenPage")
         pageColorString = "green"
-        if let keyText = pageColorString{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
                 addPageColorDatabase(profile: profile!, text: pageColorString!)
             }
-        }
         delegate?.pageColor(image : green)
     }
     @IBAction func purpleColor(_ sender: Any) {
         let purple = #imageLiteral(resourceName: "PurplePage")
         pageColorString = "purple"
-        if let keyText = pageColorString{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
                 addPageColorDatabase(profile: profile!, text: pageColorString!)
-            }
         }
         delegate?.pageColor(image : purple)
     }
     @IBAction func yellowPage(_ sender: Any) {
         let yellow = #imageLiteral(resourceName: "YellowPage")
         pageColorString = "yellow"
-        if let keyText = pageColorString{
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
                 addPageColorDatabase(profile: profile!, text: pageColorString!)
             }
-        }
         delegate?.pageColor(image : yellow)
     }
     @IBAction func DefaultPage(_ sender: Any) {
         let plain = #imageLiteral(resourceName: "page")
         pageColorString = "default"
         delegate?.pageColor(image : plain)
-        if let keyText = pageColorString {
             if((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
                 addPageColorDatabase(profile: profile!, text: pageColorString!)
             }
             delegate?.pageColor(image : plain)
-        }
     }
     /*
      -----
