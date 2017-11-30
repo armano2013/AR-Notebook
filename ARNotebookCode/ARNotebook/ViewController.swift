@@ -60,6 +60,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var cameFromShare: Bool = false
     var pageObjectArray = [Page]()
     var selectedTemplate : SCNNode!
+    var previousSelectedTemplate :SCNNode?
     var accessToWrite : Bool = true
     var alert = alertHelper()
     var prevVC: retrieveViewController!
@@ -210,27 +211,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     @IBAction func undo(_ sender: Any) {
         if accessToWrite == true {
-            if template == "single" {
+            if templateExists == true {
                 if let last = (lastNode.last){
                     last.removeFromParentNode()
                     lastNode.removeLast()
                 }
             }
-            else if template == "double"{
-                if topTempNodeContent == "full"{
-                    if let last = (lastNode.last){
-                        last.removeFromParentNode()
-                        lastNode.removeLast()
-                        topTempNodeContent = "empty"
-                    }
-                }
-                else if bottomTempNodeContent == "full"{
-                    if let last = (lastNode.last){
-                        last.removeFromParentNode()
-                        lastNode.removeLast()
-                        bottomTempNodeContent = "empty"
-                    }
-                }
+            else {
+                 alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
             }
         }
         else {
@@ -257,11 +245,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func renderNode(node: SCNNode) {
         if template == "single"{
+            selectedTemplate.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             let temp = selectedTemplate
             lastNode.append(node)
             temp?.addChildNode(node)
         }
         else if template == "double"{
+            selectedTemplate.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             if selectedTemplate != nil{
                 let tempNode = selectedTemplate
                 lastNode.append(node)
@@ -427,26 +417,44 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
     }
+   
     func selectTemplate(hitTest : [SCNHitTestResult]){
         if self.templateExists == true {
             self.hitResult2 = hitTest.first
             let node = hitTest.first?.node
             if node == self.topTempNode{
-                print("Top node selected")
                 self.selectedTemplate = node
+                print("Top node selected")
+                templateSelectColorChange(node: node!)
+                print(node)
             }
             else if node == self.bottomTempNode{
                 self.selectedTemplate = node
                 print("Bottom node selected")
+                templateSelectColorChange(node: node!)
+                print(node)
             }
             else if node == self.templateNode{
                 self.selectedTemplate = node
                 print("Single template selected")
+                templateSelectColorChange(node: node!)
+                print(node)
             }
             else{
                 print("cant find a node")
             }
         }
+    }
+    func templateSelectColorChange(node :SCNNode){
+        templateDeselectColorChange()
+        if node == selectedTemplate{
+            node.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+            self.previousSelectedTemplate = node
+        }
+    }
+    
+    func templateDeselectColorChange(){
+        previousSelectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
     }
     
     func addBook(hitTestResult: ARHitTestResult) {
@@ -619,7 +627,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
                 else {
-                    alertAddTemplate()
+                    alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
                 }
             }
             else if template == "double"{
@@ -669,7 +677,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
                 else {
-                    alertAddTemplate()
+                    alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
                 }
 
             }
@@ -708,7 +716,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
         else { // no template selected
-            alertAddTemplate()
+            alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
         }
     }
     
@@ -1095,12 +1103,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    func alertAddTemplate() {
-        let alertController = UIAlertController(title: "Error", message: "select a Template before adding content.", preferredStyle: UIAlertControllerStyle.alert)
-        let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
-        alertController.addAction(cancelAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
     /*
      -----
      Segue definitions
