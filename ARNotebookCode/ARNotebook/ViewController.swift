@@ -587,6 +587,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         material.diffuse.contents = UIColor.black
         textNode.materials = [material]
         let node = createTextNode(text: textNode)
+        lastNode.append(node)
         self.selectedTemplate.addChildNode(node)
         //renderNode(node: node)
     }
@@ -805,7 +806,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func deleteNotebook(book: String){
-        dismiss(animated: true, completion: nil)
         if accessToWrite == true {
             dismiss(animated: true, completion: nil)
             let alertController = UIAlertController(title: "Confirm Delete Notebook", message: "Are you sure you want to delete the Notebook ?", preferredStyle: UIAlertControllerStyle.alert)
