@@ -786,7 +786,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func deletePage(){
-        dismiss(animated: true, completion: nil)
         if accessToWrite == true {
             let alertController = UIAlertController(title: "Confirm Delete Page", message: "Are you sure you want to delete the page ?", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
