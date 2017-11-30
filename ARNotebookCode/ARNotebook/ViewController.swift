@@ -635,7 +635,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.position = SCNVector3(0,0, 0.01)
                                     node.name = "content"
                                     self.lastNode.append(node)
-                                    print("current page in pass", self.currentPageNode?.name)
                                     let page = self.pages[i-1]
                                     page.childNode(withName: "Top node", recursively: false)?.addChildNode(node)                                   //self.topTempNode?.addChildNode(node)
                                 }).resume()
@@ -657,7 +656,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.position = SCNVector3(0,0, 0.001)
                                     self.lastNode.append(node)
                                     node.name = "content"
-                                    print("current page in pass:", self.currentPageNode?.name)
+                                                                                           
                                     let page = self.pages[i-1]
                                     page.childNode(withName: "Bottom node", recursively: false)?.addChildNode(node)
                                     //self.bottomTempNode?.addChildNode(node)
@@ -1032,14 +1031,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func attachEventListeners(){
         let postRef = self.ref.child("notebooks/\(self.notebookID)")
         postRef.observe(.childChanged, with: { (snapshot) -> Void in
-            print("something changed")
-            print("snapshot key:", snapshot.key)
-            print("snapshot value:", snapshot.value)
-            print("snapshot children count", snapshot.childrenCount)
-            if snapshot.childrenCount == 2 {
+            if snapshot.childrenCount == 1 {
                 self.handleSingleChildChange(snapshot: snapshot)
             }
-            else if snapshot.childrenCount == 3 {
+            else if snapshot.childrenCount == 2 {
                 self.handleDoubleChildChange(snapshot: snapshot)
             }
         })
