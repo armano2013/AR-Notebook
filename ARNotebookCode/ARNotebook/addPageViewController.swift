@@ -16,6 +16,7 @@ protocol addPageDelegate {
     var currentPage: Int {get set}
     func addPage(text : String)
     var accessToWrite: Bool {get set}
+    var notebookID: Int {get set}
 }
 
 class addPageViewController: UIViewController {
@@ -49,28 +50,34 @@ class addPageViewController: UIViewController {
      -----
      */
     @IBAction func addTwoSlotPage(_ sender: Any) {
-        if (delegate?.accessToWrite)! {
+        if (delegate?.accessToWrite)!{
             let string = "double"
+            //add to database even if empty
+            savePage()
             delegate?.addPage(text : string)
         }
         else{
-            self.dismiss(animated: true, completion: nil)
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            print("add page presenting",presentingViewController, self)
         }
     }
     @IBAction func addOneSlotPage(_ sender: Any) {
         if (delegate?.accessToWrite)! {
             let string = "single"
+            savePage()
             delegate?.addPage(text : string)
         }
         else{
-            self.dismiss(animated: true, completion: nil)
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+   
         }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.dismiss(animated: true, completion: nil)
+    }
+    func savePage(){
+        self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").setValue(["empty": "true"])
     }
 }
 

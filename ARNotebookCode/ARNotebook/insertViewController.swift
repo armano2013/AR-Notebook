@@ -20,7 +20,7 @@ protocol insertDelegate {
     var notebookID : Int { get set}
     var selectedTemplate: SCNNode! {get set}
     func passImage (image: UIImage)
-    func passText(text: String, f: Int, i: Int)
+    func passText(text: String,  i: Int)
 }
 
 
@@ -104,14 +104,15 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     //for keyboard
     @IBAction func updateText(_ sender: Any) {
         if let keyText = UserInputText.text {
-            delegate?.passText(text: keyText, f: 0, i: -1)
+            saveText(text: keyText)
+            delegate?.passText(text: keyText, i: -1)
         }
     }
     
     //for clipboard
     @IBAction func addClipboardText(_ sender: Any) {
         let text = getClipboard()
-        delegate?.passText(text: text, f: 0, i: -1)
+        delegate?.passText(text: text, i: -1)
     }
     
     @IBAction func chooseGalleryImage(_ sender: Any) {
@@ -136,7 +137,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         let pasteboard: String? = UIPasteboard.general.string
         if let string = pasteboard {
             return string
-            //update database here
+            saveText(text: string)
         }
         else{ //error for if there is nothing on the clipboard
             dismiss(animated: true, completion: nil)
@@ -181,7 +182,19 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
             // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
             guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
-            self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name:imageURL])
+            self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name:imageURL, "empty": "false"])
+        }
+    }
+    func saveText(text: String){
+        if ((self.delegate?.currentProfile) != nil){
+            let profile = self.delegate?.currentProfile!
+            var name = "content1"
+            if(delegate?.selectedTemplate.name == "Bottom node"){
+                name = "content2"
+            }
+            self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name: text, "empty": "false"])
+            
         }
     }
 }
+
