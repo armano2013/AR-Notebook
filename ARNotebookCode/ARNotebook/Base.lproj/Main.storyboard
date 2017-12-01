@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -75,7 +74,6 @@
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3mv-FJ-jPj">
                                         <rect key="frame" x="218" y="48" width="72" height="80"/>
-
                                         <state key="normal" backgroundImage="brownBook"/>
                                         <connections>
                                             <action selector="blackButton:" destination="Na5-He-KwX" eventType="touchUpInside" id="8Ix-p9-BF2"/>
@@ -522,23 +520,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have received a Notebook from a different user. If you wish to view the notebook tap the Open Shared Notebook Button below." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cM2-D1-JP4">
-                                <rect key="frame" x="20" y="252.33333333333331" width="374" height="20.333333333333314"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have received a Notebook from a different user. If you wish to view the notebook tap the Open Shared Notebook Button below." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="7" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cM2-D1-JP4">
+                                <rect key="frame" x="20" y="272.5" width="319" height="20"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="1" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXS-KD-Nr0">
-                                <rect key="frame" x="122" y="338" width="131" height="30"/>
-
+                                <rect key="frame" x="107" y="373.5" width="161" height="30"/>
                                 <state key="normal" title="Open Shared Notebook"/>
                                 <connections>
                                     <action selector="dismissShare" destination="VTS-dt-pDS" eventType="touchUpInside" id="NoE-GE-3ii"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Access Level: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9kq-zG-cNn">
-                                <rect key="frame" x="153.33333333333331" y="302.66666666666674" width="108.33333333333331" height="20.333333333333314"/>
+                                <rect key="frame" x="134" y="323.5" width="108" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="ULZ-u7-ycT"/>
                                 </constraints>
@@ -549,9 +546,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="leading" secondItem="LKC-mn-2XH" secondAttribute="leading" constant="122" id="BPG-jr-HwR"/>
-                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="top" secondItem="LKC-mn-2XH" secondAttribute="top" constant="318" id="p9m-5D-Sfk"/>
+                            <constraint firstItem="fXS-KD-Nr0" firstAttribute="top" secondItem="9kq-zG-cNn" secondAttribute="bottom" constant="30" id="2Xu-ER-yPZ"/>
+                            <constraint firstItem="cM2-D1-JP4" firstAttribute="leading" secondItem="LKC-mn-2XH" secondAttribute="leading" constant="20" id="FGH-3J-b6k"/>
+                            <constraint firstItem="9kq-zG-cNn" firstAttribute="centerX" secondItem="oQs-Pg-oif" secondAttribute="centerX" id="Tou-Yl-AfD"/>
+                            <constraint firstItem="9kq-zG-cNn" firstAttribute="centerY" secondItem="oQs-Pg-oif" secondAttribute="centerY" id="WmK-aO-aTM"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="cM2-D1-JP4" secondAttribute="trailing" constant="20" id="chG-MS-pn2"/>
                             <constraint firstItem="fXS-KD-Nr0" firstAttribute="centerX" secondItem="oQs-Pg-oif" secondAttribute="centerX" id="sQe-J6-Fb6"/>
+                            <constraint firstItem="9kq-zG-cNn" firstAttribute="top" secondItem="cM2-D1-JP4" secondAttribute="bottom" constant="31" id="y3m-he-3Ny"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="LKC-mn-2XH"/>
                     </view>
@@ -563,7 +564,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KZk-iF-gcV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2696" y="-769"/>
-
         </scene>
         <!--Add Page View Controller-->
         <scene sceneID="Be6-hA-khY">
@@ -633,8 +633,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KYR-Pc-t8u" customClass="designableView" customModule="ARNotebook" customModuleProvider="target">
-                                <rect key="frame" x="155" y="182" width="200" height="400"/>
-
+                                <rect key="frame" x="105" y="182" width="250" height="400"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kGN-WG-19R">
                                         <rect key="frame" x="20" y="15" width="210" height="24"/>
@@ -657,8 +656,7 @@
                                                 <rect key="frame" x="0.0" y="28" width="242" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="p6S-ha-b8p" id="p0l-UH-HJ4">
-                                                    <rect key="frame" x="0.0" y="0.0" width="192" height="43.5"/>
-
+                                                    <rect key="frame" x="0.0" y="0.0" width="242" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableViewCellContentView>
                                             </tableViewCell>
@@ -756,7 +754,7 @@
         <image name="undo" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fmo-nK-Nk9"/>
+        <segue reference="MRj-bY-e0I"/>
         <segue reference="Noy-7X-jaB"/>
     </inferredMetricsTieBreakers>
 </document>
