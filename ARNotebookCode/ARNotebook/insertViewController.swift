@@ -112,6 +112,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     //for clipboard
     @IBAction func addClipboardText(_ sender: Any) {
         let text = getClipboard()
+        saveText(text: text)
         delegate?.passText(text: text, i: -1)
     }
     
@@ -157,7 +158,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
             if ((self.delegate?.currentProfile) != nil){
                 let profile = self.delegate?.currentProfile!
                 var name = "content1"
-                if(delegate?.selectedTemplate.name == "Bottom node"){
+                if(delegate?.selectedTemplate?.name == "Bottom node"){
                     name = "content2"
                 }
                 saveImage(profile: profile!, pickedImage: pickedImage, name: name)

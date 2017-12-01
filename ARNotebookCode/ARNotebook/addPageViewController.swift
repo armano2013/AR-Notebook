@@ -75,7 +75,9 @@ class addPageViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     func savePage(){
-        self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").setValue(["empty": "true"])
+        //because save page gets called before the page count in incremented we need to do it now
+        let pageID = (self.delegate?.currentPage)! + 1
+        self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\(pageID)").setValue(["empty": "true"])
     }
 }
 
