@@ -458,10 +458,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         previousSelectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
     }
     
-    func checkContent(){
-           rerenderContent()
-    }
-    
     func rerenderContent(){
         if selectedTemplate == templateNode{
             selectedTemplate.removeFromParentNode()
@@ -631,28 +627,32 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if bookNode != nil && currentPageNode != nil{
             if template == "single"{
                 if selectedTemplate != nil{
-                   // let tempNode = currentPageNode?.childNode(withName: "temp", recursively: false)
-                    //check to see if the content is a sotrage url - which means its an image.
-
-                    if text.range(of:"firebasestorage.googleapis.com") != nil {
-                        if let page = currentPageNode {
-                            let url = URL(string: text)
-                            URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                                guard let image = UIImage(data: data!) else {return}
-                                let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
-                                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                                node.name = "content"
-                                node.position = SCNVector3(0,0, 0.01)
-                                self.lastNode.append(node)
-                                let page = self.pages[i-1]
-                                page.childNode(withName: "Single node", recursively: false)?.addChildNode(node)
-                            }).resume()
+                    if selectedTemplate == templateNode{
+                        if contentExist == true{
+                            rerenderContent()
+                            createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
                         }
-                        
-                    }
-                    else{
-
-                        createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+                        // let tempNode = currentPageNode?.childNode(withName: "temp", recursively: false)
+                        //check to see if the content is a sotrage url - which means its an image.
+                        else if text.range(of:"firebasestorage.googleapis.com") != nil {
+                            if let page = currentPageNode {
+                                let url = URL(string: text)
+                                URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                                    guard let image = UIImage(data: data!) else {return}
+                                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+                                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                                    node.name = "content"
+                                    node.position = SCNVector3(0,0, 0.01)
+                                    self.lastNode.append(node)
+                                    let page = self.pages[i-1]
+                                    page.childNode(withName: "Single node", recursively: false)?.addChildNode(node)
+                                }).resume()
+                            }
+                            
+                        }
+                        else{
+                            createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+                        }
                     }
                 }
                 else {
@@ -663,7 +663,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 if selectedTemplate != nil{
                     if topTempNode == selectedTemplate{
                         if contentExist == true{
-                            checkContent()
+                            rerenderContent()
                             createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                         else if text.range(of:"firebasestorage.googleapis.com") != nil {
@@ -687,7 +687,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                     else if bottomTempNode == selectedTemplate{
                         if contentExist == true{
-                            checkContent()
+                            rerenderContent()
                             createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                         else if text.range(of:"firebasestorage.googleapis.com") != nil {
@@ -725,7 +725,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             if selectedTemplate != nil{
                 if template == "single"{
                     if contentExist == true {
-                       checkContent()
+                       rerenderContent()
                     }
                     else {
                         let tempNode = selectedTemplate
@@ -740,7 +740,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
                 else if template == "double"{
                     if contentExist == true {
-                        checkContent()
+                        rerenderContent()
                     }
                     else{
                         let tempNode = selectedTemplate
@@ -755,7 +755,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
             else if template == "double"{
                 if contentExist == true {
-                    checkContent()
+                    rerenderContent()
                 }
                 else{
                     let tempNode = selectedTemplate
