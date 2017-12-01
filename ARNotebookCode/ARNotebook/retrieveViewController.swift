@@ -53,7 +53,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         }
         else{
             prevVC.dismiss(animated: true, completion: nil)
-            //self.navigationController?.pushViewController(self, animated: false)
             retrievePreviousNotebookWithID(id: sharedNotebookID)
         }
     }
@@ -160,7 +159,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 self.retrievePageContent(id: id)
             }
             else {
-                let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view could not be retrieved.", preferredStyle: UIAlertControllerStyle.alert)
+                let alertController = UIAlertController(title: "Error", message: "The Notebook you are trying to view could not be retrieved. The notebook may have been moved or deleted.", preferredStyle: UIAlertControllerStyle.alert)
                 let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
                 }
                 alertController.addAction(cancelAction)
