@@ -92,7 +92,6 @@ class shareViewController: UIViewController {
         
         
         longLink = components.url
-        print(longLink?.absoluteString ?? "")
         
         let options = DynamicLinkComponentsOptions()
         options.pathLength = .unguessable

@@ -599,7 +599,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     func passText(text: String, i: Int = 0) {
-       print("presenting view controller", self.presentingViewController)
         if bookNode != nil && currentPageNode != nil{
             if template == "single"{
                 if selectedTemplate != nil{
@@ -665,7 +664,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.position = SCNVector3(0,0, 0.001)
                                     self.lastNode.append(node)
                                     node.name = "content"
-                                                                                           
                                     let page = self.pages[i-1]
                                     page.childNode(withName: "Bottom node", recursively: false)?.addChildNode(node)
                                     //self.bottomTempNode?.addChildNode(node)
@@ -783,7 +781,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func deletePage(_ sender: Any) {
-        self.deletePage()
+        if(accessToWrite){
+            self.deletePage()
+        }
+        else{
+             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+        }
     }
     
     func deletePage(){
@@ -1038,10 +1041,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func attachEventListeners(){
         let postRef = self.ref.child("notebooks/\(self.notebookID)")
         postRef.observe(.childChanged, with: { (snapshot) -> Void in
-            if snapshot.childrenCount == 1 {
+            if snapshot.childrenCount == 2 {
                 self.handleSingleChildChange(snapshot: snapshot)
             }
-            else if snapshot.childrenCount == 2 {
+            else if snapshot.childrenCount == 3 {
                 self.handleDoubleChildChange(snapshot: snapshot)
             }
         })
