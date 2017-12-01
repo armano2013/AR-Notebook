@@ -622,9 +622,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let node = createTextNode(text: textNode)
         lastNode.append(node)
         contentExist = true
-        self.selectedTemplate.addChildNode(node)
-        selectedTemplate = nil
+        selectedTemplate?.addChildNode(node)
         previousSelectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
+        selectedTemplate = nil
     }
     func downloadImage(i: Int, w: CGFloat, h: CGFloat, text: String, tmp: String){
         let url = URL(string: text)
@@ -650,7 +650,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if bookNode != nil && currentPageNode != nil {
             if selectedTemplate != nil {
                 if contentExist {
-                    selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                    if selectedTemplate == currentPageNode?.childNode(withName: "Single node", recursively: true){
+                        selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                        createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
+                    }
+                    else {
+                        selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                        createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                    }
                 }
                 if template == "single"{
                     //check to see if the content is a sotrage url - which means its an image.
@@ -667,7 +674,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Top node")
                         }
                         else{
-                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                            if contentExist {
+                                if selectedTemplate == currentPageNode?.childNode(withName: "Top node", recursively: true){
+                                    selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                                    createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                                }
+                                else{
+                                    createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                                }
+                            }
                         }
                     }
                     else if bottomTempNode == selectedTemplate {
@@ -675,7 +690,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Bottom node")
                         }
                         else{
-                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                            if contentExist {
+                                if selectedTemplate == currentPageNode?.childNode(withName: "Bottom node", recursively: true){
+                                    selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                                    createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                                }
+                                else{
+                                    createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                                }
+                            }
                         }
                     }
                 }
@@ -690,7 +713,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         if currentPageNode != nil {
             if selectedTemplate != nil{
-                if template == "single"{
                     if contentExist == true {
                         rerenderContent()
                         let tempNode = selectedTemplate
@@ -702,7 +724,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         tempNode?.addChildNode(node)
                         contentExist = true
                     }
-                    else {
+                    else if template == "single" {
                         let tempNode = selectedTemplate
                         let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
                         node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
@@ -712,7 +734,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         tempNode?.addChildNode(node)
                         contentExist = true
                     }
-                }
                 else if template == "double"{
                     if selectedTemplate == topTempNode{
                         if contentExist == true {
