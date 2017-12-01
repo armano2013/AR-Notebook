@@ -1099,7 +1099,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func handleSingleChildChange(snapshot: DataSnapshot){
         if(Int(snapshot.key) != currentPage) {
-            moveCurrentPage(i: snapshot.key)
+            if (Int(snapshot.key)! <= currentPage){
+                moveCurrentPage(i: snapshot.key)
+            }
+            else{
+                createPage()
+                oneSlotTemplate()
+                template = "single"
+            }
         }
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
@@ -1119,7 +1126,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func handleDoubleChildChange(snapshot: DataSnapshot) {
         if(Int(snapshot.key) != currentPage) {
-            moveCurrentPage(i: snapshot.key)
+            if(Int(snapshot.key)! <= currentPage) {
+                moveCurrentPage(i: snapshot.key)
+            }
+            else{
+                createPage()
+                createTopNode()
+                createBottomNode()
+                template = "double"
+            }
         }
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
