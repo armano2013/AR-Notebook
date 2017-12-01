@@ -244,14 +244,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         return node;
     }
     func renderNode(node: SCNNode) {
+        let page = currentPageNode
         if template == "single"{
-            selectedTemplate.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             let temp = selectedTemplate
             lastNode.append(node)
             temp?.addChildNode(node)
         }
         else if template == "double"{
-            selectedTemplate.geometry?.firstMaterial?.diffuse.contents = UIColor.white
             if selectedTemplate != nil{
                 let tempNode = selectedTemplate
                 lastNode.append(node)
@@ -377,6 +376,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let previous = i!;
             let turnPage = setPagesForSwipe(previous: previous)
             rightSwipeAnimation(turnPage: turnPage, currentPointer: currentPage)
+            templateReset()
         }
     }
     
@@ -387,6 +387,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let previous = i! - 2;
             let turnPage = setPagesForSwipe(previous: previous)
             leftSwipeAnimation(turnPage: turnPage, currentPointer: i!)
+            templateReset()
         }
     }
     
@@ -419,22 +420,23 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
    
     func selectTemplate(hitTest : [SCNHitTestResult]){
+        if pages.isEmpty == false{
         if self.templateExists == true {
             self.hitResult2 = hitTest.first
             let node = hitTest.first?.node
-            if node == self.topTempNode{
+            if node == currentPageNode?.childNode(withName: "Top node", recursively: false){
                 self.selectedTemplate = node
                 print("Top node selected")
                 templateSelectColorChange(node: node!)
                 print(node)
             }
-            else if node == self.bottomTempNode{
+            else if node == currentPageNode?.childNode(withName: "Bottom node", recursively: false){
                 self.selectedTemplate = node
                 print("Bottom node selected")
                 templateSelectColorChange(node: node!)
                 print(node)
             }
-            else if node == self.templateNode{
+            else if node == currentPageNode?.childNode(withName: "Single node", recursively: false){
                 self.selectedTemplate = node
                 print("Single template selected")
                 templateSelectColorChange(node: node!)
@@ -445,6 +447,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 print(node)
             }
         }
+        }
     }
     func templateSelectColorChange(node :SCNNode){
         templateDeselectColorChange()
@@ -452,6 +455,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             node.geometry?.firstMaterial?.diffuse.contents = UIColor.green
             self.previousSelectedTemplate = node
         }
+    }
+    
+    func templateReset(){
+        
+        selectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
+        selectedTemplate = nil
+        
     }
     
     func templateDeselectColorChange(){
@@ -726,6 +736,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 if template == "single"{
                     if contentExist == true {
                        rerenderContent()
+                        let tempNode = selectedTemplate
+                        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                        node.name = "content"
+                        node.position = SCNVector3(0,0, 0.001)
+                        lastNode.append(node)
+                        tempNode?.addChildNode(node)
+                        contentExist = true
                     }
                     else {
                         let tempNode = selectedTemplate
@@ -739,8 +757,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
                 else if template == "double"{
+                    if selectedTemplate == topTempNode{
                     if contentExist == true {
                         rerenderContent()
+                        let tempNode = selectedTemplate
+                        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                        node.name = "content"
+                        node.position = SCNVector3(0,0, 0.001)
+                        lastNode.append(node)
+                        tempNode?.addChildNode(node)
+                        contentExist = true
                     }
                     else{
                         let tempNode = selectedTemplate
@@ -752,22 +779,31 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         tempNode?.addChildNode(node)
                         contentExist = true
                     }
+                    }
+                    else if selectedTemplate == bottomTempNode{
+                        if contentExist == true {
+                            rerenderContent()
+                            let tempNode = selectedTemplate
+                            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                            node.name = "content"
+                            node.position = SCNVector3(0,0, 0.001)
+                            lastNode.append(node)
+                            tempNode?.addChildNode(node)
+                            contentExist = true
+                        }
+                        else{
+                            let tempNode = selectedTemplate
+                            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                            node.name = "content"
+                            node.position = SCNVector3(0,0, 0.001)
+                            lastNode.append(node)
+                            tempNode?.addChildNode(node)
+                            contentExist = true
+                        }
+                    }
                 }
-            else if template == "double"{
-                if contentExist == true {
-                    rerenderContent()
-                }
-                else{
-                    let tempNode = selectedTemplate
-                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                    node.name = "content"
-                    node.position = SCNVector3(0,0, 0.001)
-                    lastNode.append(node)
-                    tempNode?.addChildNode(node)
-                    contentExist = true
-                }
-            }
         }
         }
         else { // no template selected
@@ -775,7 +811,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
         selectedTemplate = nil
     }
-    
     /*
      -----
      Add Notebook Clear Functions
