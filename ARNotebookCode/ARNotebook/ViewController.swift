@@ -64,7 +64,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var accessToWrite : Bool = true
     var alert = alertHelper()
     var prevVC: retrieveViewController!
-    
+    var contentExist : Bool = false
     /*
      -----
      Generic Session Setup
@@ -442,6 +442,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
             else{
                 print("cant find a node")
+                print(node)
             }
         }
     }
@@ -455,6 +456,31 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func templateDeselectColorChange(){
         previousSelectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
+    }
+    
+    func checkContent(){
+           rerenderContent()
+    }
+    
+    func rerenderContent(){
+        if selectedTemplate == templateNode{
+            selectedTemplate.removeFromParentNode()
+            oneSlotTemplate()
+            let temp = currentPageNode?.childNode(withName: "Single node", recursively:false)
+            self.selectedTemplate = temp
+        }
+        if selectedTemplate == topTempNode{
+            selectedTemplate.removeFromParentNode()
+            createTopNode()
+            let temp = currentPageNode?.childNode(withName: "Top node", recursively:false)
+            self.selectedTemplate = temp
+        }
+        if selectedTemplate == bottomTempNode{
+            selectedTemplate.removeFromParentNode()
+            createBottomNode()
+            let temp = currentPageNode?.childNode(withName: "Bottom node", recursively:false)
+            self.selectedTemplate = temp
+        }
     }
     
     func addBook(hitTestResult: ARHitTestResult) {
@@ -588,8 +614,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         textNode.materials = [material]
         let node = createTextNode(text: textNode)
         lastNode.append(node)
+        contentExist = true
         self.selectedTemplate.addChildNode(node)
-        //renderNode(node: node)
+        selectedTemplate = nil
+        previousSelectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
     }
     
     /*
@@ -634,7 +662,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             else if template == "double"{
                 if selectedTemplate != nil{
                     if topTempNode == selectedTemplate{
-                        if text.range(of:"firebasestorage.googleapis.com") != nil {
+                        if contentExist == true{
+                            checkContent()
+                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                        }
+                        else if text.range(of:"firebasestorage.googleapis.com") != nil {
                             if currentPageNode != nil {
                                 let url = URL(string: text)
                                 URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
@@ -645,7 +677,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.name = "content"
                                     self.lastNode.append(node)
                                     let page = self.pages[i-1]
-                                    page.childNode(withName: "Top node", recursively: false)?.addChildNode(node)                                   //self.topTempNode?.addChildNode(node)
+                                    page.childNode(withName: "Top node", recursively: false)?.addChildNode(node)
                                 }).resume()
                             }
                         }
@@ -654,7 +686,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         }
                     }
                     else if bottomTempNode == selectedTemplate{
-                        if text.range(of:"firebasestorage.googleapis.com") != nil {
+                        if contentExist == true{
+                            checkContent()
+                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                        }
+                        else if text.range(of:"firebasestorage.googleapis.com") != nil {
                             if currentPageNode != nil {
                                 let url = URL(string: text)
                                 URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
@@ -665,10 +701,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                                     node.position = SCNVector3(0,0, 0.001)
                                     self.lastNode.append(node)
                                     node.name = "content"
-                                                                                           
                                     let page = self.pages[i-1]
                                     page.childNode(withName: "Bottom node", recursively: false)?.addChildNode(node)
-                                    //self.bottomTempNode?.addChildNode(node)
                                 }).resume()
                             }
                         }
@@ -690,35 +724,56 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if currentPageNode != nil {
             if selectedTemplate != nil{
                 if template == "single"{
-                    let tempNode = selectedTemplate
-                    let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
-                    node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                    node.position = SCNVector3(0,0, 0.001)
-                    lastNode.append(node)
-                    tempNode?.addChildNode(node)
+                    if contentExist == true {
+                       checkContent()
+                    }
+                    else {
+                        let tempNode = selectedTemplate
+                        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                        node.name = "content"
+                        node.position = SCNVector3(0,0, 0.001)
+                        lastNode.append(node)
+                        tempNode?.addChildNode(node)
+                        contentExist = true
+                    }
                 }
                 else if template == "double"{
+                    if contentExist == true {
+                        checkContent()
+                    }
+                    else{
+                        let tempNode = selectedTemplate
+                        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                        node.name = "content"
+                        node.position = SCNVector3(0,0, 0.001)
+                        lastNode.append(node)
+                        tempNode?.addChildNode(node)
+                        contentExist = true
+                    }
+                }
+            else if template == "double"{
+                if contentExist == true {
+                    checkContent()
+                }
+                else{
                     let tempNode = selectedTemplate
                     let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
                     node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+                    node.name = "content"
                     node.position = SCNVector3(0,0, 0.001)
                     lastNode.append(node)
                     tempNode?.addChildNode(node)
+                    contentExist = true
                 }
-
             }
-            else if template == "double"{
-                let tempNode = selectedTemplate
-                let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-                node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                node.position = SCNVector3(0,0, 0.001)
-                lastNode.append(node)
-                tempNode?.addChildNode(node)
-            }
+        }
         }
         else { // no template selected
             alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
         }
+        selectedTemplate = nil
     }
     
     /*
@@ -754,6 +809,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.hitResult = nil
         self.retrievedFlag = false
         self.templateExists = false
+        self.contentExist = false
     }
     
     func clearBook(){
@@ -913,7 +969,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         alertController.addAction(addWriteAccess)
         self.present(alertController, animated: true, completion: nil)
     }
-    
     func showErrorShareAlert(){
         let alertController = UIAlertController(title: "Error", message: "You have no notebook visible to share!", preferredStyle: UIAlertControllerStyle.alert)
         let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
@@ -947,24 +1002,30 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func twoSlotTemplate(){
-        if let page = currentPageNode{
-            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-            let node2 = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-            //creating the first slot of the two slot template
-            node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
-            node.position = SCNVector3(0,0.4, 0.001)
-            //creating the second slot of the two slot template
-            node2.geometry?.firstMaterial?.diffuse.contents = UIColor.white
-            node2.position = SCNVector3(0,-0.4, 0.001)
-            //adding both to the page
-            page.addChildNode(node)
-            page.addChildNode(node2)
-            node.name = "Top node"
-            node2.name = "Bottom node"
-            topTempNode = node
-            bottomTempNode = node2
-            templateExists = true
+        createTopNode()
+        createBottomNode()
+    }
+    
+    func createTopNode(){
+         if let page = currentPageNode{
+        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+        node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
+        node.position = SCNVector3(0,0.4, 0.001)
+        currentPageNode?.addChildNode(node)
+        node.name = "Top node"
+        topTempNode = node
+        templateExists = true
         }
+    }
+    
+    func createBottomNode(){
+        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+        node.geometry?.firstMaterial?.diffuse.contents = UIColor.white
+        node.position = SCNVector3(0,-0.4, 0.001)
+        currentPageNode?.addChildNode(node)
+        node.name = "Bottom node"
+        bottomTempNode = node
+        templateExists = true
     }
     
     /*
@@ -1000,9 +1061,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else {
             //error no book
         }
-        
     }
-    
     
     func addContent(id: String, pageObjs: [Page]) {
         self.notebookExists = true
@@ -1101,7 +1160,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             }
         }
     }
-    
     /*
      -----
      Segue definitions
