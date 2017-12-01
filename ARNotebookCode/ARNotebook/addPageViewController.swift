@@ -58,7 +58,6 @@ class addPageViewController: UIViewController {
         }
         else{
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
-            print("add page presenting",presentingViewController, self)
         }
     }
     @IBAction func addOneSlotPage(_ sender: Any) {
@@ -69,7 +68,6 @@ class addPageViewController: UIViewController {
         }
         else{
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
-   
         }
     }
     

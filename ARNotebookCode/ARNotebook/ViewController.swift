@@ -679,9 +679,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         }
                     }
                 }
-                else {
-                    alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
-                }
+            }
+            else {
+               alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
             }
         }
     }
@@ -831,7 +831,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func deletePage(_ sender: Any) {
-        self.deletePage()
+        if(accessToWrite){
+            self.deletePage()
+        }
+        else{
+             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+        }
     }
     
     func deletePage(){
