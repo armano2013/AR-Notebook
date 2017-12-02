@@ -686,16 +686,19 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         return planeNode
     }
     
+    
     //add more page nodes on detecting of planes... Not useful for our application added as example.
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
-        node.enumerateChildNodes{(childNode, _) in
-            childNode.removeFromParentNode()
+        
+        if !notebookExists {
+            node.enumerateChildNodes{(childNode, _) in
+                childNode.removeFromParentNode()
+            }
+            let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
+            node.addChildNode(planeNode)
         }
-        let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
-        node.addChildNode(planeNode)
     }
-    
     //didRemove runs when a feature point is removed - in this case check to see if the feature point removed was a plane note
     func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
         guard let _ = anchor as? ARPlaneAnchor else {return}
