@@ -2,9 +2,10 @@
 //  ViewController.swift
 //  ARNotebook
 //
-//  Created by Artur Bushi on 10/15/17.
-//  Copyright © 2017 Artur Bushi. All rights reserved.
+//  Created by AR Notebook on 10/15/17.
+//  Copyright © 2017 AR Notebook. All rights reserved.
 //
+
 
 import UIKit
 import ARKit
@@ -40,7 +41,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
-    var currentPage : Int = 1 // global variable to keep track of current page number
+    var currentPage : Int = 0 // global variable to keep track of current page number
     var pageColor : UIImage? // global variable to keep track of the page color when the user changes it
     var nameDelegate : profileNameDelegate? // calling the delegate to the AuthViewCont to get user's profile name
     var currentProfile : String!
@@ -49,6 +50,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var notebookID: Int = 0 //unique id of notebook
     var pageContentInfo : String = ""    
     var currentPageColor: String = ""
+    var currentBookCover: String = "brown"
     var template : String = ""
     var topTempNode : SCNNode?
     var bottomTempNode : SCNNode?
@@ -95,12 +97,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.registerGestures()
+        self.longPressGestures()
         self.configuration.planeDetection = .horizontal  // Create a session configuration
         sceneView.session.run(configuration) // Run the view's session
         self.sceneView.delegate = self
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
-        addTimer()
+        self.addPlaneTimer()
+        self.addButtonTimer()
     }
     
     /*
@@ -115,6 +119,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBOutlet weak var addPageButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
     @IBOutlet weak var insertButton: UIButton!
+    @IBOutlet weak var openButton: UIButton!
     
     func disableButtons(){
         self.deletePageButton.isEnabled = false
@@ -126,20 +131,104 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.insertButton.isEnabled = false
     }
     
-    func enableBookButtons(){
-        self.dismissButton.isEnabled = true
-        self.addPageButton.isEnabled = true
-        self.editButton.isEnabled = true
+    /*
+     -----
+     Instructions for buttons
+     -----
+     */
+    
+    func longPressGestures(){
+        let longDeleteGesture = UILongPressGestureRecognizer(target: self, action: #selector(deleteInstruction(_:)))
+        self.deletePageButton.addGestureRecognizer(longDeleteGesture)
+        let longDismissGesture = UILongPressGestureRecognizer(target: self, action: #selector(dismissInstruction(_:)))
+        self.dismissButton.addGestureRecognizer(longDismissGesture)
+        let longShareGesture = UILongPressGestureRecognizer(target: self, action: #selector(shareInstruction(_:)))
+        self.shareButton.addGestureRecognizer(longShareGesture)
+        let longUndoGesture = UILongPressGestureRecognizer(target: self, action: #selector(undoInstruction(_:)))
+        self.undoButton.addGestureRecognizer(longUndoGesture)
+        let longAddPageGesture = UILongPressGestureRecognizer(target: self, action: #selector(addPageInstruction(_:)))
+        self.addPageButton.addGestureRecognizer(longAddPageGesture)
+        let longEditGesture = UILongPressGestureRecognizer(target: self, action: #selector(editInstruction(_:)))
+        self.editButton.addGestureRecognizer(longEditGesture)
+        let longInsertGesture = UILongPressGestureRecognizer(target: self, action: #selector(insertInstruction(_:)))
+        self.insertButton.addGestureRecognizer(longInsertGesture)
+        let longOpenGesture = UILongPressGestureRecognizer(target: self, action: #selector(openInstruction(_:)))
+        self.openButton.addGestureRecognizer(longOpenGesture)
     }
     
-    func enablePageButtons(){
-        self.deletePageButton.isEnabled = true
-        self.undoButton.isEnabled = true
-        self.insertButton.isEnabled = true
-        self.shareButton.isEnabled = true
+    @objc func deleteInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will PERMANENTLY delete the current page.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     
-    func addTimer(){
+    @objc func dismissInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will dismiss the current notebook. It will NOT delete it permanently", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func shareInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "Press this button to share the current notebook. Note that read means the other person cannot edit it while write means they have all editing permissions.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func undoInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will undo the last action. This will not work on items you have not added yourself, such as when you retrieve a notebook. If you retrieve a notebook, add an item, and then undo, it will revert that change only.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func addPageInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will add a new page at the end of your notebook. If you choose a single slot, it will add a new page with only one slot for adding images or text. If you select a two-slot, it will give you two slots. You must tap on the slot that you want to update. The slot will be highlighted to confirm that you tapped on it.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func editInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will let you edit the cover style of your notebook as well as the color of the pages. \n\n To change only the current page color, simply tap the page color you like. To change the color of every page, hold down the color you prefer for a brief moment and then release.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func insertInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will let you insert text or images to a slot you have selected. If you tap images, you will be redirected to your photo gallery. If you tap on the keyboard, you will be allowed to type in what you want so long as it is under 500 characters. The clipboard button will paste what you have on your clipboard to the slot you have selected.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func openInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will open a list of previous notebooks you have created. You can also log out of AR Notebook in this menu.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    func addPlaneTimer(){
         var planetimeout: Timer?
         planetimeout = Timer.scheduledTimer(withTimeInterval: 40.0, repeats: true, block: { (_) in
             if self.notebookExists == true{
@@ -153,12 +242,42 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         })
     }
     
+    func addButtonTimer(){
+        var buttonTimer: Timer?
+        buttonTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { (_) in
+            if self.currentPageNode == nil{
+                self.deletePageButton.isEnabled = false
+                self.shareButton.isEnabled = false
+                self.undoButton.isEnabled = false
+                self.insertButton.isEnabled = false
+            }
+            else if self.currentPageNode == nil && self.lastNode.last == nil{
+                self.undoButton.isEnabled = false
+            }
+            else {
+                self.deletePageButton.isEnabled = true
+                self.shareButton.isEnabled = true
+                self.undoButton.isEnabled = true
+                self.insertButton.isEnabled = true
+            }
+            if self.notebookExists == false{
+                self.dismissButton.isEnabled = false
+                self.addPageButton.isEnabled = false
+                self.editButton.isEnabled = false
+            }
+            else{
+                self.dismissButton.isEnabled = true
+                self.addPageButton.isEnabled = true
+                self.editButton.isEnabled = true
+            }
+        })
+    }
+    
     func registerGestures(){
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinch))
         self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
-        print((self.sceneView.gestureRecognizers)!)
     }
     
     func tapGestureEnabling(){
@@ -197,9 +316,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let results = hitTest.first!
             _ = results.boneNode
             let pinchAction = SCNAction.scale(by: sender.scale, duration: 1)
-            topTempNode?.runAction(pinchAction)
-            bottomTempNode?.runAction(pinchAction)
-            currentPageNode?.runAction(pinchAction)
+            self.topTempNode?.runAction(pinchAction)
+            self.bottomTempNode?.runAction(pinchAction)
+            self.currentPageNode?.runAction(pinchAction)
             sender.scale = 1.0
         }
     }
@@ -258,7 +377,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             twoSlotTemplate()
             template = text
         }
-        self.enablePageButtons()
     }
     
     func createPage(){
@@ -284,7 +402,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.bookNode?.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
             addPageNum()
-            self.enablePageButtons()
         }
         else{//book error
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -486,11 +603,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let node = createBook(hitTestResult: hitTestResult)
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
-            self.notebookExists = true
+            self.selectBookCover(cover: self.currentBookCover)
             self.addContent(id: String(notebookID), pageObjs: self.pageObjectArray)
             self.setTime(id: String(notebookID))
             self.tapGestureEnabling()
-            self.enableBookButtons()
+            self.notebookExists = true
         }
     }
     
@@ -518,10 +635,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.ref.child("users/\((self.currentProfile)!)/notebooks/\(id)").setValue(["name": self.notebookName])
         self.ref.child("notebooks/\(id)").setValue(["name": self.notebookName])
         self.sceneView.scene.rootNode.addChildNode(node)  //render book on root
+        self.bookColor(imageOne: #imageLiteral(resourceName: "graphicBook1 copy2"), cover: "brown")
         self.setTime(id: String(notebookID))
         self.notebookExists = true
         self.tapGestureEnabling()
-        self.enableBookButtons()
     }
     
     func setTime(id: String){
@@ -554,19 +671,26 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         return planeNode
     }
     
+    
     //add more page nodes on detecting of planes... Not useful for our application added as example.
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         
         if !notebookExists{
         guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
-        node.enumerateChildNodes{(childNode, _) in
-            childNode.removeFromParentNode()
+        
+        if !notebookExists {
+            node.enumerateChildNodes{(childNode, _) in
+                childNode.removeFromParentNode()
+            }
+            let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
+            node.addChildNode(planeNode)
         }
+
         let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
         node.addChildNode(planeNode)
         }
+
     }
-    
     //didRemove runs when a feature point is removed - in this case check to see if the feature point removed was a plane note
     func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
         guard let _ = anchor as? ARPlaneAnchor else {return}
@@ -615,7 +739,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func passText(text: String, i: Int = 0) {
         if bookNode != nil && currentPageNode != nil {
-            if selectedTemplate != nil {
+            if selectedTemplate != nil{
                 if contentExist {
                     selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
                 }
@@ -647,6 +771,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
             }
+
                 else {
                     alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
                 }
@@ -769,7 +894,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      */
     
     @IBAction func deletePage(_ sender: Any) {
-        self.deletePage()
+        if(accessToWrite){
+            self.deletePage()
+        }
+        else{
+             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+        }
     }
     
     func deletePage(){
@@ -785,6 +915,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(cancelAction)
             alertController.addAction(deletePageAction)
             self.present(alertController, animated: true, completion: nil)
+        }
+        if accessToWrite == false && cameFromShare == true {
+            self.currentPageNode?.removeFromParentNode()
+            self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
+            self.pages.removeLast()
+            self.currentPageNode = self.pages.last
         }
         else{
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
@@ -822,13 +958,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    func pageColor(image: UIImage) {
+    func pageColor(image: UIImage, style: String ) {
         if accessToWrite == true {
             if bookNode != nil && currentPageNode != nil {
-                for page in pages {
-                    page.geometry?.firstMaterial?.diffuse.contents = image
+                if style == "long" {
+                    for page in pages {
+                        page.geometry?.firstMaterial?.diffuse.contents = image
+                    }
                 }
-                // maybe an array for all the pages to change all or a single page at a time ?
+                else {
+                    self.currentPageNode?.geometry?.firstMaterial?.diffuse.contents = image
+                }
             }
             else{ //error for if there is no book
                 let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -839,26 +979,45 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
+    func addAllColorsToDB(color: String){
+        for page in pages{
+            ref.child("notebooks/\(self.notebookID)/\(pages.index(of: page)! + 1)").setValue(["color" : color])
+        }
+    }
+    
     /*
      -----
-     book Color Deletegate Funcitons
+     book Color Delegate Funcitons
      -----
      */
     
     func bookColor(imageOne: UIImage, cover: String) {
         if accessToWrite == true {
-            bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
+            self.bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
             ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : cover])
         }
         else {
-            //alet extension
+            //alert extension
         }
     }
+    
+    func selectBookCover(cover: String){
+        switch cover {
+        case "coffee":
+            self.bookNode?.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "spiralNotebook")
+        case "black":
+            self.bookNode?.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "brownBook")
+        default:
+            self.bookNode?.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "graphicBook1 copy2")
+        }
+    }
+    
     /*
      -----
      Share Button
      -----
      */
+    
     @IBAction func shareNotebook(){
         if accessToWrite == true {
             //notebook ID of the notebook to share
@@ -895,8 +1054,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             link = shareVC.returnShareLink()
             self.showShareLink(url: link)
         }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
         alertController.addAction(addReadAccess)
         alertController.addAction(addWriteAccess)
+        alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }
     func showErrorShareAlert(){
@@ -963,7 +1124,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Retrieve delegate function
      -----
      */
-    func addPageWithContent(content: String, temp: String){
+    func addPageWithContent(content: String, temp: String, colorString: String){
         if self.notebookExists == true || self.retrievedFlag == true {
             if temp == "single" {
                 createPage()
@@ -987,6 +1148,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 self.selectedTemplate = self.bottomTempNode
                 passText(text: content, i: Int(index)!)
             }
+            self.addColor(colorString: colorString)
         }
         else {
             //error no book
@@ -1010,7 +1172,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     if (i == 1 && t == "double"){
                         t = "doubleSecond"
                     }
-                    addPageWithContent(content: page.content[i], temp: t)
+                    addPageWithContent(content: page.content[i], temp: t, colorString: page.currentPageColor)
                 }
             }
             else {
@@ -1024,6 +1186,24 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             
         }
     }
+    
+    func addColor(colorString: String){
+        switch colorString {
+        case "red":
+            self.pageColor(image: #imageLiteral(resourceName: "RedPage"), style: "tap")
+        case "blue":
+            self.pageColor(image: #imageLiteral(resourceName: "BluePage"), style: "tap")
+        case "green":
+            self.pageColor(image: #imageLiteral(resourceName: "GreenPage"), style: "tap")
+        case "purple":
+            self.pageColor(image: #imageLiteral(resourceName: "PurplePage"), style: "tap")
+        case "yellow":
+            self.pageColor(image: #imageLiteral(resourceName: "YellowPage"), style: "tap")
+        default:
+            self.pageColor(image: #imageLiteral(resourceName: "page"), style: "tap")
+        }
+    }
+    
     func attachEventListeners(){
         let postRef = self.ref.child("notebooks/\(self.notebookID)")
         postRef.observe(.childChanged, with: { (snapshot) -> Void in
@@ -1037,7 +1217,14 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func handleSingleChildChange(snapshot: DataSnapshot){
         if(Int(snapshot.key) != currentPage) {
-            moveCurrentPage(i: snapshot.key)
+            if (Int(snapshot.key)! <= currentPage){
+                moveCurrentPage(i: snapshot.key)
+            }
+            else{
+                createPage()
+                oneSlotTemplate()
+                template = "single"
+            }
         }
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
@@ -1047,7 +1234,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 selectedTemplate = currentPageNode?.childNode(withName: "Single node", recursively: true)
                 selectedTemplate.childNode(withName: "content", recursively: true)?.removeFromParentNode()
                 if text.range(of:"firebasestorage.googleapis.com") != nil {
-                    downloadImage(i: Int(i)!, w: 1.2, h: 07, text: text, tmp: "Single node")
+                    downloadImage(i: Int(i)!, w: 1.2, h: 0.7, text: text, tmp: "Single node")
                 }
                 else{
                     createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
@@ -1056,9 +1243,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     func handleDoubleChildChange(snapshot: DataSnapshot) {
-        if(Int(snapshot.key) != currentPage) {
-            moveCurrentPage(i: snapshot.key)
+        if(Int(snapshot.key)! < currentPage) {
+                moveCurrentPage(i: snapshot.key)
         }
+        else if (Int(snapshot.key)! == currentPage) {
+            self.deletePage()
+        }
+        createPage()
+        createTopNode()
+        createBottomNode()
+        template = "double"
+
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
             let text = page.value as! String
@@ -1115,16 +1310,36 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? insertViewController{
-            destination.delegate = self
+            if accessToWrite {
+                destination.delegate = self
+            }
+            else {
+               alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            }
         }
         else if let destination = segue.destination as? addPageViewController {
-            destination.delegate = self
+            if accessToWrite {
+                destination.delegate = self
+            }
+            else {
+                alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            }
         }
         else if let destination = segue.destination as? pageColorViewController{
-            destination.delegate = self
+            if accessToWrite {
+                destination.delegate = self
+            }
+            else {
+                alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            }
         }
         else if let destination = segue.destination as? retrieveViewController {
-            destination.delegate = self
+            if accessToWrite {
+                destination.delegate = self
+            }
+            else {
+                alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            }
         }
         
     }

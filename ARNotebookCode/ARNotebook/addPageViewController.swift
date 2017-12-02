@@ -2,9 +2,10 @@
 //  shareViewController.swift
 //  ARNotebook
 //
-//  Created by Artur Bushi on 10/15/17.
-//  Copyright © 2017 Artur Bushi. All rights reserved.
+//  Created by AR Notebook on 10/15/17.
+//  Copyright © 2017 AR Notebook. All rights reserved.
 //
+
 
 import UIKit
 import ARKit
@@ -50,27 +51,16 @@ class addPageViewController: UIViewController {
      -----
      */
     @IBAction func addTwoSlotPage(_ sender: Any) {
-        if (delegate?.accessToWrite)!{
-            let string = "double"
-            //add to database even if empty
-            savePage()
-            delegate?.addPage(text : string)
-        }
-        else{
-            alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
-            print("add page presenting",presentingViewController, self)
-        }
+        let string = "double"
+        //add to database even if empty
+        savePage()
+        self.delegate?.addPage(text : string)
     }
     @IBAction func addOneSlotPage(_ sender: Any) {
-        if (delegate?.accessToWrite)! {
-            let string = "single"
-            savePage()
-            delegate?.addPage(text : string)
-        }
-        else{
-            alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
-   
-        }
+        let string = "single"
+        savePage()
+        self.delegate?.addPage(text : string)
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -80,6 +70,7 @@ class addPageViewController: UIViewController {
         //because save page gets called before the page count in incremented we need to do it now
         let pageID = (self.delegate?.currentPage)! + 1
         self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\(pageID)").setValue(["empty": "true"])
+        self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\(pageID)").setValue(["color": "default"])
     }
 }
 

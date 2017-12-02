@@ -1,9 +1,9 @@
 //
 //  arScene.swift
-//  practiceARProject
+//  ARNotebook
 //
-//  Created by Mohammed Ali on 10/10/17.
-//  Copyright © 2017 Mohammed Ali. All rights reserved.
+//  Created by AR Notebook on 10/15/17.
+//  Copyright © 2017 AR Notebook. All rights reserved.
 //
 
 import Foundation
