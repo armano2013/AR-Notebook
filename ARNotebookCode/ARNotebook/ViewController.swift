@@ -94,6 +94,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.registerGestures()
+        self.longPressGestures()
         self.configuration.planeDetection = .horizontal  // Create a session configuration
         sceneView.session.run(configuration) // Run the view's session
         self.sceneView.delegate = self
@@ -114,6 +115,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     @IBOutlet weak var addPageButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
     @IBOutlet weak var insertButton: UIButton!
+    @IBOutlet weak var openButton: UIButton!
     
     func disableButtons(){
         self.deletePageButton.isEnabled = false
@@ -138,6 +140,103 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.shareButton.isEnabled = true
     }
     
+    /*
+     -----
+     Instructions for buttons
+     -----
+     */
+    
+    func longPressGestures(){
+        let longDeleteGesture = UILongPressGestureRecognizer(target: self, action: #selector(deleteInstruction(_:)))
+        self.deletePageButton.addGestureRecognizer(longDeleteGesture)
+        let longDismissGesture = UILongPressGestureRecognizer(target: self, action: #selector(dismissInstruction(_:)))
+        self.dismissButton.addGestureRecognizer(longDismissGesture)
+        let longShareGesture = UILongPressGestureRecognizer(target: self, action: #selector(shareInstruction(_:)))
+        self.shareButton.addGestureRecognizer(longShareGesture)
+        let longUndoGesture = UILongPressGestureRecognizer(target: self, action: #selector(undoInstruction(_:)))
+        self.undoButton.addGestureRecognizer(longUndoGesture)
+        let longAddPageGesture = UILongPressGestureRecognizer(target: self, action: #selector(addPageInstruction(_:)))
+        self.addPageButton.addGestureRecognizer(longAddPageGesture)
+        let longEditGesture = UILongPressGestureRecognizer(target: self, action: #selector(editInstruction(_:)))
+        self.editButton.addGestureRecognizer(longEditGesture)
+        let longInsertGesture = UILongPressGestureRecognizer(target: self, action: #selector(insertInstruction(_:)))
+        self.insertButton.addGestureRecognizer(longInsertGesture)
+        let longOpenGesture = UILongPressGestureRecognizer(target: self, action: #selector(openInstruction(_:)))
+        self.openButton.addGestureRecognizer(longOpenGesture)
+    }
+    
+    @objc func deleteInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will PERMANENTLY delete the current page.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func dismissInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will dismiss the current notebook. It will NOT delete it permanently", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func shareInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "Press this button to share the current notebook. Note that read means the other person cannot edit it while write means they have all editing permissions.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func undoInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will undo the last action. This will not work on items you have not added yourself, such as when you retrieve a notebook. If you retrieve a notebook, add an item, and then undo, it will revert that change only.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func addPageInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will add a new page at the end of your notebook. If you choose a single slot, it will add a new page with only one slot for adding images or text. If you select a two-slot, it will give you two slots. You must tap on the slot that you want to update. The slot will be highlighted to confirm that you tapped on it.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func editInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will let you edit the cover style of your notebook as well as the color of the pages.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func insertInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will let you insert text or images to a slot you have selected. If you tap images, you will be redirected to your photo gallery. If you tap on the keyboard, you will be allowed to type in what you want so long as it is under 500 characters. The clipboard button will paste what you have on your clipboard to the slot you have selected.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func openInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "This button will open a list of previous notebooks you have created. You can also log out of AR Notebook in this menu.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
     func addTimer(){
         var planetimeout: Timer?
         planetimeout = Timer.scheduledTimer(withTimeInterval: 40.0, repeats: true, block: { (_) in
@@ -157,7 +256,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinch))
         self.sceneView.addGestureRecognizer(pinchGestureRecognizer)
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
-        print((self.sceneView.gestureRecognizers)!)
     }
     
     func tapGestureEnabling(){
@@ -968,8 +1066,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             link = shareVC.returnShareLink()
             self.showShareLink(url: link)
         }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
         alertController.addAction(addReadAccess)
         alertController.addAction(addWriteAccess)
+        alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }
     func showErrorShareAlert(){

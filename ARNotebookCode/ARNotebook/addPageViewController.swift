@@ -54,7 +54,7 @@ class addPageViewController: UIViewController {
             let string = "double"
             //add to database even if empty
             savePage()
-            delegate?.addPage(text : string)
+            self.delegate?.addPage(text : string)
         }
         else{
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
@@ -64,7 +64,7 @@ class addPageViewController: UIViewController {
         if (delegate?.accessToWrite)! {
             let string = "single"
             savePage()
-            delegate?.addPage(text : string)
+            self.delegate?.addPage(text : string)
         }
         else{
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")

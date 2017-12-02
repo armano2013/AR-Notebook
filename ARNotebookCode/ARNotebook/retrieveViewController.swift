@@ -56,18 +56,36 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             retrievePreviousNotebookWithID(id: sharedNotebookID)
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let longLogOutGesture = UILongPressGestureRecognizer(target: self, action: #selector(logOutInstruction(_:)))
+        self.logOutButton.addGestureRecognizer(longLogOutGesture)
+    }
 
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.tableView.reloadData()
     }
+    
     /*
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.dismiss(animated: true, completion: nil)
     }
     */
+    
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var logOutButton: UIButton!
+    
+    @objc func logOutInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "Due to Facebook's Software Policies, you cannot fully log out of your Facebook account until you log out of every Facebook option on your device. This includes your web browser, other applications, and Facebook itself.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
     
     @IBAction func logOutFacebook(_ sender: Any) {
         let manager = LoginManager()
@@ -77,6 +95,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             print(error)
         }
     }
+    
    func retrieveShareContent(id : String){
         retrievePreviousNotebookWithID(id: id)
     }
@@ -140,6 +159,9 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                         }
                         let newPage = Page(content: pageContent)
                         self.pageObjArray.append(newPage)
+                    }
+                    else {
+                        //updating page struct to add in cover style
                     }
                 }
                 self.delegate?.pageObjectArray = self.pageObjArray
