@@ -2,9 +2,10 @@
 //  designableView.swift
 //  ARNotebook
 //
-//  Created by Denise Green on 10/16/17.
-//  Copyright © 2017 Artur Bushi. All rights reserved.
+//  Created by AR Notebook on 10/15/17.
+//  Copyright © 2017 AR Notebook. All rights reserved.
 //
+
 
 import UIKit
 
