@@ -39,7 +39,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
     var lastNode = [SCNNode]() //used to for undo function to delete the last input node
     var pages = [SCNNode]() //stores page nodes, can get page num from here
-    var currentPage : Int = 1 // global variable to keep track of current page number
+    var currentPage : Int = 0 // global variable to keep track of current page number
     var pageColor : UIImage? // global variable to keep track of the page color when the user changes it
     var nameDelegate : profileNameDelegate? // calling the delegate to the AuthViewCont to get user's profile name
     var currentProfile : String!
