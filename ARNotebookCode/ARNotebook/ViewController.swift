@@ -35,6 +35,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var minScale: CGFloat = 5
     var hitResult : ARHitTestResult? = nil
     var hitResult2 : SCNHitTestResult? = nil
+    var hitResult3 : SCNHitTestResult? = nil
     var notebookName = "Untitled"
     var bookNode: SCNNode?
     var currentPageNode : SCNNode? //points to the current page, assigned in page turns
@@ -362,28 +363,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.position = SCNVector3(-0.5, 0.0, 0.001)
         return node;
     }
-    func renderNode(node: SCNNode) {
-        let page = currentPageNode
-        if template == "single"{
-            let temp = selectedTemplate
-            lastNode.append(node)
-            temp?.addChildNode(node)
-        }
-        else if template == "double"{
-            if selectedTemplate != nil{
-                let tempNode = selectedTemplate
-                lastNode.append(node)
-                tempNode?.addChildNode(node)
-            }
-            else if selectedTemplate != nil{
-                let tempNode = selectedTemplate
-                lastNode.append(node)
-                bottomTempNode?.addChildNode(node)
-                tempNode?.addChildNode(node)
-            }
-        }
-    }
-    
+   
     func addPage(text: String){
         dismiss(animated: true, completion: nil)
         
@@ -509,10 +489,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     @objc func tapped(sender: UITapGestureRecognizer) {
-        let sceneView = sender.view as! ARSCNView
-        let tapLocation = sender.location(in: sceneView)
-        let hitTest = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
         if notebookExists == false{
+            let sceneView = sender.view as! ARSCNView
+            let tapLocation = sender.location(in: sceneView)
+            let hitTest = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
             if retrievedFlag == true {
                 if !hitTest.isEmpty {
                     self.addRetrievedBook(hitTestResult: hitTest.first!)
@@ -522,9 +502,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 self.addBook(hitTestResult: hitTest.first!)
             }
         }
-        else if notebookExists == true {
+        else if notebookExists {
+            let ignoreHidden = [SCNHitTestOption.ignoreChildNodes : (selectedTemplate).self]
+            let sceneView = sender.view as! ARSCNView
             let tapLocation2 = sender.location(in: sceneView)
-            let hitTest2 = sceneView.hitTest(tapLocation2)
+            let hitTest2 = sceneView.hitTest(tapLocation2, options: ignoreHidden)
+            //let hitTest2 = sceneView.hitTest(tapLocation2)
             if hitTest2.isEmpty {
                 print("nothing has been tapped on")
             }
@@ -534,8 +517,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 print("successful tap")
             }
         }
-    }
-    
+}
     func selectTemplate(hitTest : [SCNHitTestResult]){
         if pages.isEmpty == false{
             if self.templateExists == true {
@@ -558,6 +540,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     print("Single template selected")
                     templateSelectColorChange(node: node!)
                     print(node)
+                }
+                else if node?.name == "content"{
+                    print("image node")
+                    selectedTemplate = node?.parent
+                    print(selectedTemplate)
+                    templateSelectColorChange(node: selectedTemplate)
                 }
                 else{
                     print("cant find a node")
@@ -583,27 +571,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func templateDeselectColorChange(){
         previousSelectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
-    }
-    
-    func rerenderContent(){
-        if selectedTemplate == templateNode{
-            selectedTemplate.removeFromParentNode()
-            oneSlotTemplate()
-            let temp = currentPageNode?.childNode(withName: "Single node", recursively:false)
-            self.selectedTemplate = temp
-        }
-        if selectedTemplate == topTempNode{
-            selectedTemplate.removeFromParentNode()
-            createTopNode()
-            let temp = currentPageNode?.childNode(withName: "Top node", recursively:false)
-            self.selectedTemplate = temp
-        }
-        if selectedTemplate == bottomTempNode{
-            selectedTemplate.removeFromParentNode()
-            createBottomNode()
-            let temp = currentPageNode?.childNode(withName: "Bottom node", recursively:false)
-            self.selectedTemplate = temp
-        }
     }
     
     func addBook(hitTestResult: ARHitTestResult) {
@@ -702,12 +669,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         planeNode.geometry?.firstMaterial?.isDoubleSided = true
         planeNode.position = SCNVector3(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
         planeNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
+        if notebookExists{
+            planeNode.isHidden = true
+        }
+        else{
+            planeNode.isHidden = false
+        }
         return planeNode
     }
     
     
     //add more page nodes on detecting of planes... Not useful for our application added as example.
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        
+        if !notebookExists{
         guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
         
         if !notebookExists {
@@ -717,6 +692,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
             node.addChildNode(planeNode)
         }
+
+        let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
+        node.addChildNode(planeNode)
+        }
+
     }
     //didRemove runs when a feature point is removed - in this case check to see if the feature point removed was a plane note
     func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
@@ -728,7 +708,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     /*text helpers*/
     func createSlots(xf: Double, yf: Double, hght: Int, text: String){
-        
         let textNode = SCNText(string: text, extrusionDepth: 0.1)
         textNode.font = UIFont(name: "Arial", size:1)
         textNode.name = "content"
@@ -770,14 +749,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if bookNode != nil && currentPageNode != nil {
             if selectedTemplate != nil{
                 if contentExist {
-                    if selectedTemplate == currentPageNode?.childNode(withName: "Single node", recursively: true){
-                        selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
-                        createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
-                    }
-                    else {
-                        selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
-                        createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
-                    }
+                    selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
                 }
                 if template == "single"{
                     //check to see if the content is a sotrage url - which means its an image.
@@ -794,15 +766,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Top node")
                         }
                         else{
-                            if contentExist {
-                                if selectedTemplate == currentPageNode?.childNode(withName: "Top node", recursively: true){
-                                    selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
-                                    createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
-                                }
-                                else{
-                                    createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
-                                }
-                            }
+                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
                     else if bottomTempNode == selectedTemplate {
@@ -810,24 +774,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Bottom node")
                         }
                         else{
-                            if contentExist {
-                                if selectedTemplate == currentPageNode?.childNode(withName: "Bottom node", recursively: true){
-                                    selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
-                                    createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
-                                }
-                                else{
-                                    createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
-                                }
-                            }
+                           createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
                 }
             }
-            else {
-                alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
+
+                else {
+                    alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
+                }
             }
         }
-    }
     // functions to pass the image through to the VIEW CONTROLLER
     func passImage(image: UIImage) {
         dismiss(animated: true, completion: nil)
@@ -846,24 +803,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     else if template == "single" {
                        createSingleSlotImage(image: image)
                     }
-                else if template == "double"{
-                    if selectedTemplate == topTempNode{
-                        if contentExist {
-                            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                    else if template == "double"{
+                        if selectedTemplate == topTempNode{
                             createDoubleSlotImage(image: image)
                         }
-                        else{
-                           createDoubleSlotImage(image: image)
-                        }
-                    }
                     else if selectedTemplate == bottomTempNode{
-                        if contentExist == true {
-                            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
                             createDoubleSlotImage(image: image)
-                        }
-                        else{
-                            createDoubleSlotImage(image: image)
-                        }
                     }
                 }
             }
@@ -875,7 +820,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func createSingleSlotImage(image : UIImage){
         let tempNode = selectedTemplate
-        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+        let node = SCNNode(geometry: SCNBox(width: 1.0, height: 1.4, length: 0.001, chamferRadius: 0))
         node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
         node.name = "content"
         node.position = SCNVector3(0,0, 0.001)
@@ -885,7 +830,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func createDoubleSlotImage(image : UIImage){
         let tempNode = selectedTemplate
-        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+        let node = SCNNode(geometry: SCNBox(width: 1.0, height: 0.5, length: 0.001, chamferRadius: 0))
         node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
         node.name = "content"
         node.position = SCNVector3(0,0, 0.001)
