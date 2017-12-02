@@ -190,10 +190,12 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     func saveText(text: String){
         if (delegate?.accessToWrite)! {
             var name = "content1"
-            if(delegate?.selectedTemplate.name == "Bottom node"){
-                name = "content2"
+            if(delegate?.selectedTemplate != nil) {
+                if(delegate?.selectedTemplate.name == "Bottom node"){
+                    name = "content2"
+                }
+                self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name: text, "empty": "false"])
             }
-            self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name: text, "empty": "false"])
         }
     }
 }
