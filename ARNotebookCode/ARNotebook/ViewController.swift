@@ -2,9 +2,10 @@
 //  ViewController.swift
 //  ARNotebook
 //
-//  Created by Artur Bushi on 10/15/17.
-//  Copyright © 2017 Artur Bushi. All rights reserved.
+//  Created by AR Notebook on 10/15/17.
+//  Copyright © 2017 AR Notebook. All rights reserved.
 //
+
 
 import UIKit
 import ARKit
@@ -48,6 +49,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     var notebookID: Int = 0 //unique id of notebook
     var pageContentInfo : String = ""    
     var currentPageColor: String = ""
+    var currentBookCover: String = "brown"
     var template : String = ""
     var topTempNode : SCNNode?
     var bottomTempNode : SCNNode?
@@ -100,7 +102,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.sceneView.delegate = self
         currentProfile = nameDelegate?.profileName
         self.sceneView.autoenablesDefaultLighting = true
-        addTimer()
+        self.addPlaneTimer()
+        self.addButtonTimer()
     }
     
     /*
@@ -125,19 +128,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.addPageButton.isEnabled = false
         self.editButton.isEnabled = false
         self.insertButton.isEnabled = false
-    }
-    
-    func enableBookButtons(){
-        self.dismissButton.isEnabled = true
-        self.addPageButton.isEnabled = true
-        self.editButton.isEnabled = true
-    }
-    
-    func enablePageButtons(){
-        self.deletePageButton.isEnabled = true
-        self.undoButton.isEnabled = true
-        self.insertButton.isEnabled = true
-        self.shareButton.isEnabled = true
     }
     
     /*
@@ -212,7 +202,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     @objc func editInstruction( _ sender: UILongPressGestureRecognizer) {
         if sender.state == .ended {
-            let alertController = UIAlertController(title: "", message: "This button will let you edit the cover style of your notebook as well as the color of the pages.", preferredStyle: UIAlertControllerStyle.alert)
+            let alertController = UIAlertController(title: "", message: "This button will let you edit the cover style of your notebook as well as the color of the pages. \n\n To change only the current page color, simply tap the page color you like. To change the color of every page, hold down the color you prefer for a brief moment and then release.", preferredStyle: UIAlertControllerStyle.alert)
             let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
@@ -237,7 +227,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
-    func addTimer(){
+    func addPlaneTimer(){
         var planetimeout: Timer?
         planetimeout = Timer.scheduledTimer(withTimeInterval: 40.0, repeats: true, block: { (_) in
             if self.notebookExists == true{
@@ -247,6 +237,37 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 let cancelAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel)
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true, completion: nil)
+            }
+        })
+    }
+    
+    func addButtonTimer(){
+        var buttonTimer: Timer?
+        buttonTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true, block: { (_) in
+            if self.currentPageNode == nil{
+                self.deletePageButton.isEnabled = false
+                self.shareButton.isEnabled = false
+                self.undoButton.isEnabled = false
+                self.insertButton.isEnabled = false
+            }
+            else if self.currentPageNode == nil && self.lastNode.last == nil{
+                self.undoButton.isEnabled = false
+            }
+            else {
+                self.deletePageButton.isEnabled = true
+                self.shareButton.isEnabled = true
+                self.undoButton.isEnabled = true
+                self.insertButton.isEnabled = true
+            }
+            if self.notebookExists == false{
+                self.dismissButton.isEnabled = false
+                self.addPageButton.isEnabled = false
+                self.editButton.isEnabled = false
+            }
+            else{
+                self.dismissButton.isEnabled = true
+                self.addPageButton.isEnabled = true
+                self.editButton.isEnabled = true
             }
         })
     }
@@ -294,9 +315,9 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let results = hitTest.first!
             _ = results.boneNode
             let pinchAction = SCNAction.scale(by: sender.scale, duration: 1)
-            topTempNode?.runAction(pinchAction)
-            bottomTempNode?.runAction(pinchAction)
-            currentPageNode?.runAction(pinchAction)
+            self.topTempNode?.runAction(pinchAction)
+            self.bottomTempNode?.runAction(pinchAction)
+            self.currentPageNode?.runAction(pinchAction)
             sender.scale = 1.0
         }
     }
@@ -376,7 +397,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             twoSlotTemplate()
             template = text
         }
-        self.enablePageButtons()
     }
     
     func createPage(){
@@ -402,7 +422,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.bookNode?.addChildNode(pageNode)
             currentPage = Int((currentPageNode?.name)!)!
             addPageNum()
-            self.enablePageButtons()
         }
         else{//book error
             let alertController = UIAlertController(title: "Error", message: "Please add a notebook or page before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -618,11 +637,11 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let node = createBook(hitTestResult: hitTestResult)
             //render book on root
             self.sceneView.scene.rootNode.addChildNode(node)
-            self.notebookExists = true
+            self.selectBookCover(cover: self.currentBookCover)
             self.addContent(id: String(notebookID), pageObjs: self.pageObjectArray)
             self.setTime(id: String(notebookID))
             self.tapGestureEnabling()
-            self.enableBookButtons()
+            self.notebookExists = true
         }
     }
     
@@ -650,10 +669,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         self.ref.child("users/\((self.currentProfile)!)/notebooks/\(id)").setValue(["name": self.notebookName])
         self.ref.child("notebooks/\(id)").setValue(["name": self.notebookName])
         self.sceneView.scene.rootNode.addChildNode(node)  //render book on root
+        self.bookColor(imageOne: #imageLiteral(resourceName: "graphicBook1 copy2"), cover: "brown")
         self.setTime(id: String(notebookID))
         self.notebookExists = true
         self.tapGestureEnabling()
-        self.enableBookButtons()
     }
     
     func setTime(id: String){
@@ -996,13 +1015,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      -----
      */
     
-    func pageColor(image: UIImage) {
+    func pageColor(image: UIImage, style: String ) {
         if accessToWrite == true {
             if bookNode != nil && currentPageNode != nil {
-                for page in pages {
-                    page.geometry?.firstMaterial?.diffuse.contents = image
+                if style == "long" {
+                    for page in pages {
+                        page.geometry?.firstMaterial?.diffuse.contents = image
+                    }
                 }
-                // maybe an array for all the pages to change all or a single page at a time ?
+                else {
+                    self.currentPageNode?.geometry?.firstMaterial?.diffuse.contents = image
+                }
             }
             else{ //error for if there is no book
                 let alertController = UIAlertController(title: "Error", message: "Please add a notebook before adding text", preferredStyle: UIAlertControllerStyle.alert)
@@ -1013,26 +1036,45 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     
+    func addAllColorsToDB(color: String){
+        for page in pages{
+            ref.child("notebooks/\(self.notebookID)/\(pages.index(of: page)! + 1)").setValue(["color" : color])
+        }
+    }
+    
     /*
      -----
-     book Color Deletegate Funcitons
+     book Color Delegate Funcitons
      -----
      */
     
     func bookColor(imageOne: UIImage, cover: String) {
         if accessToWrite == true {
-            bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
+            self.bookNode?.geometry?.firstMaterial?.diffuse.contents = imageOne
             ref.child("notebooks/\(notebookID)").updateChildValues(["CoverStyle" : cover])
         }
         else {
-            //alet extension
+            //alert extension
         }
     }
+    
+    func selectBookCover(cover: String){
+        switch cover {
+        case "coffee":
+            self.bookNode?.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "spiralNotebook")
+        case "black":
+            self.bookNode?.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "brownBook")
+        default:
+            self.bookNode?.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "graphicBook1 copy2")
+        }
+    }
+    
     /*
      -----
      Share Button
      -----
      */
+    
     @IBAction func shareNotebook(){
         if accessToWrite == true {
             //notebook ID of the notebook to share
@@ -1139,7 +1181,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
      Retrieve delegate function
      -----
      */
-    func addPageWithContent(content: String, temp: String){
+    func addPageWithContent(content: String, temp: String, colorString: String){
         if self.notebookExists == true || self.retrievedFlag == true {
             if temp == "single" {
                 createPage()
@@ -1163,6 +1205,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 self.selectedTemplate = self.bottomTempNode
                 passText(text: content, i: Int(index)!)
             }
+            self.addColor(colorString: colorString)
         }
         else {
             //error no book
@@ -1186,7 +1229,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     if (i == 1 && t == "double"){
                         t = "doubleSecond"
                     }
-                    addPageWithContent(content: page.content[i], temp: t)
+                    addPageWithContent(content: page.content[i], temp: t, colorString: page.currentPageColor)
                 }
             }
             else {
@@ -1200,6 +1243,24 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             
         }
     }
+    
+    func addColor(colorString: String){
+        switch colorString {
+        case "red":
+            self.pageColor(image: #imageLiteral(resourceName: "RedPage"), style: "tap")
+        case "blue":
+            self.pageColor(image: #imageLiteral(resourceName: "BluePage"), style: "tap")
+        case "green":
+            self.pageColor(image: #imageLiteral(resourceName: "GreenPage"), style: "tap")
+        case "purple":
+            self.pageColor(image: #imageLiteral(resourceName: "PurplePage"), style: "tap")
+        case "yellow":
+            self.pageColor(image: #imageLiteral(resourceName: "YellowPage"), style: "tap")
+        default:
+            self.pageColor(image: #imageLiteral(resourceName: "page"), style: "tap")
+        }
+    }
+    
     func attachEventListeners(){
         let postRef = self.ref.child("notebooks/\(self.notebookID)")
         postRef.observe(.childChanged, with: { (snapshot) -> Void in

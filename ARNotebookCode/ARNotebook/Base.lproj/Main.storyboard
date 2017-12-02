@@ -223,6 +223,14 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fmC-4i-eLe"/>
                     </view>
+                    <connections>
+                        <outlet property="blueButton" destination="Bby-5e-7HI" id="vkg-Jh-K9d"/>
+                        <outlet property="defaultButton" destination="GK5-yr-5Fb" id="wPn-fz-DeF"/>
+                        <outlet property="greenButton" destination="KPs-6v-Efi" id="Dt7-l8-HUl"/>
+                        <outlet property="purpleButton" destination="DNY-Lm-hVY" id="qHZ-Kb-xz3"/>
+                        <outlet property="redButton" destination="w37-ZY-iky" id="OY0-OY-UkL"/>
+                        <outlet property="yellowButton" destination="kjE-eS-eRM" id="qo7-p0-Cwu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CGQ-qs-Ix6" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="1HY-xK-Lqw" userLabel="Exit" sceneMemberID="exit"/>
