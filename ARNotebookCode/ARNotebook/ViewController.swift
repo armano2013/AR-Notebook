@@ -713,72 +713,36 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         dismiss(animated: true, completion: nil)
         if currentPageNode != nil {
             if selectedTemplate != nil{
-                    if contentExist == true {
-                        rerenderContent()
-                        let tempNode = selectedTemplate
-                        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
-                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                        node.name = "content"
-                        node.position = SCNVector3(0,0, 0.001)
-                        lastNode.append(node)
-                        tempNode?.addChildNode(node)
-                        contentExist = true
+                    if contentExist {
+                        if selectedTemplate == currentPageNode?.childNode(withName: "Single node", recursively: true){
+                            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                            createSingleSlotImage(image: image)
+                        }
+                        else{
+                            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                            createDoubleSlotImage(image: image)
+                        }
                     }
                     else if template == "single" {
-                        let tempNode = selectedTemplate
-                        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
-                        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                        node.name = "content"
-                        node.position = SCNVector3(0,0, 0.001)
-                        lastNode.append(node)
-                        tempNode?.addChildNode(node)
-                        contentExist = true
+                       createSingleSlotImage(image: image)
                     }
                 else if template == "double"{
                     if selectedTemplate == topTempNode{
-                        if contentExist == true {
-                            rerenderContent()
-                            let tempNode = selectedTemplate
-                            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                            node.name = "content"
-                            node.position = SCNVector3(0,0, 0.001)
-                            lastNode.append(node)
-                            tempNode?.addChildNode(node)
-                            contentExist = true
+                        if contentExist {
+                            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                            createDoubleSlotImage(image: image)
                         }
                         else{
-                            let tempNode = selectedTemplate
-                            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                            node.name = "content"
-                            node.position = SCNVector3(0,0, 0.001)
-                            lastNode.append(node)
-                            tempNode?.addChildNode(node)
-                            contentExist = true
+                           createDoubleSlotImage(image: image)
                         }
                     }
                     else if selectedTemplate == bottomTempNode{
                         if contentExist == true {
-                            rerenderContent()
-                            let tempNode = selectedTemplate
-                            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                            node.name = "content"
-                            node.position = SCNVector3(0,0, 0.001)
-                            lastNode.append(node)
-                            tempNode?.addChildNode(node)
-                            contentExist = true
+                            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                            createDoubleSlotImage(image: image)
                         }
                         else{
-                            let tempNode = selectedTemplate
-                            let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
-                            node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
-                            node.name = "content"
-                            node.position = SCNVector3(0,0, 0.001)
-                            lastNode.append(node)
-                            tempNode?.addChildNode(node)
-                            contentExist = true
+                            createDoubleSlotImage(image: image)
                         }
                     }
                 }
@@ -789,6 +753,27 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
         selectedTemplate = nil
     }
+    func createSingleSlotImage(image : UIImage){
+        let tempNode = selectedTemplate
+        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 1.6, length: 0.001, chamferRadius: 0))
+        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+        node.name = "content"
+        node.position = SCNVector3(0,0, 0.001)
+        lastNode.append(node)
+        tempNode?.addChildNode(node)
+        contentExist = true
+    }
+    func createDoubleSlotImage(image : UIImage){
+        let tempNode = selectedTemplate
+        let node = SCNNode(geometry: SCNBox(width: 1.2, height: 0.7, length: 0.001, chamferRadius: 0))
+        node.geometry?.firstMaterial?.diffuse.contents = UIImage.animatedImage(with: [image], duration: 0)
+        node.name = "content"
+        node.position = SCNVector3(0,0, 0.001)
+        lastNode.append(node)
+        tempNode?.addChildNode(node)
+        contentExist = true
+    }
+    
     /*
      -----
      Add Notebook Clear Functions
