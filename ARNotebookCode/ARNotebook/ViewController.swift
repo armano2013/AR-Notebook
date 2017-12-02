@@ -960,6 +960,12 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(deletePageAction)
             self.present(alertController, animated: true, completion: nil)
         }
+        if accessToWrite == flase && cameFromShare == true {
+            self.currentPageNode?.removeFromParentNode()
+            self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
+            self.pages.removeLast()
+            self.currentPageNode = self.pages.last
+        }
         else{
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
@@ -1239,22 +1245,17 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         }
     }
     func handleDoubleChildChange(snapshot: DataSnapshot) {
-        if(Int(snapshot.key) != currentPage) {
-            if(Int(snapshot.key)! < currentPage) {
+        if(Int(snapshot.key)! < currentPage) {
                 moveCurrentPage(i: snapshot.key)
-            }
-            else{
-                if (Int(snapshot.key)! == currentPage) {
-                    //if the current page is this one, and there is more than one child..
-                    //remove the current page and recreate
-                    self.deletePage()
-                }
-                createPage()
-                createTopNode()
-                createBottomNode()
-                template = "double"
-            }
         }
+        else if (Int(snapshot.key)! == currentPage) {
+            self.deletePage()
+        }
+        createPage()
+        createTopNode()
+        createBottomNode()
+        template = "double"
+
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
             let text = page.value as! String
