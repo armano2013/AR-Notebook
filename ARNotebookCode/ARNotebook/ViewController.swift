@@ -921,17 +921,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(deletePageAction)
             self.present(alertController, animated: true, completion: nil)
         }
-        if accessToWrite == false && cameFromShare == true {
-            self.currentPageNode?.removeFromParentNode()
-            self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
-            self.pages.removeLast()
-            self.currentPageNode = self.pages.last
-        }
-        else{
+        else {
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
-    
+    func deleteRealTime() {
+        self.currentPageNode?.removeFromParentNode()
+        self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
+        self.pages.removeLast()
+        self.currentPageNode = self.pages.last
+    }
     func deleteNotebook(book: String){
         if accessToWrite == true {
             dismiss(animated: true, completion: nil)
@@ -1188,7 +1187,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if self.retrievedFlag && self.cameFromShare {
             //connect listener to notebook to see if anything changes.
             attachEventListeners()
-            
         }
     }
     
@@ -1212,10 +1210,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func attachEventListeners(){
         let postRef = self.ref.child("notebooks/\(self.notebookID)")
         postRef.observe(.childChanged, with: { (snapshot) -> Void in
-            if snapshot.childrenCount == 2 {
+            if snapshot.childrenCount == 3 {
                 self.handleSingleChildChange(snapshot: snapshot)
             }
-            else if snapshot.childrenCount == 3 {
+            else if snapshot.childrenCount == 4 {
                 self.handleDoubleChildChange(snapshot: snapshot)
             }
         })
@@ -1252,7 +1250,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             moveCurrentPage(i: snapshot.key)
         }
         else if (Int(snapshot.key)! == currentPage) {
-            self.deletePage()
+            self.deleteRealTime()
         }
         createPage()
         createTopNode()
