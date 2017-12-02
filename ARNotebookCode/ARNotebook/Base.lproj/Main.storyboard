@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQs-GR-sQ3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -400,6 +400,7 @@
                         <outlet property="dismissButton" destination="FT4-L0-4uA" id="0E3-OQ-e1n"/>
                         <outlet property="editButton" destination="1qn-Z5-Zgq" id="lUk-Hn-RFa"/>
                         <outlet property="insertButton" destination="cFE-mw-2FI" id="uWp-Wo-fsH"/>
+                        <outlet property="openButton" destination="0kK-Zk-BJV" id="ZXk-xc-JaQ"/>
                         <outlet property="sceneView" destination="7rB-xZ-A2i" id="KUY-j7-7m4"/>
                         <outlet property="shareButton" destination="GIW-Jg-ywa" id="PXB-kl-jlL"/>
                         <outlet property="undoButton" destination="tYF-ND-GVF" id="AN1-ph-mWF"/>
@@ -725,6 +726,7 @@
                         <viewLayoutGuide key="safeArea" id="MVk-Jb-1pH"/>
                     </view>
                     <connections>
+                        <outlet property="logOutButton" destination="kGN-WG-19R" id="8Rg-A9-dPL"/>
                         <outlet property="tableView" destination="dd5-Xc-WWn" id="HiY-rv-yD6"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="showSharedNotebook" id="Noy-7X-jaB"/>
                         <segue destination="wPE-lQ-U0v" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="obt-X2-c1q"/>
@@ -754,7 +756,7 @@
         <image name="undo" width="50" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="MRj-bY-e0I"/>
+        <segue reference="fmo-nK-Nk9"/>
         <segue reference="Noy-7X-jaB"/>
     </inferredMetricsTieBreakers>
 </document>
