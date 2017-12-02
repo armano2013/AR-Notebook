@@ -98,14 +98,15 @@ class pageColorViewController: UIViewController {
                 self.delegate?.addAllColorsToDB(color: self.pageColorString!)
             }
             self.dismiss(animated: true, completion: nil)
+            print("long red tapped")
         }
     }
     
     @objc func longDefaultPress( _ sender: UILongPressGestureRecognizer) {
         if sender.state == .ended {
-            let red = #imageLiteral(resourceName: "RedPage")
+            let defaultPage = #imageLiteral(resourceName: "page")
             self.pageColorString = "default"
-            self.delegate?.pageColor(image : red, style: "long")
+            self.delegate?.pageColor(image : defaultPage, style: "long")
             if pageColorString != nil{
                 self.delegate?.addAllColorsToDB(color: self.pageColorString!)
             }

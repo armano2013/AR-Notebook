@@ -1044,7 +1044,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addAllColorsToDB(color: String){
         for page in pages{
-            ref.child("notebooks/\(self.notebookID)/\(pages.index(of: page)! + 1)").setValue(["color" : color])
+            ref.child("notebooks/\(self.notebookID)/\(pages.index(of: page)! + 1)").updateChildValues(["color" : color])
         }
     }
     
