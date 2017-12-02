@@ -34,9 +34,7 @@ class AuthenticationViewController: UIViewController, profileNameDelegate, Login
                         return
                     }
                 })
-                
             })
-            
             performSegue(withIdentifier: "loginSegue", sender: self)
         default:
             break
@@ -53,14 +51,18 @@ class AuthenticationViewController: UIViewController, profileNameDelegate, Login
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor(red: 59/255, green: 89/255, blue: 152/255, alpha: 0.5)
+        if Auth.auth().currentUser != nil {
+            self.profileName = (Auth.auth().currentUser?.uid)!
+            performSegue(withIdentifier: "loginSegue", sender: self)
+        }
+        self.view.backgroundColor = UIColor(red: 59/255, green: 89/255, blue: 152/255, alpha: 1)
         // Do any additional setup after loading the view.
         ref = Database.database().reference().child("users")
         self.addFBButton()
         self.instructions()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if Auth.auth().currentUser != nil {
             self.profileName = (Auth.auth().currentUser?.uid)!
             performSegue(withIdentifier: "loginSegue", sender: self)
@@ -97,8 +99,8 @@ class AuthenticationViewController: UIViewController, profileNameDelegate, Login
         customButton.frame = CGRect(x: view.frame.width/4, y: view.frame.maxY - 100, width: view.frame.width/2, height: 35)
         customButton.layer.cornerRadius = 5
         customButton.setTitle("Login to AR Notebook with Facebook", for: .normal)
-        customButton.backgroundColor = UIColor(red: 59/255, green: 89/255, blue: 152/255, alpha: 0.5)
-        customButton.tintColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 0.5)
+        customButton.backgroundColor = UIColor(red: 59/255, green: 89/255, blue: 152/255, alpha: 1)
+        customButton.tintColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
         customButton.addTarget(self, action: #selector(customFBButtonTapped), for: .touchUpInside)
         view.addSubview(customButton)
     }
