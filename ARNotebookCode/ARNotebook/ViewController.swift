@@ -749,7 +749,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func passText(text: String, i: Int = 0) {
         if bookNode != nil && currentPageNode != nil {
-            if selectedTemplate != nil {
+            if selectedTemplate != nil{
                 if contentExist {
                     if selectedTemplate == currentPageNode?.childNode(withName: "Single node", recursively: true){
                         selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
@@ -805,7 +805,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
             }
             else {
-               alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
+                alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
             }
         }
     }
@@ -1230,7 +1230,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 selectedTemplate = currentPageNode?.childNode(withName: "Single node", recursively: true)
                 selectedTemplate.childNode(withName: "content", recursively: true)?.removeFromParentNode()
                 if text.range(of:"firebasestorage.googleapis.com") != nil {
-                    downloadImage(i: Int(i)!, w: 1.2, h: 07, text: text, tmp: "Single node")
+                    downloadImage(i: Int(i)!, w: 1.2, h: 0.7, text: text, tmp: "Single node")
                 }
                 else{
                     createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
@@ -1240,10 +1240,15 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func handleDoubleChildChange(snapshot: DataSnapshot) {
         if(Int(snapshot.key) != currentPage) {
-            if(Int(snapshot.key)! <= currentPage) {
+            if(Int(snapshot.key)! < currentPage) {
                 moveCurrentPage(i: snapshot.key)
             }
             else{
+                if (Int(snapshot.key)! == currentPage) {
+                    //if the current page is this one, and there is more than one child..
+                    //remove the current page and recreate
+                    self.deletePage()
+                }
                 createPage()
                 createTopNode()
                 createBottomNode()
@@ -1306,16 +1311,36 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? insertViewController{
-            destination.delegate = self
+            if accessToWrite {
+                destination.delegate = self
+            }
+            else {
+               alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            }
         }
         else if let destination = segue.destination as? addPageViewController {
-            destination.delegate = self
+            if accessToWrite {
+                destination.delegate = self
+            }
+            else {
+                alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            }
         }
         else if let destination = segue.destination as? pageColorViewController{
-            destination.delegate = self
+            if accessToWrite {
+                destination.delegate = self
+            }
+            else {
+                alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            }
         }
         else if let destination = segue.destination as? retrieveViewController {
-            destination.delegate = self
+            if accessToWrite {
+                destination.delegate = self
+            }
+            else {
+                alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            }
         }
         
     }

@@ -21,6 +21,7 @@ protocol insertDelegate {
     var selectedTemplate: SCNNode! {get set}
     func passImage (image: UIImage)
     func passText(text: String,  i: Int)
+    var accessToWrite: Bool {get set}
 }
 
 
@@ -35,7 +36,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     var storageRef: StorageReference! //calling a reference to the firebase storage
     @IBOutlet weak var UserInputText: UITextField!
     @IBOutlet var textFieldBottomConstraint: NSLayoutConstraint!
-    
+     var alert = alertHelper()
     
     /*
      -----
@@ -52,7 +53,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         self.UserInputText.delegate = self
-        
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -137,8 +138,8 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     func getClipboard() -> String{
         let pasteboard: String? = UIPasteboard.general.string
         if let string = pasteboard {
-            return string
             saveText(text: string)
+            return string
         }
         else{ //error for if there is nothing on the clipboard
             dismiss(animated: true, completion: nil)
@@ -187,14 +188,12 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         }
     }
     func saveText(text: String){
-        if ((self.delegate?.currentProfile) != nil){
-            let profile = self.delegate?.currentProfile!
+        if (delegate?.accessToWrite)! {
             var name = "content1"
             if(delegate?.selectedTemplate.name == "Bottom node"){
                 name = "content2"
             }
             self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name: text, "empty": "false"])
-            
         }
     }
 }

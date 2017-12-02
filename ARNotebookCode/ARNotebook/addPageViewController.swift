@@ -50,25 +50,16 @@ class addPageViewController: UIViewController {
      -----
      */
     @IBAction func addTwoSlotPage(_ sender: Any) {
-        if (delegate?.accessToWrite)!{
-            let string = "double"
-            //add to database even if empty
-            savePage()
-            self.delegate?.addPage(text : string)
-        }
-        else{
-            alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
-        }
+        let string = "double"
+        //add to database even if empty
+        savePage()
+        self.delegate?.addPage(text : string)
     }
     @IBAction func addOneSlotPage(_ sender: Any) {
-        if (delegate?.accessToWrite)! {
-            let string = "single"
-            savePage()
-            self.delegate?.addPage(text : string)
-        }
-        else{
-            alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
-        }
+        let string = "single"
+        savePage()
+        self.delegate?.addPage(text : string)
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
