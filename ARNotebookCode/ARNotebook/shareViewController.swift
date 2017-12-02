@@ -1,3 +1,12 @@
+//
+//  shareViewController.swift
+//  ARNotebook
+//
+//  Created by AR Notebook on 10/15/17.
+//  Copyright © 2017 AR Notebook. All rights reserved.
+//
+
+
 import UIKit
 import ARKit
 import Firebase
@@ -92,7 +101,6 @@ class shareViewController: UIViewController {
         
         
         longLink = components.url
-        print(longLink?.absoluteString ?? "")
         
         let options = DynamicLinkComponentsOptions()
         options.pathLength = .unguessable

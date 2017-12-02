@@ -2,8 +2,8 @@
 //  insertViewController.swift
 //  ARNotebook
 //
-//  Created by Artur Bushi on 10/15/17.
-//  Copyright © 2017 Artur Bushi. All rights reserved.
+//  Created by AR Notebook on 10/15/17.
+//  Copyright © 2017 AR Notebook. All rights reserved.
 //
 
 import UIKit
@@ -21,6 +21,7 @@ protocol insertDelegate {
     var selectedTemplate: SCNNode! {get set}
     func passImage (image: UIImage)
     func passText(text: String,  i: Int)
+    var accessToWrite: Bool {get set}
 }
 
 
@@ -35,7 +36,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     var storageRef: StorageReference! //calling a reference to the firebase storage
     @IBOutlet weak var UserInputText: UITextField!
     @IBOutlet var textFieldBottomConstraint: NSLayoutConstraint!
-    
+     var alert = alertHelper()
     
     /*
      -----
@@ -47,12 +48,11 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         ref = Database.database().reference()
         storageRef = Storage.storage().reference()
         // Do any additional setup after loading the view.
-        
         self.view.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(dissmiss)))
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         self.UserInputText.delegate = self
-        
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -105,7 +105,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     @IBAction func updateText(_ sender: Any) {
         if let keyText = UserInputText.text {
             saveText(text: keyText)
-            delegate?.passText(text: keyText, i: -1)
+            self.delegate?.passText(text: keyText, i: -1)
         }
     }
     
@@ -113,7 +113,7 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     @IBAction func addClipboardText(_ sender: Any) {
         let text = getClipboard()
         saveText(text: text)
-        delegate?.passText(text: text, i: -1)
+        self.delegate?.passText(text: text, i: -1)
     }
     
     @IBAction func chooseGalleryImage(_ sender: Any) {
@@ -137,8 +137,8 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
     func getClipboard() -> String{
         let pasteboard: String? = UIPasteboard.general.string
         if let string = pasteboard {
-            return string
             saveText(text: string)
+            return string
         }
         else{ //error for if there is nothing on the clipboard
             dismiss(animated: true, completion: nil)
@@ -174,27 +174,24 @@ class insertViewController: UIViewController ,UINavigationControllerDelegate, UI
         let imageRef = storageRef?.child("images").child(profile)
         let fileRef = imageRef?.child(String(pickedImage.hashValue))
         let data = UIImageJPEGRepresentation(pickedImage, 1)! as NSData
-        //normally would have your error handling; in this case we just do a return
         fileRef?.putData(data as Data, metadata: nil){
             (metadata, error) in guard metadata != nil else {
-                print("There was an error")
                 return
             }
-            //happens AFTER the completion of the putData() and est of your program will run while this does it's thing
             // https://firebase.google.com/docs/storage/ios/upload-files?authuser=0
             guard let imageURL =  metadata?.downloadURLs?.first?.absoluteString else { fatalError() }
             self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name:imageURL, "empty": "false"])
         }
     }
     func saveText(text: String){
-        if ((self.delegate?.currentProfile) != nil){
-            let profile = self.delegate?.currentProfile!
+        if (delegate?.accessToWrite)! {
             var name = "content1"
-            if(delegate?.selectedTemplate.name == "Bottom node"){
-                name = "content2"
+            if(delegate?.selectedTemplate != nil) {
+                if(delegate?.selectedTemplate.name == "Bottom node"){
+                    name = "content2"
+                }
+                self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name: text, "empty": "false"])
             }
-            self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\((self.delegate?.currentPage)!)").updateChildValues([name: text, "empty": "false"])
-            
         }
     }
 }

@@ -1,3 +1,11 @@
+//
+//  retrieveViewController.swift
+//  ARNotebook
+//
+//  Created by AR Notebook on 10/15/17.
+//  Copyright © 2017 AR Notebook. All rights reserved.
+//
+
 import UIKit
 import FacebookLogin
 import FacebookCore
@@ -7,6 +15,8 @@ import FirebaseDatabase
 
 struct Page {
     var content=[String]()
+    var currentPageColor = "default"
+    var bookCover = "brown"
 }
 
 protocol retrieveDelegate {
@@ -16,6 +26,8 @@ protocol retrieveDelegate {
     var retrievedFlag : Bool {get set}
     var notebookID: Int {get set}
     var pageObjectArray: [Page] {get set}
+    var currentBookCover: String {get set}
+    func selectBookCover(cover: String)
 }
 
 class retrieveViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -56,18 +68,36 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             retrievePreviousNotebookWithID(id: sharedNotebookID)
         }
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let longLogOutGesture = UILongPressGestureRecognizer(target: self, action: #selector(logOutInstruction(_:)))
+        self.logOutButton.addGestureRecognizer(longLogOutGesture)
+    }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.tableView.reloadData()
     }
+    
     /*
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    */
+     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+     self.dismiss(animated: true, completion: nil)
+     }
+     */
+    
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var logOutButton: UIButton!
+    
+    @objc func logOutInstruction( _ sender: UILongPressGestureRecognizer) {
+        if sender.state == .ended {
+            let alertController = UIAlertController(title: "", message: "Due to Facebook's Software Policies, you cannot fully log out of your Facebook account until you log out of every Facebook option on your device. This includes your web browser, other applications, and Facebook itself.", preferredStyle: UIAlertControllerStyle.alert)
+            let cancelAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
     
     @IBAction func logOutFacebook(_ sender: Any) {
         let manager = LoginManager()
@@ -77,7 +107,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             print(error)
         }
     }
-   func retrieveShareContent(id : String){
+    
+    func retrieveShareContent(id : String){
         retrievePreviousNotebookWithID(id: id)
     }
     
@@ -118,28 +149,36 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 self.pageNum = Int(snapshot.childrenCount)
                 while let pages = enumPages.nextObject() as? DataSnapshot {
                     let enumContent = pages.children
+                    var cover = "brown"
                     if(pages.key != "name" && pages.key != "CoverStyle" && pages.key != "LastAccessed" ) {
                         var pageContent = [String]()
+                        var pageColor = "default"
                         while let content = enumContent.nextObject() as? DataSnapshot {
                             var contentVal = content.value as! String
-                            if(content.key != "color" ){
+                            if(content.key == "color" ){
+                                pageColor = content.value as! String
+                                contentVal = ""
+                                pageContent.append(contentVal)
+                            }
+                            else {
                                 if (content.key == "empty" && contentVal == "false"){
                                     continue
                                 }
                                 else if (content.key == "empty" && contentVal == "true"){
-                                    contentVal = " "
+                                    contentVal = ""
                                     pageContent.append(contentVal)
                                 }
                                 else{
                                     pageContent.append(contentVal)
                                 }
                             }
-                            else {
-                                //update page struct to handle retrieved page color
-                            }
                         }
-                        let newPage = Page(content: pageContent)
+                        let newPage = Page(content: pageContent, currentPageColor: pageColor, bookCover: cover)
                         self.pageObjArray.append(newPage)
+                    }
+                    else if pages.key == "CoverStyle"{
+                        cover = pages.value as! String
+                        self.delegate?.currentBookCover = cover
                     }
                 }
                 self.delegate?.pageObjectArray = self.pageObjArray
@@ -210,8 +249,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             mainVC?.cameFromShare = true
             mainVC?.prevVC = self
             if(self.accessToWrite) {
-                 mainVC?.notebookID = Int(self.sharedNotebookID)! //if the user can write update the notebookID flag so the updates are managed in DB
+                mainVC?.notebookID = Int(self.sharedNotebookID)! //if the user can write update the notebookID flag so the updates are managed in DB
             }
         }
     }
- }
+}
