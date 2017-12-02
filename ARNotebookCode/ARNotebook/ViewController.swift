@@ -674,7 +674,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         if selectedTemplate?.name == "Top node"{
                             createDoubleSlotImage(image: image)
                         }
-                    else if selectedTemplate?.name == "Bottom Node"{
+                    else if selectedTemplate?.name == "Bottom node"{
                             createDoubleSlotImage(image: image)
                     }
                 }
