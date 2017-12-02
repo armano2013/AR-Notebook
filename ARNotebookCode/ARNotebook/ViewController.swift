@@ -506,8 +506,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             let ignoreHidden = [SCNHitTestOption.ignoreChildNodes : (selectedTemplate).self]
             let sceneView = sender.view as! ARSCNView
             let tapLocation2 = sender.location(in: sceneView)
-            let hitTest2 = sceneView.hitTest(tapLocation2, options: ignoreHidden)
-            //let hitTest2 = sceneView.hitTest(tapLocation2)
+            let hitTest2 = sceneView.hitTest(tapLocation2)
             if hitTest2.isEmpty {
                 print("nothing has been tapped on")
             }
@@ -667,12 +666,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         planeNode.geometry?.firstMaterial?.isDoubleSided = true
         planeNode.position = SCNVector3(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
         planeNode.eulerAngles = SCNVector3(90.degreesToRadians, 0, 0)
-        if notebookExists{
-            planeNode.isHidden = true
-        }
-        else{
-            planeNode.isHidden = false
-        }
         return planeNode
     }
     
@@ -721,7 +714,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         contentExist = true
         selectedTemplate?.addChildNode(node)
         previousSelectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
-        selectedTemplate = nil
     }
     func downloadImage(i: Int, w: CGFloat, h: CGFloat, text: String, tmp: String){
         let url = URL(string: text)
@@ -759,6 +751,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
                 else if template == "double"{
+
                     if selectedTemplate?.name == "Top node" {
                         if text.range(of:"firebasestorage.googleapis.com") != nil {
                             downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Top node")
@@ -767,6 +760,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
+
                     else if selectedTemplate?.name == "Bottom node" {
                         if text.range(of:"firebasestorage.googleapis.com") != nil {
                             downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Bottom node")
@@ -801,12 +795,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 else if template == "single" {
                     createSingleSlotImage(image: image)
                 }
-                else if template == "double"{
-                    if selectedTemplate == topTempNode{
-                        createDoubleSlotImage(image: image)
-                    }
-                    else if selectedTemplate == bottomTempNode{
-                        createDoubleSlotImage(image: image)
+               
+              else if template == "double"{
+                        if selectedTemplate?.name == "Top node"{
+                            createDoubleSlotImage(image: image)
+                        }
+                    else if selectedTemplate?.name == "Bottom node"{
+                            createDoubleSlotImage(image: image)
                     }
                 }
             }
