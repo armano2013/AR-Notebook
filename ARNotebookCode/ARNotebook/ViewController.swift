@@ -363,7 +363,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         node.position = SCNVector3(-0.5, 0.0, 0.001)
         return node;
     }
-   
+    
     func addPage(text: String){
         dismiss(animated: true, completion: nil)
         
@@ -381,7 +381,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func createPage(){
         if self.notebookExists == true || self.retrievedFlag == true  {
-            var offset = 0.0
+            var offset = 0.01
             let pageNode = SCNNode(geometry: SCNBox(width: 1.4, height: 1.8, length:0.001, chamferRadius: 0.0))
             //@FIXME have fixed hieght for now bounding box isnt working
             
@@ -516,7 +516,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 print("successful tap")
             }
         }
-}
+    }
     func selectTemplate(hitTest : [SCNHitTestResult]){
         if pages.isEmpty == false{
             if self.templateExists == true {
@@ -542,7 +542,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 }
                 else if node?.name == "content"{
                     print("image node")
-                    selectedTemplate = node?.parent
+                    self.selectedTemplate = node?.parent
                     print(selectedTemplate)
                     templateSelectColorChange(node: selectedTemplate)
                 }
@@ -562,10 +562,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     
     func templateReset(){
-        
         selectedTemplate?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
         selectedTemplate = nil
-        
     }
     
     func templateDeselectColorChange(){
@@ -676,20 +674,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         
         if !notebookExists{
-        guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
-        
-        if !notebookExists {
-            node.enumerateChildNodes{(childNode, _) in
-                childNode.removeFromParentNode()
+            guard let planeAnchor = anchor as? ARPlaneAnchor else {return}
+            
+            if !notebookExists {
+                node.enumerateChildNodes{(childNode, _) in
+                    childNode.removeFromParentNode()
+                }
+                let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
+                node.addChildNode(planeNode)
             }
+            
             let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
             node.addChildNode(planeNode)
         }
-
-        let planeNode = createPlaneFocusSquare(planeAnchor: planeAnchor)
-        node.addChildNode(planeNode)
-        }
-
+        
     }
     //didRemove runs when a feature point is removed - in this case check to see if the feature point removed was a plane note
     func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
@@ -753,7 +751,8 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                     }
                 }
                 else if template == "double"{
-                    if selectedTemplate?.name == "Top node"{
+
+                    if selectedTemplate?.name == "Top node" {
                         if text.range(of:"firebasestorage.googleapis.com") != nil {
                             downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Top node")
                         }
@@ -761,41 +760,43 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                             createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
-                    else if selectedTemplate?.name == "Bottom node"{
+
+                    else if selectedTemplate?.name == "Bottom node" {
                         if text.range(of:"firebasestorage.googleapis.com") != nil {
                             downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Bottom node")
                         }
                         else{
-                           createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                         }
                     }
                 }
             }
-
-                else {
-                    alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
-                }
+                
+            else {
+                alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
             }
         }
+    }
     // functions to pass the image through to the VIEW CONTROLLER
     func passImage(image: UIImage) {
         dismiss(animated: true, completion: nil)
         if currentPageNode != nil {
             if selectedTemplate != nil{
-                    if contentExist {
-                        if selectedTemplate == currentPageNode?.childNode(withName: "Single node", recursively: true){
-                            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
-                            createSingleSlotImage(image: image)
-                        }
-                        else{
-                            selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
-                            createDoubleSlotImage(image: image)
-                        }
+                if contentExist {
+                    if selectedTemplate == currentPageNode?.childNode(withName: "Single node", recursively: true){
+                        selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                        createSingleSlotImage(image: image)
                     }
-                    else if template == "single" {
-                       createSingleSlotImage(image: image)
+                    else{
+                        selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
+                        createDoubleSlotImage(image: image)
                     }
-                    else if template == "double"{
+                }
+                else if template == "single" {
+                    createSingleSlotImage(image: image)
+                }
+               
+              else if template == "double"{
                         if selectedTemplate?.name == "Top node"{
                             createDoubleSlotImage(image: image)
                         }
@@ -808,7 +809,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         else { // no template selected
             alert.alert(fromController: self, title: "No Template Selected", message: "select a Template before adding content.")
         }
-        selectedTemplate = nil
     }
     func createSingleSlotImage(image : UIImage){
         let tempNode = selectedTemplate
@@ -898,7 +898,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             self.deletePage()
         }
         else{
-             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+            alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
     
@@ -916,17 +916,16 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(deletePageAction)
             self.present(alertController, animated: true, completion: nil)
         }
-        if accessToWrite == false && cameFromShare == true {
-            self.currentPageNode?.removeFromParentNode()
-            self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
-            self.pages.removeLast()
-            self.currentPageNode = self.pages.last
-        }
-        else{
+        else {
             alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
         }
     }
-    
+    func deleteRealTime() {
+        self.currentPageNode?.removeFromParentNode()
+        self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
+        self.pages.removeLast()
+        self.currentPageNode = self.pages.last
+    }
     func deleteNotebook(book: String){
         if accessToWrite == true {
             dismiss(animated: true, completion: nil)
@@ -981,7 +980,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     
     func addAllColorsToDB(color: String){
         for page in pages{
-            ref.child("notebooks/\(self.notebookID)/\(pages.index(of: page)! + 1)").setValue(["color" : color])
+            ref.child("notebooks/\(self.notebookID)/\(pages.index(of: page)! + 1)").updateChildValues(["color" : color])
         }
     }
     
@@ -1183,7 +1182,6 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
         if self.retrievedFlag && self.cameFromShare {
             //connect listener to notebook to see if anything changes.
             attachEventListeners()
-            
         }
     }
     
@@ -1207,10 +1205,10 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     func attachEventListeners(){
         let postRef = self.ref.child("notebooks/\(self.notebookID)")
         postRef.observe(.childChanged, with: { (snapshot) -> Void in
-            if snapshot.childrenCount == 2 {
+            if snapshot.childrenCount == 3 {
                 self.handleSingleChildChange(snapshot: snapshot)
             }
-            else if snapshot.childrenCount == 3 {
+            else if snapshot.childrenCount == 4 {
                 self.handleDoubleChildChange(snapshot: snapshot)
             }
         })
@@ -1244,20 +1242,20 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
     }
     func handleDoubleChildChange(snapshot: DataSnapshot) {
         if(Int(snapshot.key)! < currentPage) {
-                moveCurrentPage(i: snapshot.key)
+            moveCurrentPage(i: snapshot.key)
         }
         else if (Int(snapshot.key)! == currentPage) {
-            self.deletePage()
+            self.deleteRealTime()
         }
         createPage()
         createTopNode()
         createBottomNode()
         template = "double"
-
+        
         let enumPages = snapshot.children
         while let page = enumPages.nextObject() as? DataSnapshot {
             let text = page.value as! String
-             guard let i = currentPageNode?.name else {return}
+            guard let i = currentPageNode?.name else {return}
             //let textNode = currentPageNode?.childNode(withName: "text", recursively: true)
             if (page.key == "content1"){
                 //select the top node of current page
@@ -1314,7 +1312,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 destination.delegate = self
             }
             else {
-               alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
+                alert.alert(fromController: self, title:"No Write Access", message:"You are viewing a shared notebook that you do not have write access to. Please continue to use this notebook as read only.")
             }
         }
         else if let destination = segue.destination as? addPageViewController {

@@ -75,7 +75,6 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         self.logOutButton.addGestureRecognizer(longLogOutGesture)
     }
     
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.tableView.reloadData()
@@ -155,10 +154,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                         var pageColor = "default"
                         while let content = enumContent.nextObject() as? DataSnapshot {
                             var contentVal = content.value as! String
-                            if(content.key == "color" ){
+                            if (content.key == "color" ){
                                 pageColor = content.value as! String
-                                contentVal = ""
-                                pageContent.append(contentVal)
                             }
                             else {
                                 if (content.key == "empty" && contentVal == "false"){

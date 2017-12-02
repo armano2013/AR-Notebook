@@ -70,7 +70,7 @@ class addPageViewController: UIViewController {
         //because save page gets called before the page count in incremented we need to do it now
         let pageID = (self.delegate?.currentPage)! + 1
         self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\(pageID)").setValue(["empty": "true"])
-        self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\(pageID)").setValue(["color": "default"])
+        self.ref.child("notebooks/\((self.delegate?.notebookID)!)/\(pageID)").updateChildValues(["color": "default"])
     }
 }
 
