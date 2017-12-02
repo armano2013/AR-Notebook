@@ -15,6 +15,8 @@ import FirebaseDatabase
 
 struct Page {
     var content=[String]()
+    var currentPageColor = "default"
+    var bookCover = "brown"
 }
 
 protocol retrieveDelegate {
@@ -24,6 +26,8 @@ protocol retrieveDelegate {
     var retrievedFlag : Bool {get set}
     var notebookID: Int {get set}
     var pageObjectArray: [Page] {get set}
+    var currentBookCover: String {get set}
+    func selectBookCover(cover: String)
 }
 
 class retrieveViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -70,7 +74,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         let longLogOutGesture = UILongPressGestureRecognizer(target: self, action: #selector(logOutInstruction(_:)))
         self.logOutButton.addGestureRecognizer(longLogOutGesture)
     }
-
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -78,10 +82,10 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     /*
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    */
+     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+     self.dismiss(animated: true, completion: nil)
+     }
+     */
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var logOutButton: UIButton!
@@ -104,7 +108,7 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-   func retrieveShareContent(id : String){
+    func retrieveShareContent(id : String){
         retrievePreviousNotebookWithID(id: id)
     }
     
@@ -145,31 +149,36 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
                 self.pageNum = Int(snapshot.childrenCount)
                 while let pages = enumPages.nextObject() as? DataSnapshot {
                     let enumContent = pages.children
+                    var cover = "brown"
                     if(pages.key != "name" && pages.key != "CoverStyle" && pages.key != "LastAccessed" ) {
                         var pageContent = [String]()
+                        var pageColor = "default"
                         while let content = enumContent.nextObject() as? DataSnapshot {
                             var contentVal = content.value as! String
-                            if(content.key != "color" ){
+                            if(content.key == "color" ){
+                                pageColor = content.value as! String
+                                contentVal = ""
+                                pageContent.append(contentVal)
+                            }
+                            else {
                                 if (content.key == "empty" && contentVal == "false"){
                                     continue
                                 }
                                 else if (content.key == "empty" && contentVal == "true"){
-                                    contentVal = " "
+                                    contentVal = ""
                                     pageContent.append(contentVal)
                                 }
                                 else{
                                     pageContent.append(contentVal)
                                 }
                             }
-                            else {
-                                //update page struct to handle retrieved page color
-                            }
                         }
-                        let newPage = Page(content: pageContent)
+                        let newPage = Page(content: pageContent, currentPageColor: pageColor, bookCover: cover)
                         self.pageObjArray.append(newPage)
                     }
-                    else {
-                        //updating page struct to add in cover style
+                    else if pages.key == "CoverStyle"{
+                        cover = pages.value as! String
+                        self.delegate?.currentBookCover = cover
                     }
                 }
                 self.delegate?.pageObjectArray = self.pageObjArray
@@ -240,8 +249,8 @@ class retrieveViewController: UIViewController, UITableViewDelegate, UITableView
             mainVC?.cameFromShare = true
             mainVC?.prevVC = self
             if(self.accessToWrite) {
-                 mainVC?.notebookID = Int(self.sharedNotebookID)! //if the user can write update the notebookID flag so the updates are managed in DB
+                mainVC?.notebookID = Int(self.sharedNotebookID)! //if the user can write update the notebookID flag so the updates are managed in DB
             }
         }
     }
- }
+}
