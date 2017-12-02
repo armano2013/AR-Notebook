@@ -979,7 +979,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
             alertController.addAction(deletePageAction)
             self.present(alertController, animated: true, completion: nil)
         }
-        if accessToWrite == flase && cameFromShare == true {
+        if accessToWrite == false && cameFromShare == true {
             self.currentPageNode?.removeFromParentNode()
             self.ref?.child("notebooks").child(String(self.notebookID)).child(String(self.currentPage)).removeValue()
             self.pages.removeLast()
