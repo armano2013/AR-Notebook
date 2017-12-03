@@ -741,7 +741,7 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 if contentExist {
                     selectedTemplate?.childNode(withName: "content", recursively: true)?.removeFromParentNode()
                 }
-                if template == "single"{
+                if selectedTemplate?.name == "Single node"{
                     //check to see if the content is a sotrage url - which means its an image.
                     if text.range(of:"firebasestorage.googleapis.com") != nil {
                         downloadImage(i: i, w: 1.2, h: 1.6, text: text, tmp: "Single node")
@@ -750,28 +750,23 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                         createSlots(xf: -0.5, yf: -8.0, hght: 16, text: text)
                     }
                 }
-                else if template == "double"{
-
-                    if selectedTemplate?.name == "Top node" {
-                        if text.range(of:"firebasestorage.googleapis.com") != nil {
-                            downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Top node")
-                        }
-                        else{
-                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
-                        }
+                else  if selectedTemplate?.name == "Top node" {
+                    if text.range(of:"firebasestorage.googleapis.com") != nil {
+                        downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Top node")
                     }
-
-                    else if selectedTemplate?.name == "Bottom node" {
-                        if text.range(of:"firebasestorage.googleapis.com") != nil {
-                            downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Bottom node")
-                        }
-                        else{
-                            createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
-                        }
+                    else{
+                        createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
+                    }
+                }
+                else if selectedTemplate?.name == "Bottom node" {
+                    if text.range(of:"firebasestorage.googleapis.com") != nil {
+                        downloadImage(i: i, w: 1.2, h: 0.7, text: text, tmp: "Bottom node")
+                    }
+                    else{
+                        createSlots(xf: -0.5, yf: -3.5, hght: 7, text: text)
                     }
                 }
             }
-                
             else {
                 alert.alert(fromController: self, title: "No Template Selected", message: "Select a Template before adding content.")
             }
@@ -795,13 +790,13 @@ class ViewController:  UIViewController, ARSCNViewDelegate, UIImagePickerControl
                 else if template == "single" {
                     createSingleSlotImage(image: image)
                 }
-               
-              else if template == "double"{
-                        if selectedTemplate?.name == "Top node"{
-                            createDoubleSlotImage(image: image)
-                        }
+                    
+                else if template == "double"{
+                    if selectedTemplate?.name == "Top node"{
+                        createDoubleSlotImage(image: image)
+                    }
                     else if selectedTemplate?.name == "Bottom node"{
-                            createDoubleSlotImage(image: image)
+                        createDoubleSlotImage(image: image)
                     }
                 }
             }
